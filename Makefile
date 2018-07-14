@@ -1,7 +1,7 @@
 EXE=out
 YACC_SRC=*.y
 LEX_SRC=*.l
-LINK=-ly -lfl -lm
+LINK=-lfl -lm
 CC=cc
 
 default: all
