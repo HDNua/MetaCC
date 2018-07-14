@@ -1,0 +1,361 @@
+   0  $accept : source_text $end
+
+   1  source_text : symbol_definition_list
+
+   2  symbol_definition_list : symbol_definition
+   3                         | symbol_definition_list symbol_definition
+
+   4  symbol_definition : symbol_key COLON symbol_value_list SEMICOLON
+
+   5  symbol_key : MCC_SYMBOL
+
+   6  key_attributes : "CANNOT_MATCH_STRING"
+
+   7  symbol_value_list : symbol_value
+   8                    | symbol_value_list VBAR symbol_value
+
+   9  symbol_value : symbol_value_element_list
+
+  10  symbol_value_element_list : symbol_value_element
+  11                            | symbol_value_element_list symbol_value_element
+
+  12  symbol_value_element : MCC_STRING
+  13                       | MCC_SYMBOL
+  14                       | LIST LP list_parameter RP
+  15                       | OPTION LP option_parameter RP
+  16                       | STAR LP star_parameter RP
+
+  17  list_parameter : list_parameter_value COMMA list_parameter_delim
+
+  18  option_parameter : option_parameter_value
+
+  19  star_parameter : star_parameter_value
+
+  20  list_parameter_value : symbol_value_element
+
+  21  list_parameter_delim : MCC_STRING
+
+  22  option_parameter_value : symbol_value_element
+
+  23  star_parameter_value : symbol_value_element
+
+state 0
+	$accept : . source_text $end  (0)
+
+	MCC_SYMBOL  shift 1
+	.  error
+
+	source_text  goto 2
+	symbol_definition_list  goto 3
+	symbol_definition  goto 4
+	symbol_key  goto 5
+
+
+state 1
+	symbol_key : MCC_SYMBOL .  (5)
+
+	.  reduce 5
+
+
+state 2
+	$accept : source_text . $end  (0)
+
+	$end  accept
+
+
+state 3
+	source_text : symbol_definition_list .  (1)
+	symbol_definition_list : symbol_definition_list . symbol_definition  (3)
+
+	MCC_SYMBOL  shift 1
+	$end  reduce 1
+
+	symbol_definition  goto 6
+	symbol_key  goto 5
+
+
+state 4
+	symbol_definition_list : symbol_definition .  (2)
+
+	.  reduce 2
+
+
+state 5
+	symbol_definition : symbol_key . COLON symbol_value_list SEMICOLON  (4)
+
+	COLON  shift 7
+	.  error
+
+
+state 6
+	symbol_definition_list : symbol_definition_list symbol_definition .  (3)
+
+	.  reduce 3
+
+
+state 7
+	symbol_definition : symbol_key COLON . symbol_value_list SEMICOLON  (4)
+
+	MCC_STRING  shift 8
+	MCC_SYMBOL  shift 9
+	LIST  shift 10
+	OPTION  shift 11
+	STAR  shift 12
+	.  error
+
+	symbol_value_list  goto 13
+	symbol_value_element_list  goto 14
+	symbol_value  goto 15
+	symbol_value_element  goto 16
+
+
+state 8
+	symbol_value_element : MCC_STRING .  (12)
+
+	.  reduce 12
+
+
+state 9
+	symbol_value_element : MCC_SYMBOL .  (13)
+
+	.  reduce 13
+
+
+state 10
+	symbol_value_element : LIST . LP list_parameter RP  (14)
+
+	LP  shift 17
+	.  error
+
+
+state 11
+	symbol_value_element : OPTION . LP option_parameter RP  (15)
+
+	LP  shift 18
+	.  error
+
+
+state 12
+	symbol_value_element : STAR . LP star_parameter RP  (16)
+
+	LP  shift 19
+	.  error
+
+
+state 13
+	symbol_definition : symbol_key COLON symbol_value_list . SEMICOLON  (4)
+	symbol_value_list : symbol_value_list . VBAR symbol_value  (8)
+
+	SEMICOLON  shift 20
+	VBAR  shift 21
+	.  error
+
+
+state 14
+	symbol_value : symbol_value_element_list .  (9)
+	symbol_value_element_list : symbol_value_element_list . symbol_value_element  (11)
+
+	MCC_STRING  shift 8
+	MCC_SYMBOL  shift 9
+	LIST  shift 10
+	OPTION  shift 11
+	STAR  shift 12
+	SEMICOLON  reduce 9
+	VBAR  reduce 9
+
+	symbol_value_element  goto 22
+
+
+state 15
+	symbol_value_list : symbol_value .  (7)
+
+	.  reduce 7
+
+
+state 16
+	symbol_value_element_list : symbol_value_element .  (10)
+
+	.  reduce 10
+
+
+state 17
+	symbol_value_element : LIST LP . list_parameter RP  (14)
+
+	MCC_STRING  shift 8
+	MCC_SYMBOL  shift 9
+	LIST  shift 10
+	OPTION  shift 11
+	STAR  shift 12
+	.  error
+
+	symbol_value_element  goto 23
+	list_parameter  goto 24
+	list_parameter_value  goto 25
+
+
+state 18
+	symbol_value_element : OPTION LP . option_parameter RP  (15)
+
+	MCC_STRING  shift 8
+	MCC_SYMBOL  shift 9
+	LIST  shift 10
+	OPTION  shift 11
+	STAR  shift 12
+	.  error
+
+	symbol_value_element  goto 26
+	option_parameter  goto 27
+	option_parameter_value  goto 28
+
+
+state 19
+	symbol_value_element : STAR LP . star_parameter RP  (16)
+
+	MCC_STRING  shift 8
+	MCC_SYMBOL  shift 9
+	LIST  shift 10
+	OPTION  shift 11
+	STAR  shift 12
+	.  error
+
+	symbol_value_element  goto 29
+	star_parameter  goto 30
+	star_parameter_value  goto 31
+
+
+state 20
+	symbol_definition : symbol_key COLON symbol_value_list SEMICOLON .  (4)
+
+	.  reduce 4
+
+
+state 21
+	symbol_value_list : symbol_value_list VBAR . symbol_value  (8)
+
+	MCC_STRING  shift 8
+	MCC_SYMBOL  shift 9
+	LIST  shift 10
+	OPTION  shift 11
+	STAR  shift 12
+	.  error
+
+	symbol_value_element_list  goto 14
+	symbol_value  goto 32
+	symbol_value_element  goto 16
+
+
+state 22
+	symbol_value_element_list : symbol_value_element_list symbol_value_element .  (11)
+
+	.  reduce 11
+
+
+state 23
+	list_parameter_value : symbol_value_element .  (20)
+
+	.  reduce 20
+
+
+state 24
+	symbol_value_element : LIST LP list_parameter . RP  (14)
+
+	RP  shift 33
+	.  error
+
+
+state 25
+	list_parameter : list_parameter_value . COMMA list_parameter_delim  (17)
+
+	COMMA  shift 34
+	.  error
+
+
+state 26
+	option_parameter_value : symbol_value_element .  (22)
+
+	.  reduce 22
+
+
+state 27
+	symbol_value_element : OPTION LP option_parameter . RP  (15)
+
+	RP  shift 35
+	.  error
+
+
+state 28
+	option_parameter : option_parameter_value .  (18)
+
+	.  reduce 18
+
+
+state 29
+	star_parameter_value : symbol_value_element .  (23)
+
+	.  reduce 23
+
+
+state 30
+	symbol_value_element : STAR LP star_parameter . RP  (16)
+
+	RP  shift 36
+	.  error
+
+
+state 31
+	star_parameter : star_parameter_value .  (19)
+
+	.  reduce 19
+
+
+state 32
+	symbol_value_list : symbol_value_list VBAR symbol_value .  (8)
+
+	.  reduce 8
+
+
+state 33
+	symbol_value_element : LIST LP list_parameter RP .  (14)
+
+	.  reduce 14
+
+
+state 34
+	list_parameter : list_parameter_value COMMA . list_parameter_delim  (17)
+
+	MCC_STRING  shift 37
+	.  error
+
+	list_parameter_delim  goto 38
+
+
+state 35
+	symbol_value_element : OPTION LP option_parameter RP .  (15)
+
+	.  reduce 15
+
+
+state 36
+	symbol_value_element : STAR LP star_parameter RP .  (16)
+
+	.  reduce 16
+
+
+state 37
+	list_parameter_delim : MCC_STRING .  (21)
+
+	.  reduce 21
+
+
+state 38
+	list_parameter : list_parameter_value COMMA list_parameter_delim .  (17)
+
+	.  reduce 17
+
+
+Rules never reduced:
+	key_attributes : "CANNOT_MATCH_STRING"  (6)
+
+
+15 terminals, 17 nonterminals
+24 grammar rules, 39 states

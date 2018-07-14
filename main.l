@@ -16,7 +16,14 @@ yywrap(void)
 {
 	return 1;
 }
+
+
+char mcc_string_buf[MAX_TOKEN_LEN];
+char *mcc_string_ptr;
+
 %}
+
+
 
 
 %x COMMENT
@@ -26,11 +33,16 @@ yywrap(void)
 
 
 
-[ \t\r\n]		;
+[ \t\r]			;
+[\n]			{
+	++line_count;
+}
 "|"			return VBAR;
 "("			return LP;
 ")"			return RP;
 ","			return COMMA;
+":"			return COLON;
+";"			return SEMICOLON;
 
 
 
@@ -55,24 +67,34 @@ yywrap(void)
 "//"			{
 	BEGIN(LINECOMMENT);
 }
-<LINECOMMENT>"\n"	{
+<LINECOMMENT>\n		{
 	++line_count;
 	BEGIN(INITIAL);
 }
-
-
-
-"\""			{
-	BEGIN(STRING);
+<LINECOMMENT>.		{
+	
 }
-<STRING>"\n"		{
+
+
+
+\"			{
+	BEGIN(STRING);
+	mcc_string_ptr = mcc_string_buf;
+}
+<STRING>\n		{
+	fprintf(stderr, "invalid stirng \n");
 	exit(1);
 }
-<STRING>"\""		{
+<STRING>\"		{
+	*mcc_string_ptr = '\0';
 	BEGIN(INITIAL);
-	strcpy(yylval.token_str, yytext);
+	strcpy(yylval.token_str, mcc_string_buf);
 	return MCC_STRING;
 }
+<STRING>.		{
+	*mcc_string_ptr++ = *yytext;
+}
+
 
 
 

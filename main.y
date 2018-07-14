@@ -106,6 +106,7 @@ symbol_key
 		ret->ast_key_attributes = NULL;
 		$$ = ret;
 	}
+	/*
 	| MCC_SYMBOL key_attributes
 	{
 		struct ast_symbol_key *ret = 
@@ -114,9 +115,10 @@ symbol_key
 		ret->ast_key_attributes = NULL;
 		$$ = ret;
 	}
+	*/
 	;
 key_attributes
-	: /* empty */
+	: "CANNOT_MATCH_STRING"
 	{
 		$$ = NULL;
 	}
@@ -276,7 +278,7 @@ int
 yyerror(char const *str)
 {
 	extern char *yytext;
-	fprintf(stderr, "parser error near %s \n", yytext);
+	fprintf(stderr, "%4d: %s: syntax error \n", line_count, yytext);
 	return 0;
 }
 
@@ -288,4 +290,6 @@ int main(void) {
 	if (yyparse()) {
 		fprintf(stderr, "ERROR \n");
 	}
+
+	return 0;
 }

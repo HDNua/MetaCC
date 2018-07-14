@@ -8,7 +8,7 @@
 
 
 
-
+// 
 struct ast_list *ast_list_new(ast_type type) {
 	struct ast_list *ret = (struct ast_list *)malloc(sizeof(struct ast_list));
 	ret->type = AST_LIST;
@@ -17,3 +17,12 @@ struct ast_list *ast_list_new(ast_type type) {
 	ret->tail = ret->head.next;
 	return ret;
 };
+// 
+void ast_list_append(struct ast_list *self, void *elem, ast_type type) {
+
+}
+
+
+
+// 
+

@@ -19,18 +19,22 @@ lex:
 	lex $(LEX_SRC)
 
 cc: 
-	$(CC) -o $(EXE) y.tab.c lex.yy.c  $(LINK)
+	$(CC) -o $(EXE) *.c $(LINK)
 
 yacc_dbg:
-	yacc -d $(YACC_SRC)
+	yacc -gdvt $(YACC_SRC)
 
 lex_dbg:
 	lex $(LEX_SRC)
 
 cc_dbg: 
-	$(CC) -g -o $(EXE) y.tab.c lex.yy.c  $(LINK)
+	$(CC) -g -o $(EXE) *.c $(LINK) -DYYDEBUG 
+
+test:
+	./$(EXE) < symbols.list
 
 clean:
 	rmtmp
 	rm -rf y.tab.c y.tab.h lex.yy.c
+	rm -rf y.output
 	rm -rf $(EXE)

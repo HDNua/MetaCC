@@ -1,3 +1,15 @@
+MetaCC - Meta Compiler Compiler v0.0.2.0
+----
+
+- 최초로 동작하는 파서 완성.
+> 이후 JavaCC or lex/yacc 등 편한 형태로 변환하는 코드를 작성하면 된다.
+
+! 몇 가지 버그 수정 요망.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.0.1.0
 ----
 
