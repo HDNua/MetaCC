@@ -112,17 +112,17 @@ struct ast_star_parameter {
 // 
 struct ast_list_parameter_value {
 	ast_type	                    type;
-	struct ast_symbol_value_element     *ast_symbol_value_element;
+	struct ast_list                     *ast_symbol_value_element_list;
 };
 // 
 struct ast_option_parameter_value {
 	ast_type	                    type;
-	struct ast_symbol_value_element     *ast_symbol_value_element;
+	struct ast_list                     *ast_symbol_value_element_list;
 };
 // 
 struct ast_star_parameter_value {
 	ast_type	                    type;
-	struct ast_symbol_value_element     *ast_symbol_value_element;
+	struct ast_list                     *ast_symbol_value_element_list;
 };
 
 

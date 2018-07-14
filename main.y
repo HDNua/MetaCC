@@ -234,12 +234,12 @@ star_parameter
 	}
 	;
 list_parameter_value
-	: symbol_value_element
+	: symbol_value_list
 	{
 		struct ast_list_parameter_value *ret = (struct ast_list_parameter_value *)
 			malloc(sizeof(struct ast_list_parameter_value));
 		ret->type = AST_LIST_PARAMETER;
-		ret->ast_symbol_value_element = $1;
+		ret->ast_symbol_value_element_list = $1;
 		$$ = ret;
 	}
 	;
@@ -247,22 +247,22 @@ list_parameter_delim
 	: MCC_STRING
 	;
 option_parameter_value
-	: symbol_value_element
+	: symbol_value_list
 	{
 		struct ast_option_parameter_value *ret = (struct ast_option_parameter_value *)
 			malloc(sizeof(struct ast_option_parameter_value));
 		ret->type = AST_OPTION_PARAMETER;
-		ret->ast_symbol_value_element = $1;
+		ret->ast_symbol_value_element_list = $1;
 		$$ = ret;
 	}
 	;
 star_parameter_value
-	: symbol_value_element
+	: symbol_value_list
 	{
 		struct ast_star_parameter_value *ret = (struct ast_star_parameter_value *)
 			malloc(sizeof(struct ast_star_parameter_value));
 		ret->type = AST_STAR_PARAMETER;
-		ret->ast_symbol_value_element = $1;
+		ret->ast_symbol_value_element_list = $1;
 		$$ = ret;
 	}
 	;
