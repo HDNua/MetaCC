@@ -334,16 +334,15 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
         describe_begin();
         tab_depth();
         printf("%s \n", ast_str(self->type));
-        
         ast_symbol_key_describe(self->ast_symbol_key);
         ast_list_iterate(self->ast_symbol_value_list);
-
         describe_end();
     }
     else {
         static char symbol_key_className[MAX_TOKEN_LEN];
         struct ast_symbol_key *ast_symbol_key = self->ast_symbol_key;
         struct ast_key_attributes *ast_key_attr = ast_symbol_key->ast_key_attributes;
+        struct ast_list *ast_symbol_value_list = self->ast_symbol_value_list;
         const char *symbol_name = ast_symbol_key->symbol_name;
 
         // 
@@ -359,7 +358,9 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
                 exit(1);
             }
         }
-        else {
+
+        // get symbol key class name & values informations.
+        {
             char *dst = symbol_key_className;
             const char *src = symbol_name;
 
@@ -378,8 +379,44 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
 
         // 
         printf("SV%s %s(): {\n", symbol_key_className, symbol_name);
-        printf("\n");
+
+        // gather token list.
+        {
+            struct ast_list *ast_list = ast_symbol_value_list;
+            struct ast_list_node *node;
+            for (node = ast_list->head.next; node; node = node->next) {
+                printf("%s \n", ast_str(ast_list->elem_type));
+            }
+        }
         printf("} {\n");
+
+        // gather syntax list.
+        {
+            struct ast_list *ast_list = ast_symbol_value_list;
+            struct ast_list_node *node;
+            int value_list_flag = 0;
+            int elem_list_flag = 0;
+            
+            // printf("\t%c", (value_list_flag ? '|' : (value_list_flag=1, ':')));
+            for (node = ast_list->head.next; node; node = node->next) {
+                struct ast_symbol_value *ast_symbol_value = node->elem;
+                struct ast_list *ast_elem_list = 
+                    ast_symbol_value->ast_symbol_value_element_list;
+                struct ast_list_node *node2;
+
+                // 
+                printf("\t%c", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
+                for (node2 = ast_elem_list->head.next; node2; node2 = node2->next) {
+                    struct ast_symbol_value_element *ast_elem = node2->elem;
+                    // printf("%c%s", (elem_list_flag ? '|' : (elem_list_flag=1, ' ')), 
+                    //    ast_str(ast_elem->elem_type));
+                    printf(" %s", ast_str(ast_elem->elem_type));
+                }
+                printf("\n\t{\n\t\t\n\t}\n");
+            }
+        }
+
+        // 
         printf("}\n\n");
     }
 }
