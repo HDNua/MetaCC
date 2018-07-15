@@ -39,6 +39,7 @@ int yyerror(char const *str);
 
 %token	VBAR LP RP COMMA
 %token	LIST OPTION STAR
+%token	SKIP CSTRING NULL_
 
 %type <token_str> MCC_STRING
 %type <token_str> MCC_SYMBOL MCC_METHOD
@@ -106,19 +107,17 @@ symbol_key
 		ret->ast_key_attributes = NULL;
 		$$ = ret;
 	}
-	/*
 	| MCC_SYMBOL key_attributes
 	{
 		struct ast_symbol_key *ret = 
 			(struct ast_symbol_key *)malloc(sizeof(struct ast_symbol_key));
 		ret->symbol_name = strdup($1);
-		ret->ast_key_attributes = NULL;
+		ret->ast_key_attributes = $2;
 		$$ = ret;
 	}
-	*/
 	;
 key_attributes
-	: "CANNOT_MATCH_STRING"
+	: SKIP
 	{
 		$$ = NULL;
 	}
@@ -199,6 +198,22 @@ symbol_value_element
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
 		ret->type = AST_STAR_PARAMETER;
 		ret->u.ast_star_parameter = $3;
+		$$ = ret;
+	}
+	| CSTRING
+	{
+		struct ast_symbol_value_element *ret = 
+			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
+		// ret->type = AST_STAR_PARAMETER;
+		// ret->u.ast_star_parameter = $3;
+		$$ = ret;
+	}
+	| NULL_
+	{
+		struct ast_symbol_value_element *ret = 
+			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
+		// ret->type = AST_STAR_PARAMETER;
+		// ret->u.ast_star_parameter = $3;
 		$$ = ret;
 	}
 	;

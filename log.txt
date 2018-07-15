@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.0.2.2 (COMPLETE)
+----
+
+- 심볼 리스트에 대한 초안 작업 완료.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.0.2.1 (COMPLETE)
 ----
 

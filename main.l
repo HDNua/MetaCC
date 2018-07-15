@@ -52,6 +52,12 @@ char *mcc_string_ptr;
 
 
 
+"SKIP"			return SKIP;
+"CSTRING"		return CSTRING;
+"NULL"			return NULL_;
+
+
+
 "/*"			{
 	BEGIN(COMMENT);
 }
