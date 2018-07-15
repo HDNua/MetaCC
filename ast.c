@@ -22,6 +22,8 @@ static const char *ast_str(ast_type type) {
         "list_node",
         "mcc_string",
         "mcc_symbol",
+        "cstring",
+        "null"
     };
 
     return ast_str_[type];
@@ -147,8 +149,8 @@ void ast_list_node_action(struct ast_list_node *self) {
 // 
 void ast_symbol_definition_describe(struct ast_symbol_definition *self) {
     describe_begin();
-    tab_depth();
-    printf("%s \n", ast_str(self->type));
+    // tab_depth();
+    // printf("%s \n", ast_str(self->type));
     
     ast_symbol_key_describe(self->ast_symbol_key);
     ast_list_iterate(self->ast_symbol_value_list);
@@ -162,8 +164,15 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
 // 
 void ast_symbol_key_describe(struct ast_symbol_key *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    // tab_depth();
+    // printf("%s \n", ast_str(self->type));
+    
+    tab_depth();
+    printf(": %s \n", self->symbol_name);
+
+    if (self->ast_key_attributes) {
+        ast_key_attributes_describe(self->ast_key_attributes);
+    }
 
     describe_end();
 }
@@ -175,8 +184,8 @@ void ast_symbol_key_action(struct ast_symbol_key *self) {
 // 
 void ast_key_attributes_describe(struct ast_key_attributes *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
 
     describe_end();
 }
@@ -188,8 +197,10 @@ void ast_key_attributes_action(struct ast_key_attributes *self) {
 // 
 void ast_symbol_value_describe(struct ast_symbol_value *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    // tab_depth();
+    // printf("%s \n", ast_str(self->type));
+
+    ast_list_iterate(self->ast_symbol_value_element_list);
 
     describe_end();
 }
@@ -201,8 +212,39 @@ void ast_symbol_value_action(struct ast_symbol_value *self) {
 // 
 void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
     describe_begin();
+    // tab_depth();
+    // printf("%s \n", ast_str(self->type));
+
+    switch (self->elem_type) {
+    case AST_MCC_STRING:
         tab_depth();
-        printf("%s \n", ast_str(self->type));
+        printf("%s \n", self->u.mcc_string);
+        break;
+    case AST_MCC_SYMBOL:
+        tab_depth();
+        printf("%s \n", self->u.mcc_symbol);
+        break;
+    case AST_LIST_PARAMETER:
+        ast_list_parameter_describe(self->u.ast_list_parameter);
+        break;
+    case AST_OPTION_PARAMETER:
+        ast_option_parameter_describe(self->u.ast_option_parameter);
+        break;
+    case AST_STAR_PARAMETER:
+        ast_star_parameter_describe(self->u.ast_star_parameter);
+        break;
+    case AST_CSTRING:
+        tab_depth();
+        printf("%s \n", self->u.cstring);
+        break;
+    case AST_NULL:
+        tab_depth();
+        printf("%s \n", self->u.null_);
+        break;
+    default:
+        fprintf(stderr, "invalid symbol value element [%d] \n", self->elem_type);
+        exit(1);
+    }
 
     describe_end();
 }

@@ -59,16 +59,8 @@ int yyerror(char const *str);
 %type <ast_list_parameter_value> list_parameter_value
 %type <ast_option_parameter_value> option_parameter_value
 %type <ast_star_parameter_value> star_parameter_value
-// %type <ast_symbol_value_element> list_parameter_value
-// %type <ast_symbol_value_element> option_parameter_value
-// %type <ast_symbol_value_element> star_parameter_value
-
-
 
 %%
-
-
-
 source_text
 	: symbol_definition_list
 	{
@@ -104,6 +96,7 @@ symbol_key
 	{
 		struct ast_symbol_key *ret = 
 			(struct ast_symbol_key *)malloc(sizeof(struct ast_symbol_key));
+		ret->type = AST_SYMBOL_KEY;
 		ret->symbol_name = strdup($1);
 		ret->ast_key_attributes = NULL;
 		$$ = ret;
@@ -112,6 +105,7 @@ symbol_key
 	{
 		struct ast_symbol_key *ret = 
 			(struct ast_symbol_key *)malloc(sizeof(struct ast_symbol_key));
+		ret->type = AST_SYMBOL_KEY;
 		ret->symbol_name = strdup($1);
 		ret->ast_key_attributes = $2;
 		$$ = ret;
@@ -134,6 +128,7 @@ symbol_value_list
 	{
 		struct ast_symbol_value *ret = 
 			(struct ast_symbol_value *)malloc(sizeof(struct ast_symbol_value));
+		ret->type = AST_SYMBOL_VALUE;
 		ast_list_append($1, $3, AST_SYMBOL_VALUE);
 		$$ = $1;
 	}
@@ -143,6 +138,7 @@ symbol_value
 	{
 		struct ast_symbol_value *ret = 
 			(struct ast_symbol_value *)malloc(sizeof(struct ast_symbol_value));
+		ret->type = AST_SYMBOL_VALUE;
 		ret->ast_symbol_value_element_list = $1;
 		$$ = ret;
 	}
@@ -165,15 +161,17 @@ symbol_value_element
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		ret->type = AST_MCC_STRING;
-		ret->u.string = strdup($1);
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_MCC_STRING;
+		ret->u.mcc_string = strdup($1);
 		$$ = ret;
 	}
 	| MCC_SYMBOL
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		ret->type = AST_MCC_SYMBOL;
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_MCC_SYMBOL;
 		ret->u.mcc_symbol = strdup($1);
 		$$ = ret;
 	}
@@ -181,7 +179,8 @@ symbol_value_element
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		ret->type = AST_LIST_PARAMETER;
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_LIST_PARAMETER;
 		ret->u.ast_list_parameter = $3;
 		$$ = ret;
 	}
@@ -189,7 +188,8 @@ symbol_value_element
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		ret->type = AST_OPTION_PARAMETER;
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_OPTION_PARAMETER;
 		ret->u.ast_option_parameter = $3;
 		$$ = ret;
 	}
@@ -197,7 +197,8 @@ symbol_value_element
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		ret->type = AST_STAR_PARAMETER;
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_STAR_PARAMETER;
 		ret->u.ast_star_parameter = $3;
 		$$ = ret;
 	}
@@ -205,6 +206,8 @@ symbol_value_element
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_CSTRING;
 		// ret->type = AST_STAR_PARAMETER;
 		// ret->u.ast_star_parameter = $3;
 		$$ = ret;
@@ -213,6 +216,8 @@ symbol_value_element
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_NULL;
 		// ret->type = AST_STAR_PARAMETER;
 		// ret->u.ast_star_parameter = $3;
 		$$ = ret;

@@ -5,21 +5,25 @@
 
 
 typedef enum ast_type {
-    AST_UNTYPED,
-    AST_LIST,
-    AST_SYMBOL_DEFINITION,
-    AST_SYMBOL_KEY,
-    AST_KEY_ATTRIBUTES,
-    AST_SYMBOL_VALUE,
-    AST_SYMBOL_VALUE_ELEMENT,
-    AST_LIST_PARAMETER,
-    AST_OPTION_PARAMETER,
-    AST_STAR_PARAMETER,
+    AST_UNTYPED,                    // 0
+    AST_LIST,                       // 1
+    AST_SYMBOL_DEFINITION,          // 2
+    AST_SYMBOL_KEY,                 // 3
+    AST_KEY_ATTRIBUTES,             // 4
+    AST_SYMBOL_VALUE,               // 5
+    AST_SYMBOL_VALUE_ELEMENT,       // 6
+    AST_LIST_PARAMETER,             // 7
+    AST_OPTION_PARAMETER,           // 8
+    AST_STAR_PARAMETER,             // 9
 
     // 
-    AST_LIST_NODE,
-    AST_MCC_STRING,
-    AST_MCC_SYMBOL,
+    AST_LIST_NODE,                  // 10
+
+    // 
+    AST_MCC_STRING,                 // 11
+    AST_MCC_SYMBOL,                 // 12
+    AST_CSTRING,                    // 13
+    AST_NULL,                       // 14
 
 } ast_type;
 
@@ -104,13 +108,16 @@ void ast_symbol_value_action(struct ast_symbol_value *);
 // 
 struct ast_symbol_value_element {
     ast_type	                        type;
+    ast_type                            elem_type;
 
     union {
-        const char                      *string;
+        const char                      *mcc_string;
         const char                      *mcc_symbol;
         struct ast_list_parameter       *ast_list_parameter;
         struct ast_option_parameter     *ast_option_parameter;
         struct ast_star_parameter       *ast_star_parameter;
+        const char                      *cstring;
+        const char                      *null_;
     } u;
 };
 // 
