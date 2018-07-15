@@ -5,6 +5,7 @@
 
 
 typedef enum ast_type {
+    AST_UNTYPED,
     AST_LIST,
     AST_SYMBOL_DEFINITION,
     AST_SYMBOL_KEY,
@@ -27,6 +28,7 @@ typedef enum ast_type {
 // 
 struct ast_list_node {
     ast_type                            type;
+    ast_type                            elem_type;
     void                                *elem;
     struct ast_list_node                *next;
 };

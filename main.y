@@ -93,6 +93,7 @@ symbol_definition
 	{
 		struct ast_symbol_definition *ret = 
 			(struct ast_symbol_definition *)malloc(sizeof(struct ast_symbol_definition));
+		ret->type = AST_SYMBOL_DEFINITION;
 		ret->ast_symbol_key = $1;
 		ret->ast_symbol_value_list = $3;
 		$$ = ret;

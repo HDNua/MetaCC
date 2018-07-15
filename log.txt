@@ -1,3 +1,14 @@
+MetaCC - Meta Compiler Compiler v0.0.2.4
+----
+
+- 타입이 정의되지 않은 추상 구문 트리에 대한 디버그 진행중.
+
+
+- describe, action 함수들에 대한 템플릿 작성 완료.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.0.2.3
 ----
 
