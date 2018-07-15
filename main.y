@@ -45,6 +45,7 @@ int yyerror(char const *str);
 %type <token_str> MCC_STRING
 %type <token_str> MCC_SYMBOL MCC_METHOD
 %type <token_str> list_parameter_delim
+%type <token_str> SKIP TERMINAL
 
 %type <ast_list> symbol_definition_list
 %type <ast_list> symbol_value_list 
@@ -115,11 +116,19 @@ symbol_key
 key_attributes
 	: SKIP
 	{
-		$$ = NULL;
+		struct ast_key_attributes *ret = 
+			(struct ast_key_attributes *)malloc(sizeof(struct ast_key_attributes));
+		ret->type = AST_KEY_ATTRIBUTES;
+		ret->attributes = strdup($1);
+		$$ = ret;
 	}
 	| TERMINAL
 	{
-		$$ = NULL;
+		struct ast_key_attributes *ret = 
+			(struct ast_key_attributes *)malloc(sizeof(struct ast_key_attributes));
+		ret->type = AST_KEY_ATTRIBUTES;
+		ret->attributes = strdup($1);
+		$$ = ret;
 	}
 	;
 symbol_value_list
@@ -322,7 +331,8 @@ int main(void) {
 	printf("done. \n\n");
 	
 	// 
-	ast_list_iterate(symbol_definition_list);
+	// ast_list_iterate(symbol_definition_list);
+	ast_list_traverse(symbol_definition_list);
 	
 	// 
 	return 0;

@@ -292,7 +292,7 @@ tagged_union_expression
     : "tagged" member_identifier OPTION( expression )
     ;
 inside_expression
-    : exprssion "inside" "{" open_range_list "}"
+    : expression "inside" "{" open_range_list "}"
     ;
 value_range
     : expression

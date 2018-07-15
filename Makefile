@@ -1,4 +1,4 @@
-EXE=out
+EXE=metacc
 YACC_SRC=*.y
 LEX_SRC=*.l
 LINK=-lfl -lm
@@ -31,7 +31,7 @@ cc_dbg:
 	$(CC) -g -o $(EXE) *.c $(LINK) -DYYDEBUG 
 
 test:
-	./$(EXE) < symbols.list
+	./$(EXE) < symbols.list > SVObject.jj
 
 clean:
 	rmtmp

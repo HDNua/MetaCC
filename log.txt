@@ -1,3 +1,13 @@
+MetaCC - Meta Compiler Compiler v0.0.3.2
+----
+
+- 최초의 jj 파일 작성 완료!
+
+
+end.
+
+
+
 MetaCC - Meta Compiler Compiler v0.0.3.1
 ----
 

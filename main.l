@@ -57,8 +57,14 @@ char *mcc_string_ptr;
 
 
 
-"SKIP"			return SKIP;
-"TERMINAL"		return TERMINAL;
+"SKIP"			{
+	strcpy(yylval.token_str, yytext);
+	return SKIP;
+}
+"TERMINAL"		{
+	strcpy(yylval.token_str, yytext);
+	return TERMINAL;
+}
 
 
 

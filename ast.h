@@ -87,7 +87,8 @@ void ast_symbol_key_action(struct ast_symbol_key *);
 // 
 struct ast_key_attributes {
     ast_type	                        type;
-
+    
+    const char                          *attributes;
 };
 // 
 void ast_key_attributes_describe(struct ast_key_attributes *);

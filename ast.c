@@ -4,6 +4,8 @@
 #include <string.h>
 #include <ctype.h>
 
+#define MAX_TOKEN_LEN   2048
+
 
 
 // 
@@ -61,13 +63,6 @@ void ast_list_iterate(struct ast_list *self) {
     struct ast_list_node *node;
     for (node=self->head.next; node; node=node->next) {
         ast_list_node_describe(node);
-    }
-}
-// 
-void ast_list_traverse(struct ast_list *self) {
-    struct ast_list_node *node;
-    for (node=self->head.next; node; node=node->next) {
-        ast_list_node_action(node);
     }
 }
 
@@ -139,10 +134,6 @@ void ast_list_node_describe(struct ast_list_node *self) {
     }
     // describe_end();
 }
-// 
-void ast_list_node_action(struct ast_list_node *self) {
-
-}
 
 
 
@@ -157,10 +148,6 @@ void ast_symbol_definition_describe(struct ast_symbol_definition *self) {
 
     // describe_end();
 }
-//
-void ast_symbol_definition_action(struct ast_symbol_definition *self) {
-}
-
 // 
 void ast_symbol_key_describe(struct ast_symbol_key *self) {
     // describe_begin();
@@ -177,11 +164,6 @@ void ast_symbol_key_describe(struct ast_symbol_key *self) {
 
     // describe_end();
 }
-//
-void ast_symbol_key_action(struct ast_symbol_key *self) {
-
-}
-
 // 
 void ast_key_attributes_describe(struct ast_key_attributes *self) {
     describe_begin();
@@ -190,11 +172,6 @@ void ast_key_attributes_describe(struct ast_key_attributes *self) {
 
     describe_end();
 }
-// 
-void ast_key_attributes_action(struct ast_key_attributes *self) {
-
-}
-
 // 
 void ast_symbol_value_describe(struct ast_symbol_value *self) {
     describe_begin();
@@ -206,12 +183,243 @@ void ast_symbol_value_describe(struct ast_symbol_value *self) {
     describe_end();
 }
 // 
-void ast_symbol_value_action(struct ast_symbol_value *self) {
+void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
+    // describe_begin();
+    // tab_depth();
+    // printf("%s \n", ast_str(self->type));
 
+    switch (self->elem_type) {
+    case AST_MCC_STRING:
+        tab_depth();
+        printf("\"%s\" \n", self->u.mcc_string);
+        break;
+    case AST_MCC_SYMBOL:
+        tab_depth();
+        printf("%s \n", self->u.mcc_symbol);
+        break;
+    case AST_LIST_PARAMETER:
+        ast_list_parameter_describe(self->u.ast_list_parameter);
+        break;
+    case AST_OPTION_PARAMETER:
+        ast_option_parameter_describe(self->u.ast_option_parameter);
+        break;
+    case AST_STAR_PARAMETER:
+        ast_star_parameter_describe(self->u.ast_star_parameter);
+        break;
+    case AST_CSTRING:
+        tab_depth();
+        printf("C\"%s\" \n", self->u.cstring);
+        break;
+    case AST_NULL:
+        tab_depth();
+        printf("%s \n", self->u.null_);
+        break;
+    default:
+        fprintf(stderr, "invalid symbol value element [%d] \n", self->elem_type);
+        exit(1);
+    }
+
+    // describe_end();
+}
+// 
+void ast_list_parameter_describe(struct ast_list_parameter *self) {
+    describe_begin();
+    tab_depth();
+    printf("LIST(%s, [%s]) \n", ast_str(self->type), self->list_parameter_delim);
+
+    describe_end();
+}
+// 
+void ast_option_parameter_describe(struct ast_option_parameter *self) {
+    describe_begin();
+    tab_depth();
+    printf("OPTION(%s) \n", ast_str(self->type));
+
+    describe_end();
+}
+// 
+void ast_star_parameter_describe(struct ast_star_parameter *self) {
+    describe_begin();
+    tab_depth();
+    printf("STAR(%s) \n", ast_str(self->type));
+
+    describe_end();
+}
+// 
+void ast_list_parameter_value_describe(struct ast_list_parameter_value *self) {
+    describe_begin();
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
+
+    describe_end();
+}
+// 
+void ast_option_parameter_value_describe(struct ast_option_parameter_value *self) {
+    describe_begin();
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
+
+    describe_end();
+}
+// 
+void ast_star_parameter_value_describe(struct ast_star_parameter_value *self) {
+    describe_begin();
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
+
+    describe_end();
+}
+
+
+
+
+
+
+
+
+
+
+// 
+void ast_list_traverse(struct ast_list *self) {
+    struct ast_list_node *node;
+    for (node=self->head.next; node; node=node->next) {
+        ast_list_node_action(node);
+    }
+}
+// 
+void ast_list_node_action(struct ast_list_node *self) {
+    if (self->type == AST_LIST_NODE) {
+        switch (self->elem_type) {
+            case AST_LIST:
+                ast_list_traverse(self->elem);
+                break;
+            case AST_SYMBOL_DEFINITION:
+                ast_symbol_definition_action(self->elem);
+                break;
+            case AST_SYMBOL_KEY:
+                ast_symbol_key_action(self->elem);
+                break;
+            case AST_KEY_ATTRIBUTES:
+                ast_key_attributes_action(self->elem);
+                break;
+            case AST_SYMBOL_VALUE:
+                ast_symbol_value_action(self->elem);
+                break;
+            case AST_SYMBOL_VALUE_ELEMENT:
+                ast_symbol_value_element_action(self->elem);
+                break;
+            case AST_LIST_PARAMETER:
+                ast_list_parameter_action(self->elem);
+                break;
+            case AST_OPTION_PARAMETER:
+                ast_option_parameter_action(self->elem);
+                break;
+            case AST_STAR_PARAMETER:
+                ast_star_parameter_action(self->elem);
+                break;
+            default:
+                fprintf(stderr, "invalid node element type [%d] \n", self->elem_type);
+                exit(1);
+                break;
+        }
+    }
+    else {
+        fprintf(stderr, "invalid node \n");
+        exit(1);
+    }
+}
+// 
+void ast_symbol_definition_action(struct ast_symbol_definition *self) {
+    if (0) {
+        describe_begin();
+        tab_depth();
+        printf("%s \n", ast_str(self->type));
+        
+        ast_symbol_key_describe(self->ast_symbol_key);
+        ast_list_iterate(self->ast_symbol_value_list);
+
+        describe_end();
+    }
+    else {
+        static char symbol_key_className[MAX_TOKEN_LEN];
+        struct ast_symbol_key *ast_symbol_key = self->ast_symbol_key;
+        struct ast_key_attributes *ast_key_attr = ast_symbol_key->ast_key_attributes;
+        const char *symbol_name = ast_symbol_key->symbol_name;
+
+        // 
+        if (ast_key_attr) {
+            if (strcmp(ast_key_attr->attributes, "SKIP") == 0) {
+                return;
+            }
+            else if (strcmp(ast_key_attr->attributes, "TERMINAL") == 0) {
+                // 
+                return;
+            }
+            else {
+                exit(1);
+            }
+        }
+        else {
+            char *dst = symbol_key_className;
+            const char *src = symbol_name;
+
+            *dst++ = toupper(*src++);
+            while (*src != '\0') {
+                if (*src == '_') {
+                    ++src;
+                    *dst++ = toupper(*src++);
+                }
+                else {
+                    *dst++ = *src++;
+                }
+            }
+            *dst = '\0';
+        }
+
+        // 
+        printf("SV%s %s(): {\n", symbol_key_className, symbol_name);
+        printf("\n");
+        printf("} {\n");
+        printf("}\n\n");
+    }
+}
+// 
+void ast_symbol_key_action(struct ast_symbol_key *self) {
+    // describe_begin();
+    // tab_depth();
+    // printf("%s \n", ast_str(self->type));
+    
+    tab_depth();
+    // printf(": %s \n", self->symbol_name);
+    printf("%s: \n", self->symbol_name);
+
+    if (self->ast_key_attributes) {
+        ast_key_attributes_describe(self->ast_key_attributes);
+    }
+
+    // describe_end();
+}
+// 
+void ast_key_attributes_action(struct ast_key_attributes *self) {
+    describe_begin();
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
+
+    describe_end();
 }
 
 // 
-void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
+void ast_symbol_value_action(struct ast_symbol_value *self) {
+    describe_begin();
+    // tab_depth();
+    // printf("%s \n", ast_str(self->type));
+
+    ast_list_iterate(self->ast_symbol_value_element_list);
+
+    describe_end();
+}
+// 
+void ast_symbol_value_element_action(struct ast_symbol_value_element *self) {
     // describe_begin();
     // tab_depth();
     // printf("%s \n", ast_str(self->type));
@@ -250,12 +458,7 @@ void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
     // describe_end();
 }
 // 
-void ast_symbol_value_element_action(struct ast_symbol_value_element *self) {
-
-}
-
-// 
-void ast_list_parameter_describe(struct ast_list_parameter *self) {
+void ast_list_parameter_action(struct ast_list_parameter *self) {
     describe_begin();
     tab_depth();
     printf("LIST(%s, [%s]) \n", ast_str(self->type), self->list_parameter_delim);
@@ -263,25 +466,15 @@ void ast_list_parameter_describe(struct ast_list_parameter *self) {
     describe_end();
 }
 // 
-void ast_list_parameter_action(struct ast_list_parameter *self) {
-
-}
-
-// 
-void ast_option_parameter_describe(struct ast_option_parameter *self) {
+void ast_option_parameter_action(struct ast_option_parameter *self) {
     describe_begin();
     tab_depth();
     printf("OPTION(%s) \n", ast_str(self->type));
 
     describe_end();
 }
-//
-void ast_option_parameter_action(struct ast_option_parameter *self) {
-
-}
-
 // 
-void ast_star_parameter_describe(struct ast_star_parameter *self) {
+void ast_star_parameter_action(struct ast_star_parameter *self) {
     describe_begin();
     tab_depth();
     printf("STAR(%s) \n", ast_str(self->type));
@@ -289,25 +482,7 @@ void ast_star_parameter_describe(struct ast_star_parameter *self) {
     describe_end();
 }
 // 
-void ast_star_parameter_action(struct ast_star_parameter *self) {
-
-}
-
-// 
-void ast_list_parameter_value_describe(struct ast_list_parameter_value *self) {
-    describe_begin();
-    tab_depth();
-    printf("%s \n", ast_str(self->type));
-
-    describe_end();
-}
-// 
 void ast_list_parameter_value_action(struct ast_list_parameter_value *self) {
-
-}
-
-// 
-void ast_option_parameter_value_describe(struct ast_option_parameter_value *self) {
     describe_begin();
     tab_depth();
     printf("%s \n", ast_str(self->type));
@@ -316,11 +491,6 @@ void ast_option_parameter_value_describe(struct ast_option_parameter_value *self
 }
 // 
 void ast_option_parameter_value_action(struct ast_option_parameter_value *self) {
-
-}
-
-// 
-void ast_star_parameter_value_describe(struct ast_star_parameter_value *self) {
     describe_begin();
     tab_depth();
     printf("%s \n", ast_str(self->type));
@@ -329,6 +499,13 @@ void ast_star_parameter_value_describe(struct ast_star_parameter_value *self) {
 }
 // 
 void ast_star_parameter_value_action(struct ast_star_parameter_value *self) {
+    describe_begin();
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
 
+    describe_end();
 }
+
+
+
 
