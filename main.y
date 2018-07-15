@@ -125,7 +125,7 @@ key_attributes
 symbol_value_list
 	: symbol_value
 	{
-		struct ast_list *list = (struct ast_list *)malloc(sizeof(struct ast_list));
+		struct ast_list *list = ast_list_new(AST_SYMBOL_VALUE);
 		ast_list_append(list, $1, AST_SYMBOL_VALUE);
 		$$ = list;
 	}
@@ -286,9 +286,9 @@ star_parameter_value
 
 /*************************************************************/
 %%
-
 int line_count = 0;
 
+// 
 int
 yyerror(char const *str)
 {
@@ -297,6 +297,7 @@ yyerror(char const *str)
 	return 0;
 }
 
+// 
 int main(void) {
 	extern int yyparse(void);
 	extern FILE *yyin;
@@ -306,5 +307,12 @@ int main(void) {
 		fprintf(stderr, "ERROR \n");
 	}
 
+	// 
+	printf("done. \n\n");
+	
+	// 
+	ast_list_iterate(symbol_definition_list);
+	
+	// 
 	return 0;
 }

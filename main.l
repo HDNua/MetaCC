@@ -6,7 +6,7 @@
 
 
 #ifdef YYDEBUG
-extern int yydebug = 1;
+extern int yydebug;
 #endif
 
 extern int line_count;

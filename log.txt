@@ -1,4 +1,13 @@
-MetaCC - Meta Compiler Compiler v0.0.2.2 (COMPLETE)
+MetaCC - Meta Compiler Compiler v0.0.2.3
+----
+
+- 추상 구문 트리 템플릿 작업 완료.
+
+
+end.
+
+
+MetaCC - Meta Compiler Compiler v0.0.2.2
 ----
 
 - 심볼 리스트에 대한 초안 작업 완료.
@@ -7,7 +16,7 @@ MetaCC - Meta Compiler Compiler v0.0.2.2 (COMPLETE)
 end.
 
 
-MetaCC - Meta Compiler Compiler v0.0.2.1 (COMPLETE)
+MetaCC - Meta Compiler Compiler v0.0.2.1
 ----
 
 ! 몇 가지 버그 수정 요망.
@@ -18,7 +27,7 @@ end.
 
 
 
-MetaCC - Meta Compiler Compiler v0.0.2.0
+MetaCC - Meta Compiler Compiler v0.0.2.0 (COMPLETE)
 ----
 
 - 최초로 동작하는 파서 완성.

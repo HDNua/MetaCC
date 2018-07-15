@@ -36,5 +36,5 @@ test:
 clean:
 	rmtmp
 	rm -rf y.tab.c y.tab.h lex.yy.c
-	rm -rf y.output
+	rm -rf y.output y.dot
 	rm -rf $(EXE)
