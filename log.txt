@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.0.3.1
+----
+
+- describe 함수 응용해봄.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.0.3.0
 ----
 

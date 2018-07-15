@@ -37,12 +37,12 @@ char *mcc_string_ptr;
 [\n]			{
 	++line_count;
 }
-"|"			return VBAR;
-"("			return LP;
-")"			return RP;
-","			return COMMA;
-":"			return COLON;
-";"			return SEMICOLON;
+"|"				return VBAR;
+"("				return LP;
+")"				return RP;
+","				return COMMA;
+":"				return COLON;
+";"				return SEMICOLON;
 
 
 
@@ -52,9 +52,13 @@ char *mcc_string_ptr;
 
 
 
-"SKIP"			return SKIP;
 "CSTRING"		return CSTRING;
 "NULL"			return NULL_;
+
+
+
+"SKIP"			return SKIP;
+"TERMINAL"		return TERMINAL;
 
 
 

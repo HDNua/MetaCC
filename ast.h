@@ -129,7 +129,7 @@ void ast_symbol_value_element_action(struct ast_symbol_value_element *);
 struct ast_list_parameter {
     ast_type	                        type;
     struct ast_list_parameter_value     *ast_list_parameter_value;
-    const char                          *ast_list_parameter_delim;
+    const char                          *list_parameter_delim;
 };
 // 
 void ast_list_parameter_describe(struct ast_list_parameter *);

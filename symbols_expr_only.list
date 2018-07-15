@@ -440,22 +440,22 @@ nonrange_variable_lvalue
     ;
 
 # 8.6) Operators
-unary_operator
+unary_operator TERMINAL
     : "+"   | "-"   | "!"   | "~"   | "&"   | "~&"  | "|"   | "~|"  | "^"   | "~^"  | "^~"
     ;
-binary_operator
+binary_operator TERMINAL
     : "+"   | "-"   | "*"   | "/"   | "%"
     | "=="  | "!="  | "===" | "!==" | "==?" | "!=?" | "&&"  | "||"  | "**"
     | "<"   | "<="  | ">"   | ">="  | "&"   | "|"   | "^"   | "^~"  | "~^"
     | ">>"  | "<<"  | ">>>" | "<<<" | "->"  | "<->"
     ;
-inc_or_dec_operator
+inc_or_dec_operator TERMINAL
     : "++"  | "--"
     ;
-unary_module_path_operator
+unary_module_path_operator TERMINAL
     : "!"   | "~"   | "&"   | "~&"  | "|"   | "~|"  | "^"   | "~^"  | "^~"
     ;
-binary_module_path_operator
+binary_module_path_operator TERMINAL
     : "=="  | "!="  | "&&"  | "||"  | "&"   | "|"   | "^"   | "^~"  | "~^"
     ;
 

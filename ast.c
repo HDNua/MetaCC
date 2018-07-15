@@ -81,14 +81,14 @@ static int describe_begin() {
 static int describe_end() {
     return --description_depth;
 }
-static void indent_depth(char ch) {
+static void indent_depth(const char *s) {
     int i;
     for (i=0; i<description_depth; ++i) {
-        putchar(ch);
+        printf("%s", s); 
     }
 }
 static void tab_depth() {
-    indent_depth('\t');
+    indent_depth("    ");
 }
 
 
@@ -148,14 +148,14 @@ void ast_list_node_action(struct ast_list_node *self) {
 
 // 
 void ast_symbol_definition_describe(struct ast_symbol_definition *self) {
-    describe_begin();
+    // describe_begin();
     // tab_depth();
     // printf("%s \n", ast_str(self->type));
     
     ast_symbol_key_describe(self->ast_symbol_key);
     ast_list_iterate(self->ast_symbol_value_list);
 
-    describe_end();
+    // describe_end();
 }
 //
 void ast_symbol_definition_action(struct ast_symbol_definition *self) {
@@ -163,18 +163,19 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
 
 // 
 void ast_symbol_key_describe(struct ast_symbol_key *self) {
-    describe_begin();
+    // describe_begin();
     // tab_depth();
     // printf("%s \n", ast_str(self->type));
     
     tab_depth();
-    printf(": %s \n", self->symbol_name);
+    // printf(": %s \n", self->symbol_name);
+    printf("%s: \n", self->symbol_name);
 
     if (self->ast_key_attributes) {
         ast_key_attributes_describe(self->ast_key_attributes);
     }
 
-    describe_end();
+    // describe_end();
 }
 //
 void ast_symbol_key_action(struct ast_symbol_key *self) {
@@ -211,7 +212,7 @@ void ast_symbol_value_action(struct ast_symbol_value *self) {
 
 // 
 void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
-    describe_begin();
+    // describe_begin();
     // tab_depth();
     // printf("%s \n", ast_str(self->type));
 
@@ -246,7 +247,7 @@ void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
         exit(1);
     }
 
-    describe_end();
+    // describe_end();
 }
 // 
 void ast_symbol_value_element_action(struct ast_symbol_value_element *self) {
@@ -256,8 +257,8 @@ void ast_symbol_value_element_action(struct ast_symbol_value_element *self) {
 // 
 void ast_list_parameter_describe(struct ast_list_parameter *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    tab_depth();
+    printf("LIST(%s, [%s]) \n", ast_str(self->type), self->list_parameter_delim);
 
     describe_end();
 }
@@ -269,8 +270,8 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
 // 
 void ast_option_parameter_describe(struct ast_option_parameter *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    tab_depth();
+    printf("OPTION(%s) \n", ast_str(self->type));
 
     describe_end();
 }
@@ -282,8 +283,8 @@ void ast_option_parameter_action(struct ast_option_parameter *self) {
 // 
 void ast_star_parameter_describe(struct ast_star_parameter *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    tab_depth();
+    printf("STAR(%s) \n", ast_str(self->type));
 
     describe_end();
 }
@@ -295,8 +296,8 @@ void ast_star_parameter_action(struct ast_star_parameter *self) {
 // 
 void ast_list_parameter_value_describe(struct ast_list_parameter_value *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
 
     describe_end();
 }
@@ -308,8 +309,8 @@ void ast_list_parameter_value_action(struct ast_list_parameter_value *self) {
 // 
 void ast_option_parameter_value_describe(struct ast_option_parameter_value *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
 
     describe_end();
 }
@@ -321,8 +322,8 @@ void ast_option_parameter_value_action(struct ast_option_parameter_value *self) 
 // 
 void ast_star_parameter_value_describe(struct ast_star_parameter_value *self) {
     describe_begin();
-        tab_depth();
-        printf("%s \n", ast_str(self->type));
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
 
     describe_end();
 }

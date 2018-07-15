@@ -39,7 +39,8 @@ int yyerror(char const *str);
 
 %token	VBAR LP RP COMMA
 %token	LIST OPTION STAR
-%token	SKIP CSTRING NULL_
+%token	CSTRING NULL_
+%token	SKIP TERMINAL
 
 %type <token_str> MCC_STRING
 %type <token_str> MCC_SYMBOL MCC_METHOD
@@ -113,6 +114,10 @@ symbol_key
 	;
 key_attributes
 	: SKIP
+	{
+		$$ = NULL;
+	}
+	| TERMINAL
 	{
 		$$ = NULL;
 	}
@@ -230,7 +235,7 @@ list_parameter
 			(struct ast_list_parameter *)malloc(sizeof(struct ast_list_parameter));
 		ret->type = AST_LIST_PARAMETER;
 		ret->ast_list_parameter_value = $1;
-		ret->ast_list_parameter_delim = $3;
+		ret->list_parameter_delim = strdup($3);
 		$$ = ret;
 	}
 	;
