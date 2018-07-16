@@ -1,3 +1,17 @@
+MetaCC - Meta Compiler Compiler v0.0.3.4
+----
+
+- 액션에 대한 초안 작성 완료.
+
+
+- 심볼 이름으로만 출력되던 것을 실제 심볼의 값을 출력하게끔 변경.
+
+
+- 자동으로 템플릿을 만들어주게끔 변경해야 함.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.0.3.3
 ----
 
