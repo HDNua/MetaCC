@@ -1,3 +1,15 @@
+MetaCC - Meta Compiler Compiler v0.0.4.0
+----
+
+- 이제 자동으로 템플릿을 생성할 수 있습니다.
+
+
+- 섹션 7에 대한 문법 작성 완료.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.0.3.4
 ----
 

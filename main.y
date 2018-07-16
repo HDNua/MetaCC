@@ -322,13 +322,49 @@ int main(void) {
 	extern int yyparse(void);
 	extern FILE *yyin;
 
+	const char *parser_name = "SVParser";
+	const char *start_symbol = "expression";
+
 	yyin = stdin;
 	if (yyparse()) {
 		fprintf(stderr, "ERROR \n");
 	}
 
 	// 
-	printf("done. \n\n");
+	// printf("done. \n\n");
+
+	// templates
+	printf("options {\n");
+	printf("    STATIC = false;\n");
+	printf("}\n");
+	printf("\n");
+	printf("PARSER_BEGIN(%s)\n", parser_name);
+	printf("import java.io.*;\n");
+	printf("\n");
+	printf("class %s {\n", parser_name);
+	printf("    public static void main(String[] args) {\n");
+	printf("        try {\n");
+	printf("        \n");
+	printf("        \n");
+	printf("        }\n");
+	printf("        catch (ParseException ex) {\n");
+	printf("            System.err.println(ex.getMessage());\n");
+	printf("        }\n");
+	printf("    }\n");
+	printf("    public static String check(String s) throws ParseException {\n");
+	printf("        Reader reader = new Reader(s);\n");
+	printf("        return new SVParser(reader).%s();\n", start_symbol);
+	printf("    }\n");
+	printf("}\n");
+	printf("\n");
+	printf("PARSER_END(%s)\n", parser_name);
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("SKIP: { <[\" \", \"\\t\", \"\\r\", \"\\n\"]> }\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
 	
 	// 
 	// ast_list_iterate(symbol_definition_list);

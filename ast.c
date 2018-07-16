@@ -352,7 +352,7 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
             }
             else if (strcmp(ast_key_attr->attributes, "TERMINAL") == 0) {
                 // 
-                return;
+                // return;
             }
             else {
                 exit(1);

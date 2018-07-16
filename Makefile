@@ -32,6 +32,8 @@ cc_dbg:
 
 test:
 	./$(EXE) < symbols.list > SVObject.jj
+	mv SVObject.jj out
+	javacc out/SVObject.jj
 
 clean:
 	rmtmp

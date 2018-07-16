@@ -116,7 +116,7 @@ char *mcc_string_ptr;
 
 
 
-[a-z][a-z_0-9]* {
+[a-z$][a-z_0-9]* {
 	strcpy(yylval.token_str, yytext);
 	return MCC_SYMBOL;
 }
