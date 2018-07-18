@@ -3,17 +3,17 @@
 # NEW SECTION
 # 1. Source text
 #--------------------------------------------------------------------------------
-# 1.1) Library source text                        
-# 1.2) SystemVerilog source text                  
-# 1.3) Module parameters and ports                
-# 1.4) Module items                               working
-# 1.5) Configuration source text                  working
-# 1.6) Interface items                            working
-# 1.7) Program items                              working
-# 1.8) Checker items                              working
-# 1.9) Class items                                working
-# 1.10) Constraints                               working
-# 1.11) Package items                             working
+# 1.1) Library source text
+# 1.2) SystemVerilog source text
+# 1.3) Module parameters and ports
+# 1.4) Module items
+# 1.5) Configuration source text
+# 1.6) Interface items
+# 1.7) Program items
+# 1.8) Checker items
+# 1.9) Class items
+# 1.10) Constraints
+# 1.11) Package items
 #================================================================================
 # 1.1) Library source text
 library_text
@@ -234,24 +234,24 @@ ansi_port_declaration
 # NEW SECTION
 # 2. Declarations
 #--------------------------------------------------------------------------------
-# 2.1) Declaration types                          working
-# 2.1.1) Module parameter declarations            working
-# 2.1.2) Port declarations                        working
-# 2.1.3) Type declarations                        working
-# 2.2) Declaration data types                     working
-# 2.2.1) Net and variable types                   working
-# 2.2.2) Strengths                                
-# 2.2.3) Delays                                   
-# 2.3) Declaration lists                          
-# 2.4) Declaration assignments                    
-# 2.5) Declaration ranges                         
-# 2.6) Function declarations                      working
-# 2.7) Task declarations                          working
-# 2.8) Block item declarations                    working
-# 2.9) Interface declarations                     working
-# 2.10) Assertion declarations                    working
-# 2.11) Covergroup declarations                   working
-# 2.12) -----------------                         working
+# 2.1) Declaration types
+# 2.1.1) Module parameter declarations
+# 2.1.2) Port declarations
+# 2.1.3) Type declarations
+# 2.2) Declaration data types
+# 2.2.1) Net and variable types
+# 2.2.2) Strengths
+# 2.2.3) Delays
+# 2.3) Declaration lists
+# 2.4) Declaration assignments
+# 2.5) Declaration ranges
+# 2.6) Function declarations
+# 2.7) Task declarations
+# 2.8) Block item declarations
+# 2.9) Interface declarations
+# 2.10) Assertion declarations
+# 2.11) Covergroup declarations
+# 2.12) -----------------
 #================================================================================
 # 2.1) Declaration types
 # 2.1.1) Module parameter declarations

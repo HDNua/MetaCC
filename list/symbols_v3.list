@@ -1,825 +1,88 @@
 # vim: expandtab ts=4 sw=4
 #================================================================================
 # NEW SECTION
-# 1. Source text
+# 1. 
 #--------------------------------------------------------------------------------
-# 1.1) Library source text                        
-# 1.2) SystemVerilog source text                  
-# 1.3) Module parameters and ports                
-# 1.4) Module items                               working
-# 1.5) Configuration source text                  working
-# 1.6) Interface items                            working
-# 1.7) Program items                              working
-# 1.8) Checker items                              working
-# 1.9) Class items                                working
-# 1.10) Constraints                               working
-# 1.11) Package items                             working
+# 1.1) 
+# 1.2) 
+# 1.3) 
+# 1.4) 
+# 1.5) 
+# 1.6) 
+# 1.7) 
+# 1.8) 
 #================================================================================
-# 1.1) Library source text
-library_text
-    : STAR( library_description )
-    ;
-library_description
-    : library_declaration
-    | include_statement
-    | config_declaration
-    | ";"
-    ;
-library_declaration
-    : "library" library_identifier LIST( file_path_spec, "," )
-        OPTION( "-incdir" LIST( file_path_spec, "," ) )
-    ;
-include_statement
-    : "include" file_path_spec ";"
-    ;
-
-# 1.2) SystemVerilog source text
-source_text
-    : OPTION( timeunits_declaration ) STAR( description )
-    ;
-description
-    : module_declaration
-    | udp_declaration
-    | interface_declaration
-    | program_declaration
-    | package_declaration
-    | STAR( attribute_instance ) package_item
-    | STAR( attribute_instance ) bind_directive
-    | config_declaration
-    ;
-module_nonansi_header
-    : STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) list_of_ports ";"
-    ;
-module_ansi_header
-    : STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) OPTION( list_of_port_declarations ) ";"
-    ;
-module_declaration
-    : module_nonansi_header OPTION( timeunits_declaration ) STAR( module_item )
-        "endmodule" OPTION( ":" module_identifier )
-    | module_ansi_header OPTION( timeunits_declaration ) STAR( non_port_module_item )
-        "endmodule" OPTION( ":" module_identifier )
-    | STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifeir "(" ".*" ")" ";"
-        OPTION( timeunits_declaration ) STAR( module_item ) 
-        "endmodule" OPTION( ":" module_identifier )
-    | "extern" module_nonansi_header
-    | "extern" module_ansi_header
-    ;
-module_keyword
-    : "module" | "macromodule"
-    ;
-interface_declaration
-    : interface_nonansi_header OPTION( timeunits_declaration ) STAR( interface_item )
-        "endinterface" OPTION( ":" interface_identifier )
-    | interface_ansi_header OPTION( timeunits_declaration ) STAR( non_port_interface_item )
-        "endinterface" OPTION( ":" interface_identifier )
-    | STAR( attribute_instance ) "interface" interface_identifier "(" ".*" ")" ";"
-        OPTION( timeunits_declaration ) STAR( interface_item )
-        "endinterface" OPTION( ":" interface_identifier )
-    | "extern" interface_nonansi_header
-    | "extern" interface_ansi_header
-    ;
-interface_nonansi_header
-    : STAR( attribute_instance ) "interface" OPTION( lifetime ) interface_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) list_of_ports ";"
-    ;
-interface_ansi_header
-    : STAR( attribute_instance ) "interface" OPTION( lifetime ) interface_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) OPTION( list_of_port_declarations ) ";"
-    ;
-program_declaration
-    : program_nonansi_header OPTION( timeunits_declaration ) STAR( program_item )
-        "endprogram" OPTION( ":" program_identifier )
-    | program_ansi_header OPTION( timeunits_declaration ) STAR( non_port_program_item )
-        "endprogram" OPTION( ":" program_identifier )
-    | STAR( attribute_instance ) "program" program_identifier "(" ".*" ")" ";"
-        OPTION( timeunits_declaration ) STAR( program_item )
-        "endprogram" OPTION( ":" program_identifier )
-    | "extern" program_nonansi_header
-    | "extern" program_ansi_header
-    ;
-program_nonansi_header
-    : STAR( attribute_instance ) "program" OPTION( lifetime ) program_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) list_of_ports ";"
-    ;
-program_ansi_header
-    : STAR( attribute_instance ) "program" OPTION( lifetime ) program_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) OPTION( list_of_port_declarations ) ";"
-    ;
-checker_declaration
-    : "checker" checker_identifier OPTION( "(" OPTION( checker_port_list ) ")" ) ";"
-        STAR( STAR( attribute_instance ) checker_or_generate_item )
-        "endchecker" OPTION( ":" checker_identifier )
-    ;
-class_declaration
-    : OPTION( "virtual" ) "class" OPTION( lifetime ) class_identifier OPTION( parameter_port_list )
-        OPTION( "extends" class_type OPTION( "(" list_of_arguments ")" ) )
-        OPTION( "implements" LIST( interface_class_type, "," ) ) ";"
-        STAR( class_item )
-        "endclass" OPTION( ":" class_identifier )
-    ;
-interface_class_type
-    : ps_class_identifier OPTION( parameter_value_assignment )
-    ;
-interface_class_declaration
-    : "interface" "class" class_identifier OPTION( parameter_port_list )
-        OPTION( "extends" LIST( interface_class_type, "," ) ) ";"
-        STAR( interface_class_item )
-        "endclass" OPTION( ":" class_identifier )
-    ;
-interface_class_item
-    : type_declaration
-    | STAR( attribute_instance ) interface_class_method
-    | local_parameter_declaration ";"
-    | parameter_declaration ";"
-    | ";"
-    ;
-interface_class_method
-    : "pure" "virtual" method_prototype ";"
-    ;
-package_declaration
-    : STAR( attribute_instance ) "package" OPTION( lifetime ) package_identifier ";"
-        OPTION( timeunits_declaration ) STAR( STAR( attribute_instance ) package_item )
-        "endpackage" OPTION( ":" package_identifier )
-    ;
-timeunits_declaration
-    : "timeunit" time_literal OPTION( "/" time_literal ) ";"
-    | "timeprecision" time_literal ";"
-    | "timeunit" time_literal ";" "timeprecision" time_literal ";"
-    | "timeprecision" time_literal ";" "timeunit" time_literal ";"
-    ;
-
-# 1.3) Module parameters and ports
-parameter_port_list
-    : "#" "(" list_of_param_assignments STAR( "," parameter_port_declaration ) ")"
-    | "#" "(" LIST( parameter_port_declaration, "," ) ")"
-    | "#" "(" ")"
-    ;
-parameter_port_declaration
-    : parameter_declaration
-    | local_parameter_declaration
-    | data_type list_of_param_assignments
-    | "type" list_of_type_assignments
-    ;
-list_of_ports
-    : "(" LIST( port, "," ) ")"
-    ;
-list_of_port_declarations
-    : "(" OPTION( LIST( STAR( attribute_instance ) ansi_port_declaration, "," ) ) ")"
-    ;
-port_declaration
-    : STAR( attribute_instance ) inout_declaration
-    | STAR( attribute_instance ) input_declaration
-    | STAR( attribute_instance ) output_declaration
-    | STAR( attribute_instance ) ref_declaration
-    | STAR( attribute_instance ) interface_port_declaration
-    ;
-port
-    : OPTION( port_expression )
-    | "." port_identifier "(" OPTION( port_expression ) ")"
-    ;
-port_expression
-    : port_reference
-    | "{" LIST( port_reference, "," ) "}"
-    ;
-port_reference
-    : port_identifier constant_select
-    ;
-port_direction
-    : "input" | "output" | "inout" | "ref"
-    ;
-net_port_header
-    : OPTION( port_direction ) net_port_type
-    ;
-variable_port_header
-    : OPTION( port_direction ) variable_port_type
-    ;
-interface_port_header
-    : interface_identifier OPTION( "." modport_identifier )
-    | "interface" OPTION( "." modport_identifier )
-    ;
-ansi_port_declaration
-    : OPTION( net_port_header | interface_port_header ) port_identifier STAR( unpacked_dimension )
-        OPTION( "=" constant_expression )
-    | OPTION( variable_port_header ) port_identifier STAR( variable_dimension ) OPTION( "=" constant_expression )
-    | OPTION( port_direction ) "." port_identifier "(" OPTION( expression ) ")"
-    ;
-
-# 1.4) Module items
-
-
-# 1.5) Configuration source text
-
-
-# 1.6) Interface items
-
-
-# 1.7) Program items
-
-
-# 1.8) Checker items
-
-
-# 1.9) Class items
-
-
-# 1.10) Constraints
-
-
-# 1.11) Package items
-
-
-#================================================================================
-# NEW SECTION
-# 2. Declarations
-#--------------------------------------------------------------------------------
-# 2.1) Declaration types                          working
-# 2.1.1) Module parameter declarations            working
-# 2.1.2) Port declarations                        working
-# 2.1.3) Type declarations                        working
-# 2.2) Declaration data types                     working
-# 2.2.1) Net and variable types                   working
-# 2.2.2) Strengths                                
-# 2.2.3) Delays                                   
-# 2.3) Declaration lists                          
-# 2.4) Declaration assignments                    
-# 2.5) Declaration ranges                         
-# 2.6) Function declarations                      working
-# 2.7) Task declarations                          working
-# 2.8) Block item declarations                    working
-# 2.9) Interface declarations                     working
-# 2.10) Assertion declarations                    working
-# 2.11) Covergroup declarations                   working
-# 2.12) -----------------                         working
-#================================================================================
-# 2.1) Declaration types
-# 2.1.1) Module parameter declarations
-
-
-# 2.1.2) Port declarations
-
-
-# 2.1.3) Type declarations
-
-
-# 2.2) Declaration data types
-# 2.2.1) Net and variable types
-casting_type
-    : simple_type
-    | constant_primary
-    | signing
-    | "string"
-    | "const"
-    ;
-data_type # WORKING
-    : "string"
-    ;
-# data_type_or_implicit
-# implicit_data_type
-# enum_base_type
-# enum_name_declaration
-class_scope
-    : class_type "::"
-    ;
-class_type
-    : ps_class_identifier OPTION( parameter_value_assignment )
-        STAR( "::" class_identifier OPTION( parameter_value_assignment ) )
-    ;
-integer_type
-    : integer_vector_type
-    | integer_atom_type
-    ;
-integer_atom_type
-    : "byte" | "shortint" | "int" | "longint" | "integer" | "time"
-    ;
-integer_vector_type
-    : "bit" | "logic" | "reg"
-    ;
-non_integer_type
-    : "shortreal" | "real" | "realtime"
-    ;
-# net_type
-# net_port_type
-# variable_port_type
-# var_data_type
-signing
-    : "signed" | "unsigned"
-    ;
-simple_type
-    : integer_type
-    | non_integer_type
-    | ps_type_identifier
-    | ps_parameter_identifier
-    ;
-# struct_union_member
-data_type_or_void
-    : data_type
-    | "void"
-    ;
-struct_union
-    : "struct"
-    | "union" OPTION( "tagged" )
-    ;
-type_reference
-    : "type" "(" expression ")"
-    | "type" "(" data_type ")"
-    ;
-
-# 2.2.2) Strengths
-drive_strength
-    : "(" strength0 "," strength1 ")"                  # "(" strength0 , strength1 ")"
-    | "(" strength1 "," strength0 ")"
-    | "(" strength0 "," "highz1" ")"
-    | "(" strength1 "," "highz0" ")"
-    | "(" "highz0" "," strength1 ")"
-    | "(" "highz1" "," strength0 ")"
-    ;
-strength0
-    : "supply0" | "strong0" | "pull0" | "weak0"
-    ;
-strength1
-    : "supply1" | "strong1" | "pull1" | "weak1"
-    ;
-charge_strength
-    : "(" "small" ")" | "(" "medium" ")" | "(" "large" ")"
-    ;
-
-# 2.2.3) Delays
-delay3
-    : "#" delay_value
-    | "#" "(" mintypmax_expression OPTION( "," mintypmax_expression OPTION( "," mintypmax_expression ) ) ")"
-    ;
-delay2
-    : "#" delay_value
-    | "#" "(" mintypmax_expression OPTION( "," mintypmax_expression ) ")"
-    ;
-delay_value
-    : unsigned_number
-    | real_number
-    | ps_identifier
-    | time_literal
-    | "1step"
-    ;
-
-# 2.3) Declaration lists
-list_of_defparam_assignments
-    : LIST( defparam_assignment , "," )
-    ;
-list_of_genvar_identifiers
-    : LIST( genvar_identifier , "," )
-    ;
-list_of_interface_identifiers
-    : LIST( interface_identifier STAR( unpacked_dimension ) , "," )
-    ;
-list_of_net_decl_assignments
-    : LIST( net_decl_assignment , "," )
-    ;
-list_of_param_assignments
-    : LIST( param_assignment , "," )
-    ;
-list_of_port_identifiers
-    : LIST( port_identifier STAR( unpacked_dimension ) , "," )
-    ;
-list_of_udp_port_identifiers
-    : LIST( port_identifier , "," )
-    ;
-list_of_specparam_assignments
-    : LIST( specparam_assignment , "," )
-    ;
-list_of_tf_variable_identifiers
-    : LIST( port_identifier STAR( variable_dimension ) OPTION( "=" expression ) , "," )
-    ;
-list_of_type_assignments
-    : LIST( type_assignment , "," )
-    ;
-list_of_variable_decl_assignments
-    : LIST( variable_decl_assignment , "," )
-    ;
-list_of_variable_identifiers
-    : LIST( variable_identifier STAR( variable_dimension ) , "," )
-    ;
-list_of_variable_port_identifiers
-    : LIST( port_identifier STAR( variable_dimension ) OPTION( "=" constant_expression ) , "," )
-    ;
-
-# 2.4) Declaration assignments
-defparam_assignment
-    : hierarchical_parameter_identifier "=" constant_mintypmax_expression
-    ;
-net_decl_assignment
-    : net_identifier STAR( unpacked_dimension ) OPTION( "=" expression )
-    ;
-param_assignment
-    : parameter_identifier STAR( unpacked_dimension ) OPTION( "=" expression )
-    ;
-specparam_assignment
-    : specparam_identifier "=" constant_mintypmax_expression
-    | pulse_control_specparam
-    ;
-type_assignment
-    : type_identifier OPTION( "=" data_type )
-    ;
-pulse_control_specparam
-    : "PATHPULSE$" "=" "(" reject_limit_value OPTION( "," error_limit_value ) ")"
-    | "PATHPULSE$"specify_input_terminal_descriptor"$"specify_output_terminal_descriptor
-        "=" "(" reject_limit_value OPTION( "," error_limit_value ) ")"
-    ;
-error_limit_value
-    : limit_value
-    ;
-reject_limit_value
-    : limit_value
-    ;
-limit_value
-    : constant_mintypmax_expression
-    ;
-variable_decl_assignment
-    : variable_identifier STAR( variable_dimension ) OPTION( "=" expression )
-    | dynamic_array_variable_identifier unsized_dimension STAR( variable_dimension ) OPTION( "=" dynamic_array_new )
-    | class_variable_identifier OPTION( "=" class_new )
-    ;
-class_new
-    : OPTION( class_scope ) "new" OPTION( "(" list_of_arguments ")" )
-    | "new" expression
-    ;
-dynamic_array_new
-    : "new" "[" expression "]" OPTION( "(" expression ")" )
-    ;
-
-# 2.5) Declaration ranges
-unpacked_dimension
-    : "[" constant_range "]"
-    | "[" constant_expression "]"
-    ;
-packed_dimension
-    : "[" constant_range "]"
-    | unsized_dimension
-    ;
-associative_dimension
-    : "[" data_type "]"
-    | "[" "*" "]"
-    ;
-variable_dimension
-    : unsized_dimension
-    | unpacked_dimension
-    | associative_dimension
-    | queue_dimension
-    ;
-queue_dimension
-    : "[" "$" OPTION( ":" constant_expression ) "]"
-    ;
-unsized_dimension
-    : "[" "]"
-    ;
-
-# 2.6) Function declarations
-
-# 2.7) Task declarations
-
-# 2.8) Block item declarations
-
-# 2.9) Interface declarations
-
-# 2.10) Assertion declarations
-
-# 2.11) Covergroup declarations
-
-# 2.12) -----------------
+#
 
 
 
 #================================================================================
 # NEW SECTION
-# 3. Primitive instances
+# 2. 
 #--------------------------------------------------------------------------------
-# 3.1) Primitive instantiation and instances
-# 3.2) Primitive strengths
-# 3.3) Primitive terminals
-# 3.4) Primitive gate and switch types
+# 2.1) 
+# 2.2) 
+# 2.3) 
+# 2.4) 
+# 2.5) 
+# 2.6) 
+# 2.7) 
+# 2.8) 
 #================================================================================
-# 3.1) Primitive instantiation and instances
-gate_instantiation
-    : cmos_switchtype OPTION( delay3 ) LIST( cmos_switch_instance, "," ) ";"
-    | enable_gatetype OPTION( drive_strength ) OPTION( delay3 ) LIST( enable_gate_instance, "," ) ";"
-    | mos_switchtype OPTION( delay3 ) LIST( mos_switch_instance, "," ) ";"
-    | n_input_gatetype OPTION( drive_strength ) OPTION( delay2 ) LIST( n_input_gate_instance, "," ) ";"
-    | n_output_gatetype OPTION( drive_strength ) OPTION( delay2 ) LIST( n_output_gate_instance, "," ) ";"
-    | pass_en_switchtype OPTION( delay2 ) LIST( pass_enable_switch_instance, "," ) ";"
-    | pass_switchtype LIST( pass_switch_instance, "," ) ";"
-    | "pulldown" OPTION( pulldown_strength ) LIST( pull_gate_instance, "," ) ";"
-    | "pullup" OPTION( pullup_strength ) LIST( pull_gate_instance, "," ) ";"
-    ;
-cmos_switch_instance
-    : OPTION( name_of_instance ) "(" output_terminal "," input_terminal "," ncontrol_terminal "," pcontrol_terminal ")"
-    ;
-enable_gate_instance
-    : OPTION( name_of_instance ) "(" output_terminal "," input_terminal "," enable_terminal ")"
-    ;
-mos_switch_instance
-    : OPTION( name_of_instance ) "(" output_terminal "," input_terminal "," enable_terminal ")"
-    ;
-n_input_gate_instance
-    : OPTION( name_of_instance ) "(" output_terminal "," LIST( input_terminal, "," ) ")" 
-    ;
-n_output_gate_instance
-    : OPTION( name_of_instance ) "(" LIST( output_terminal, "," ) ")"
-    ;
-pass_switch_instance
-    : OPTION( name_of_instance ) "(" inout_terminal "," inout_terminal ")"
-    ;
-pass_enable_switch_instance
-    : OPTION( name_of_instance ) "(" inout_terminal "," inout_terminal "," enable_terminal ")" 
-    ;
-pull_gate_instance
-    : OPTION( name_of_instance ) "(" output_terminal ")"
-    ;
+#
 
-# 3.2) Primitive strengths
-pulldown_strength
-    : "(" strength0 "," strength1 ")"
-    | "(" strength1 "," strength0 ")"
-    | "(" strength0 ")"
-    ;
-pullup_strength
-    : "(" strength0 "," strength1 ")"
-    | "(" strength1 "," strength0 ")"
-    | "(" strength1 ")"
-    ;
 
-# 3.3) Primitive terminals
-enable_terminal
-    : expression
-    ;
-inout_terminal
-    : net_lvalue
-    ;
-input_terminal
-    : expression
-    ;
-ncontrol_terminal
-    : expression
-    ;
-output_terminal
-    : net_lvalue
-    ;
-pcontrol_terminal
-    : expression
-    ;
-
-# 3.4) Primitive gate and switch types
-cmos_switchtype
-    : "cmos" | "rcmos"
-    ;
-enable_gatetype
-    : "bufif0" | "bufif1" | "notif0" | "notif1"
-    ;
-mos_switchtype
-    : "nmos" | "pmos" | "rnmos" | "rpmos"
-    ;
-n_input_gatetype
-    : "and" | "nand" | "or" | "nor" | "xor" | "xnor"
-    ;
-n_output_gatetype
-    : "buf" | "not"
-    ;
-pass_en_switchtype
-    : "tranif0" | "tranif1" | "rtranif0" | "rtranif1"
-    ;
-pass_switchtype
-    : "tran" | "rtran"
-    ;
 
 #================================================================================
 # NEW SECTION
-# 4. Instantiations
+# 3. 
 #--------------------------------------------------------------------------------
-# 4.1) Instantiation
-# 4.1.1) Module instantiation
-# 4.1.2) Interface instantiation
-# 4.1.3) Program instantiation
-# 4.1.4) Checker instantiation
-# 4.2) Generated instantiation
+# 3.1) 
+# 3.2) 
+# 3.3) 
+# 3.4) 
+# 3.5) 
+# 3.6) 
+# 3.7) 
+# 3.8) 
 #================================================================================
-# 4.1) Instantiation
-# 4.1.1) Module instantiation
-module_instantiation
-    : module_identifier OPTION( parameter_value_assignment ) LIST( hierarchical_instance, "," ) ";"
-    ;
-parameter_value_assignment
-    : "#" "(" OPTION( list_of_parameter_assignments ) ")"
-    ;
-list_of_parameter_assignments
-    : LIST( ordered_parameter_assignments, "," )
-    | LIST( named_parameter_assignments, "," )
-    ;
-ordered_parameter_assignments
-    : param_expression
-    ;
-named_parameter_assignments
-    : "." parameter_identifier "(" OPTION( param_expression ) ")"
-    ;
-hierarchical_instance
-    : name_of_instance "(" OPTION( list_of_port_connection ) ")"
-    ;
-name_of_instance
-    : instance_identifier STAR( unpacked_dimension )
-    ;
-list_of_port_connections
-    : LIST( ordered_port_connection, "," )
-    | LIST( named_port_connection, "," )
-    ;
-ordered_port_connection
-    : STAR( attribute_instance ) OPTION( expression )
-    ;
-named_port_connection
-    : STAR( attribute_instance ) "." port_identifier OPTION( "(" OPTION( expression ) ")" )
-    | STAR( attribute_instance ) "." "*"
-    ;
+# 
 
-# 4.1.2) Interface instantiation
-interface_instantiation
-    : interface_identifier OPTION( parameter_value_assignment ) LIST( hierarchical_instance, "," ) ";"
-    ;
 
-# 4.1.3) Program instantiation
-program_instantiation
-    : program_identifier OPTION( parameter_value_assignment ) LIST( hierarchical_instance, "," ) ";"
-    ;
-
-# 4.1.4) Checker instantiation
-checker_instance
-    : ps_checker_identifier name_of_instance "(" OPTION( list_of_checker_port_connections ) ")" ";"
-    ;
-list_of_checker_port_connections
-    : LIST( ordered_checker_port_connection, "," )
-    | LIST( named_checker_port_connection, "," )
-    ;
-ordered_checker_port_connection
-    : STAR( attribute_instance ) OPTION( property_actual_arg )
-    ;
-named_checker_port_connection
-    : STAR( attribute_instance ) "." formal_port_identifier OPTION( "(" OPTION( property_actual_tag ) ")" )
-    | STAR( attribute_instance ) "." "*"
-    ;
-
-# 4.2) Generated instantiation
-generate_region
-    : "generate" STAR( generate_item ) "endgenerate"
-    ;
-loop_generate_construct
-    : "for" "(" genvar_initialization ";" genvar_expression ";" genvar_iteration ")"
-        generate_block
-    ;
-genvar_initialization
-    : OPTION( "genvar" ) genvar_identifier "=" constant_expression
-    ;
-genvar_iteration
-    : genvar_identifier assignment_operator genvar_expression
-    | inc_or_dec_operator genvar_identifier
-    | genvar_identifier inc_or_dec_operator
-    ;
-conditional_generate_construct
-    : if_generate_construct
-    | case_generate_construct
-    ;
-if_generate_construct
-    : "if" "(" constant_expression ")" generate_block OPTION( "else" generate_block )
-    ;
-case_generate_construct
-    : "case" "(" constant_expression ")" case_generate_item "{" case_generate_item "}" "endcase"
-    ;
-case_generate_item
-    : LIST( constant_expression, "," ) ":" generate_block
-    | "default" OPTION( ":" ) generate_block
-    ;
-generate_block
-    : generate_item
-    | OPTION( generate_block_identifier ":" ) "begin" OPTION( ":" generate_block_identifier )
-        STAR( generate_item )
-        "end" OPTION( ":" generate_block_identifier )
-    ;
-generate_item
-    : module_or_generate_item
-    | interface_or_generate_item
-    | checker_or_generate_item
-    ;
 
 #================================================================================
 # NEW SECTION
-# 5. UDP declaration and instantiation
+# 4. 
 #--------------------------------------------------------------------------------
-# 5.1) UDP declaration
-# 5.2) UDP ports
-# 5.3) UDP body
-# 5.4) UDP instantiation
+# 4.1) 
+# 4.2) 
+# 4.3) 
+# 4.4) 
+# 4.5) 
+# 4.6) 
+# 4.7) 
+# 4.8) 
 #================================================================================
-# 5.1) UDP declaration
-udp_nonansi_declaration
-    : STAR( attribute_instance ) "primitive" udp_identifier "(" udp_port_list ")" ";"
-    ;
-udp_ansi_declaration
-    : STAR( attribute_instance ) "primitive" udp_identifier "(" udp_declaration_port_list ")" ";"
-    ;
-udp_declaration
-    : udp_nonansi_declaration LIST( udp_port_declaration, "" )
-        udp_body
-        "endprimitive" OPTION( ":" udp_identifier )
-    | udp_ansi_declaration
-        udp_body
-        "endprimitive" OPTION( ":" udp_identifier )
-    | "extern" udp_nonansi_declaration
-    | "extern" udp_ansi_declaration
-    | STAR( attribute_instance ) "primitive" udp_identifier "(" ".*" ")" ";"
-        STAR( udp_port_declaration )
-        udp_body
-        "endprimitive" OPTION( ":" udp_identifier )
-    ;
+#
 
-# 5.2) UDP ports
-udp_port_list
-    : output_port_identifier "," LIST( input_port_identifier, "," )
-    ;
-udp_declaration_port_list
-    : udp_output_declaration "," LIST( udp_input_declaration, "," )
-    ;
-udp_port_declaration
-    : udp_output_declaration ";"
-    | udp_input_declaration ";"
-    | udp_reg_declaration ";"
-    ;
-udp_output_declaration
-    : STAR( attribute_instance ) "output" port_identifier
-    | STAR( attribute_instance ) "output" "reg" port_identifier OPTION( "=" constant_expression )
-    ;
-udp_input_declaration
-    : STAR( attribute_instance ) "input" list_of_udp_port_identifiers
-    ;
-udp_reg_declaration
-    : STAR( attribute_instance ) "reg" variable_identifier
-    ;
 
-# 5.3) UDP body
-udp_body
-    : combinational_body
-    | sequential_body
-    ;
-combinational_body
-    : "table" LIST( combinational_entry, "" ) "endtable"
-    ;
-combinational_entry
-    : level_input_list ":" output_symbol ";"
-    ;
-sequential_body
-    : OPTION( udp_initial_statement ) "table" LIST( sequential_entry, "" ) "endtable"
-    ;
-udp_initial_statement
-    : "initial" output_port_identifier "=" init_val ";"
-    ;
-init_val
-    : "1'b0" | "1'b1" | "1'bx" | "1'bX" | "1'B0" | "1'B1" | "1'Bx" | "1'BX" | "1" | "0"
-    ;
-sequential_entry
-    : seq_input_list ":" current_state ":" next_state ";"
-    ;
-seq_input_list
-    : level_input_list 
-    | edge_input_list
-    ;
-level_input_list
-    : LIST( level_symbol, "" )
-    ;
-edge_input_list
-    : STAR( level_symbol ) edge_indicator STAR( level_symbol )
-    ;
-edge_indicator
-    : "(" level_symbol level_symbol ")" 
-    | edge_symbol
-    ;
-current_state
-    : level_symbol
-    ;
-next_state
-    : output_symbol
-    | "-"
-    ;
-output_symbol
-    : "0" | "1" | "x" | "X"
-    ;
-level_symbol
-    : "0" | "1" | "x" | "X" | "?" | "b" | "B"
-    ;
-edge_symbol
-    : "r" | "R" | "f" | "F" | "p" | "P" | "n" | "N" | "*"
-    ;
 
-# 5.4) UDP instantiation
-udp_instantiation
-    : udp_identifier OPTION( drive_strength ) OPTION( delay2 ) LIST( udp_instance, "," ) ";"
-    ;
-udp_instance
-    : OPTION( name_of_instance ) "(" output_terminal "," LIST( input_terminal, "," ) ")"
-    ;
+#================================================================================
+# NEW SECTION
+# 5. 
+#--------------------------------------------------------------------------------
+# 5.1) 
+# 5.2) 
+# 5.3) 
+# 5.4) 
+# 5.5) 
+# 5.6) 
+# 5.7) 
+# 5.8) 
+#================================================================================
+#
+
+
 
 #================================================================================
 # NEW SECTION
@@ -834,10 +97,6 @@ udp_instance
 # 6.7) Case statements
 # 6.7.1) Patterns
 # 6.8) Looping statements
-# 6.9) Subroutine call statements
-# 6.10) Assertion statements
-# 6.11) Clocking block
-# 6.12) Randsequence
 #================================================================================
 # 6.1) Continuous assignment and net alias statements
 continuous_assign
@@ -964,53 +223,6 @@ variable_identifier_list
 procedural_timing_control_statement
     : procedural_timing_control statement_or_null
     ;
-delay_or_event_control
-    : delay_control
-    | event_control
-    | "repeat" "(" expression ")" event_control
-    ;
-delay_control
-    : "#" delay_value
-    | "#" "(" mintypmax_expression ")"
-    ;
-event_control
-    : "@" hierarchical_event_identifier
-    | "@" "(" event_expression ")"
-    | "@" "*"                                       # "@*"
-    | "@" "(" "*" ")"                               # "@" "(*)"
-    | "@" ps_or_hierarchical_sequence_identifier
-    ;
-event_expression
-    : OPTION( edge_identifier ) expression OPTION( "iff" expression )
-    | sequence_instance OPTION( "iff" expression )
-    | event_expression "or" event_expression
-    | event_expression "," event_expression
-    | "(" event_expression ")"
-    ;
-procedural_timing_control
-    : delay_control
-    | event_control
-    | cycle_delay
-    ;
-jump_statement
-    : "return" OPTION( expression ) ";"
-    | "break" ";"
-    | "continue" ";"
-    ;
-wait_statement
-    : "wait" "(" expression ")" statement_or_null
-    | "wait" "fork" ";"
-    | "wait_order" "(" LIST( hierarchical_identifier, "," ) ")" action_block
-    ;
-event_trigger
-    : "->" hierarchical_event_identifier ";"
-    | "->>" OPTION( delay_or_event_control ) hierarchical_event_identifier ";"
-    ;
-disable_statement
-    : "disable" hierarchical_task_identifier ";"
-    | "disable" hierarchical_block_identifier ";"
-    | "disable" "fork" ";"
-    ;
 
 # 6.6) Conditional statements
 conditional_statement
@@ -1125,188 +337,8 @@ assignment_pattern_variable_lvalue
     ;
 
 # 6.8) Looping statements
-loop_statement
-    : "forever" statement_or_null
-    | "repeat" "(" expression ")" statement_or_null
-    | "while" "(" expression ")" statement_or_null
-    | "for" "(" OPTION( for_initialization ) ";" OPTION( expression ) ";" OPTION( for_step ) ")"
-        statement_or_null
-    | "do" statement_or_null "while" "(" expression ")" ";"
-    | "foreach" "(" ps_or_hierarchical_array_identifier "[" loop_variables "]" ")" statement
-    ;
-for_initialization
-    : list_of_variable_assignments
-    | LIST( for_variable_declaration, "," )
-    ;
-for_variable_declaration
-    : OPTION( "var" ) LIST( data_type variable_identifier "=" expression, "," )
-    ;
-for_step
-    : LIST( for_step_assignment, "," )
-    ;
-for_step_assignment
-    : operator_assignment
-    | inc_or_dec_expression
-    | function_subroutine_call
-    ;
-loop_variables
-    : LIST( OPTION( index_variable_identifier ), "," )
-    ;
 
-# 6.9) Subroutine call statements
-subroutine_call_statement
-    : subroutine_call ";"
-    | "void" "'" "(" function_subroutine_call ")" ";"
-    ;
 
-# 6.10) Assertion statements
-assertion_item
-    : concurrent_assertion_item
-    | deferred_immediate_assertion_item
-    ;
-deferred_immediate_assertion_item
-    : OPTION( block_identifier ":" ) deferred_immediate_assertion_statement
-    ;
-procedural_assertion_statement
-    : concurrent_assertion_statement
-    | immediate_assertion_statement
-    | checker_instantiation
-    ;
-immediate_assertion_statement
-    : simple_immediate_assertion_statement
-    | deferred_immediate_assertion_statement
-    ;
-simple_immediate_assertion_statement
-    : simple_immediate_assert_statement
-    | simple_immediate_assume_statement
-    | simple_immediate_cover_statement
-    ;
-simple_immediate_assert_statement
-    : "assert" "(" expression ")" action_block
-    ;
-simple_immediate_assume_statement
-    : "assume" "(" expression ")" action_block
-    ;
-simple_immediate_cover_statement
-    : "cover" "(" expression ")" action_block
-    ;
-deferred_immediate_assertion_statement
-    : deferred_immediate_assert_statement
-    | deferred_immediate_assume_statement
-    | deferred_immediate_cover_statement
-    ;
-deferred_immediate_assert_statement
-    : "assert" "#0" "(" expression ")" action_block
-    | "assert" "final" "(" expression ")" action_block
-    ;
-deferred_immediate_assume_statement
-    : "assume" "#0" "(" expression ")" action_block
-    | "assume" "final" "(" expression ")" action_block
-    ;
-deferred_immediate_cover_statement
-    : "cover" "#0" "(" expression ")" statement_or_null
-    | "cover" "final" "(" expression ")" statement_or_null
-    ;
-
-# 6.11) Clocking block
-clocking_declaration
-    : OPTION( "default" ) "clocking" OPTION( clocking_identifier ) clocking_event ";"
-        STAR( clocking_item )
-        "endclocking" OPTION( ":" clocking_identifier )
-    | "global" "clocking" OPTION( clocking_identifier ) clocking_event ";" "endclocking" OPTION( ":" clocking_identifier )
-    ;
-clocking_event
-    : "@" identifier
-    | "@" "(" event_expression ")"
-    ;
-clocking_item
-    : "default" default_skew ";"
-    | clocking_direction list_of_clocking_decl_assign ";"
-    | STAR( attribute_instance ) assertion_item_declaration
-    ;
-default_skew
-    : "input" clocking_skew
-    | "output" clocking_skew
-    | "input" clocking_skew "output" clocking_skew
-    ;
-clocking_direction
-    : "input" OPTION( clocking_skew )
-    | "output" OPTION( clocking_skew )
-    | "input" OPTION( clocking_skew ) "output" OPTION( clocking_skew )
-    | "inout"
-    ;
-list_of_clocking_decl_assign
-    : LIST( clocking_decl_assign, "," )
-    ;
-clocking_decl_assign
-    : signal_identifier OPTION( "=" expression )
-    ;
-clocking_skew
-    : edge_identifier OPTION( delay_control )
-    | delay_control
-    ;
-clocking_drive
-    : clockvar_expression "<=" OPTION( cycle_delay ) expression
-    ;
-cycle_delay
-    : "##" integral_number
-    | "##" identifier
-    | "##" "(" expression ")"
-    ;
-clockvar
-    : hierarchical_identifier
-    ;
-clockvar_expression
-    : clockvar select
-    ;
-
-# 6.12) Randsequence
-randsequence_statement
-    : "randsequence" "(" OPTION( production_identifier ) ")"
-        LIST( production, "" )
-        "endsequence"
-    ;
-production
-    : OPTION( data_type_or_void ) production_identifier OPTION( "(" tf_port_list ")" ) ":" LIST( rs_rule, "|" ) ";"
-    ;
-rs_rule
-    : rs_production_list OPTION( ":=" weight_specification OPTION( rs_code_block ) )
-    ;
-rs_production_list
-    : LIST( rs_prod, "" )
-    | "rand" "join" OPTION( "(" expression ")" ) production_item LIST( production_item, "" )
-    ;
-weight_specification
-    : integral_number
-    | ps_identifier
-    | "(" expression ")"
-    ;
-rs_code_block
-    : "{" STAR( data_declaration ) STAR( statement_or_null ) "}"
-    ;
-rs_prod
-    : production_item
-    | rs_code_block
-    | rs_if_else
-    | rs_repeat
-    | rs_case
-    ;
-production_item
-    : production_identifier OPTION( "(" list_of_arguments ")" )
-    ;
-rs_if_else
-    : "if" "(" expression ")" production_item OPTION( "else" production_item )
-    ;
-rs_repeat
-    : "repeat" "(" expression ")" production_item
-    ;
-rs_case
-    : "case" "(" case_expression ")" LIST( rs_case_item, "" ) "endcase"
-    ;
-rs_case_item
-    : LIST( case_item_expression, "," ) ":" production_item ";"
-    | "default" OPTION( ":" ) production_item ";"
-    ;
 
 #================================================================================
 # NEW SECTION
@@ -1406,7 +438,7 @@ t_path_delay_expression
 trise_path_delay_expression
     : path_delay_expression
     ;
-tfall_path_delay_expression
+tfall_path_delay_expresison
     : path_delay_expression
     ;
 tz_path_delay_expression
@@ -1988,7 +1020,7 @@ cast
 net_lvalue
     : ps_or_hierarchical_net_identifier constant_select
     | "{" LIST( net_lvalue, "," ) "}"
-    | OPTION( assignment_pattern_expression_type ) assignment_pattern_net_lvalue
+    | OPTION( assignment_pattern_expression_type ) assignment_pattern_net_value
     ;
 variable_lvalue
     : OPTION( implicit_class_handle "." | package_scope ) 

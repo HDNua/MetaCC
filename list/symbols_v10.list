@@ -3,229 +3,37 @@
 # NEW SECTION
 # 1. Source text
 #--------------------------------------------------------------------------------
-# 1.1) Library source text                        
-# 1.2) SystemVerilog source text                  
-# 1.3) Module parameters and ports                
-# 1.4) Module items                               working
-# 1.5) Configuration source text                  working
-# 1.6) Interface items                            working
-# 1.7) Program items                              working
-# 1.8) Checker items                              working
-# 1.9) Class items                                working
-# 1.10) Constraints                               working
-# 1.11) Package items                             working
+# 1.1) Library source text
+# 1.2) SystemVerilog source text
+# 1.3) Module parameters and ports
+# 1.4) Module items
+# 1.5) Configuration source text
+# 1.6) Interface items
+# 1.7) Program items
+# 1.8) Checker items
+# 1.9) Class items
+# 1.10) Constraints
+# 1.11) Package items
 #================================================================================
 # 1.1) Library source text
-library_text
-    : STAR( library_description )
-    ;
-library_description
-    : library_declaration
-    | include_statement
-    | config_declaration
-    | ";"
-    ;
-library_declaration
-    : "library" library_identifier LIST( file_path_spec, "," )
-        OPTION( "-incdir" LIST( file_path_spec, "," ) )
-    ;
-include_statement
-    : "include" file_path_spec ";"
-    ;
 
 # 1.2) SystemVerilog source text
-source_text
-    : OPTION( timeunits_declaration ) STAR( description )
-    ;
-description
-    : module_declaration
-    | udp_declaration
-    | interface_declaration
-    | program_declaration
-    | package_declaration
-    | STAR( attribute_instance ) package_item
-    | STAR( attribute_instance ) bind_directive
-    | config_declaration
-    ;
-module_nonansi_header
-    : STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) list_of_ports ";"
-    ;
-module_ansi_header
-    : STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) OPTION( list_of_port_declarations ) ";"
-    ;
-module_declaration
-    : module_nonansi_header OPTION( timeunits_declaration ) STAR( module_item )
-        "endmodule" OPTION( ":" module_identifier )
-    | module_ansi_header OPTION( timeunits_declaration ) STAR( non_port_module_item )
-        "endmodule" OPTION( ":" module_identifier )
-    | STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifeir "(" ".*" ")" ";"
-        OPTION( timeunits_declaration ) STAR( module_item ) 
-        "endmodule" OPTION( ":" module_identifier )
-    | "extern" module_nonansi_header
-    | "extern" module_ansi_header
-    ;
-module_keyword
-    : "module" | "macromodule"
-    ;
-interface_declaration
-    : interface_nonansi_header OPTION( timeunits_declaration ) STAR( interface_item )
-        "endinterface" OPTION( ":" interface_identifier )
-    | interface_ansi_header OPTION( timeunits_declaration ) STAR( non_port_interface_item )
-        "endinterface" OPTION( ":" interface_identifier )
-    | STAR( attribute_instance ) "interface" interface_identifier "(" ".*" ")" ";"
-        OPTION( timeunits_declaration ) STAR( interface_item )
-        "endinterface" OPTION( ":" interface_identifier )
-    | "extern" interface_nonansi_header
-    | "extern" interface_ansi_header
-    ;
-interface_nonansi_header
-    : STAR( attribute_instance ) "interface" OPTION( lifetime ) interface_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) list_of_ports ";"
-    ;
-interface_ansi_header
-    : STAR( attribute_instance ) "interface" OPTION( lifetime ) interface_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) OPTION( list_of_port_declarations ) ";"
-    ;
-program_declaration
-    : program_nonansi_header OPTION( timeunits_declaration ) STAR( program_item )
-        "endprogram" OPTION( ":" program_identifier )
-    | program_ansi_header OPTION( timeunits_declaration ) STAR( non_port_program_item )
-        "endprogram" OPTION( ":" program_identifier )
-    | STAR( attribute_instance ) "program" program_identifier "(" ".*" ")" ";"
-        OPTION( timeunits_declaration ) STAR( program_item )
-        "endprogram" OPTION( ":" program_identifier )
-    | "extern" program_nonansi_header
-    | "extern" program_ansi_header
-    ;
-program_nonansi_header
-    : STAR( attribute_instance ) "program" OPTION( lifetime ) program_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) list_of_ports ";"
-    ;
-program_ansi_header
-    : STAR( attribute_instance ) "program" OPTION( lifetime ) program_identifier
-        STAR( package_import_declaration ) OPTION( parameter_port_list ) OPTION( list_of_port_declarations ) ";"
-    ;
-checker_declaration
-    : "checker" checker_identifier OPTION( "(" OPTION( checker_port_list ) ")" ) ";"
-        STAR( STAR( attribute_instance ) checker_or_generate_item )
-        "endchecker" OPTION( ":" checker_identifier )
-    ;
-class_declaration
-    : OPTION( "virtual" ) "class" OPTION( lifetime ) class_identifier OPTION( parameter_port_list )
-        OPTION( "extends" class_type OPTION( "(" list_of_arguments ")" ) )
-        OPTION( "implements" LIST( interface_class_type, "," ) ) ";"
-        STAR( class_item )
-        "endclass" OPTION( ":" class_identifier )
-    ;
-interface_class_type
-    : ps_class_identifier OPTION( parameter_value_assignment )
-    ;
-interface_class_declaration
-    : "interface" "class" class_identifier OPTION( parameter_port_list )
-        OPTION( "extends" LIST( interface_class_type, "," ) ) ";"
-        STAR( interface_class_item )
-        "endclass" OPTION( ":" class_identifier )
-    ;
-interface_class_item
-    : type_declaration
-    | STAR( attribute_instance ) interface_class_method
-    | local_parameter_declaration ";"
-    | parameter_declaration ";"
-    | ";"
-    ;
-interface_class_method
-    : "pure" "virtual" method_prototype ";"
-    ;
-package_declaration
-    : STAR( attribute_instance ) "package" OPTION( lifetime ) package_identifier ";"
-        OPTION( timeunits_declaration ) STAR( STAR( attribute_instance ) package_item )
-        "endpackage" OPTION( ":" package_identifier )
-    ;
-timeunits_declaration
-    : "timeunit" time_literal OPTION( "/" time_literal ) ";"
-    | "timeprecision" time_literal ";"
-    | "timeunit" time_literal ";" "timeprecision" time_literal ";"
-    | "timeprecision" time_literal ";" "timeunit" time_literal ";"
-    ;
 
 # 1.3) Module parameters and ports
-parameter_port_list
-    : "#" "(" list_of_param_assignments STAR( "," parameter_port_declaration ) ")"
-    | "#" "(" LIST( parameter_port_declaration, "," ) ")"
-    | "#" "(" ")"
-    ;
-parameter_port_declaration
-    : parameter_declaration
-    | local_parameter_declaration
-    | data_type list_of_param_assignments
-    | "type" list_of_type_assignments
-    ;
-list_of_ports
-    : "(" LIST( port, "," ) ")"
-    ;
-list_of_port_declarations
-    : "(" OPTION( LIST( STAR( attribute_instance ) ansi_port_declaration, "," ) ) ")"
-    ;
-port_declaration
-    : STAR( attribute_instance ) inout_declaration
-    | STAR( attribute_instance ) input_declaration
-    | STAR( attribute_instance ) output_declaration
-    | STAR( attribute_instance ) ref_declaration
-    | STAR( attribute_instance ) interface_port_declaration
-    ;
-port
-    : OPTION( port_expression )
-    | "." port_identifier "(" OPTION( port_expression ) ")"
-    ;
-port_expression
-    : port_reference
-    | "{" LIST( port_reference, "," ) "}"
-    ;
-port_reference
-    : port_identifier constant_select
-    ;
-port_direction
-    : "input" | "output" | "inout" | "ref"
-    ;
-net_port_header
-    : OPTION( port_direction ) net_port_type
-    ;
-variable_port_header
-    : OPTION( port_direction ) variable_port_type
-    ;
-interface_port_header
-    : interface_identifier OPTION( "." modport_identifier )
-    | "interface" OPTION( "." modport_identifier )
-    ;
-ansi_port_declaration
-    : OPTION( net_port_header | interface_port_header ) port_identifier STAR( unpacked_dimension )
-        OPTION( "=" constant_expression )
-    | OPTION( variable_port_header ) port_identifier STAR( variable_dimension ) OPTION( "=" constant_expression )
-    | OPTION( port_direction ) "." port_identifier "(" OPTION( expression ) ")"
-    ;
 
 # 1.4) Module items
 
-
 # 1.5) Configuration source text
-
 
 # 1.6) Interface items
 
-
 # 1.7) Program items
-
 
 # 1.8) Checker items
 
-
 # 1.9) Class items
 
-
 # 1.10) Constraints
-
 
 # 1.11) Package items
 
@@ -234,24 +42,24 @@ ansi_port_declaration
 # NEW SECTION
 # 2. Declarations
 #--------------------------------------------------------------------------------
-# 2.1) Declaration types                          working
-# 2.1.1) Module parameter declarations            working
-# 2.1.2) Port declarations                        working
-# 2.1.3) Type declarations                        working
-# 2.2) Declaration data types                     working
-# 2.2.1) Net and variable types                   working
-# 2.2.2) Strengths                                
-# 2.2.3) Delays                                   
-# 2.3) Declaration lists                          
-# 2.4) Declaration assignments                    
-# 2.5) Declaration ranges                         
-# 2.6) Function declarations                      working
-# 2.7) Task declarations                          working
-# 2.8) Block item declarations                    working
-# 2.9) Interface declarations                     working
-# 2.10) Assertion declarations                    working
-# 2.11) Covergroup declarations                   working
-# 2.12) -----------------                         working
+# 2.1) Declaration types
+# 2.1.1) Module parameter declarations
+# 2.1.2) Port declarations
+# 2.1.3) Type declarations
+# 2.2) Declaration data types
+# 2.2.1) Net and variable types
+# 2.2.2) Strengths
+# 2.2.3) Delays
+# 2.3) Declaration lists
+# 2.4) Declaration assignments
+# 2.5) Declaration ranges
+# 2.6) Function declarations
+# 2.7) Task declarations
+# 2.8) Block item declarations
+# 2.9) Interface declarations
+# 2.10) Assertion declarations
+# 2.11) Covergroup declarations
+# 2.12) -----------------
 #================================================================================
 # 2.1) Declaration types
 # 2.1.1) Module parameter declarations
