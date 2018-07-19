@@ -31,12 +31,12 @@ cc_dbg:
 	$(CC) -g -o $(EXE) *.c $(LINK) -DYYDEBUG 
 
 test:
-	./$(EXE) < symbols.list > SVObject.jj
-	javacc SVObject.jj
-	javac *.java
-	mv SVObject.jj out
-	mv *.java out
-	mv *.class out 
+	# ./$(EXE) < symbols.list > SVObject.jj
+	# javacc SVObject.jj
+	# javac *.java
+	# mv SVObject.jj out
+	# mv *.java out
+	# mv *.class out 
 
 clean:
 	rmtmp
