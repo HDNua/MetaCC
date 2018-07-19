@@ -15,15 +15,17 @@ typedef enum ast_type {
     AST_LIST_PARAMETER,             // 7
     AST_OPTION_PARAMETER,           // 8
     AST_STAR_PARAMETER,             // 9
+	AST_TOKEN_DEFINITION,           // 10
 
     // 
-    AST_LIST_NODE,                  // 10
+    AST_LIST_NODE,                  // 11
 
     // 
-    AST_MCC_STRING,                 // 11
-    AST_MCC_SYMBOL,                 // 12
-    AST_CSTRING,                    // 13
-    AST_NULL,                       // 14
+    AST_MCC_STRING,                 // 12
+    AST_MCC_SYMBOL,                 // 13
+    AST_CSTRING,                    // 14
+    AST_NULL,                       // 15
+	AST_TOKEN,                      // 16
 
 } ast_type;
 
@@ -119,6 +121,7 @@ struct ast_symbol_value_element {
         struct ast_star_parameter       *ast_star_parameter;
         const char                      *cstring;
         const char                      *null_;
+		struct ast_token_definition     *ast_token_definition;
     } u;
 };
 // 
@@ -188,6 +191,17 @@ void ast_star_parameter_value_describe(struct ast_star_parameter_value *);
 void ast_star_parameter_value_action(struct ast_star_parameter_value *);
 
 
+
+// 
+struct ast_token_definition {
+    ast_type	                        type;
+	const char                          *token_key;
+	const char                          *token_value;
+};
+// 
+void ast_token_definition_describe(struct ast_token_definition *);
+// 
+void ast_token_definition_action(struct ast_token_definition *);
 
 
 

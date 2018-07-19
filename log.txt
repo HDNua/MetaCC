@@ -1,3 +1,17 @@
+MetaCC - Meta Compiler Compiler v0.0.4.2 (IMPORTANT)
+----
+
+- 시스템 베릴로그 문법 진짜 오질라게 많네
+> 얼마 안 남았어...!
+
+
+- 파서에 토큰 데피니션 문법을 넣음.
+> 어째 맘에 안 들어서 나중에 빼야 될 것 같다.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.0.4.1 (IMPORTANT)
 ----
 

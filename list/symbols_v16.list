@@ -8,12 +8,12 @@
 # 1.3) Module parameters and ports                
 # 1.4) Module items                               
 # 1.5) Configuration source text                  
-# 1.6) Interface items                            
-# 1.7) Program items                              
-# 1.8) Checker items                              
-# 1.9) Class items                                
-# 1.10) Constraints                               
-# 1.11) Package items                             
+# 1.6) Interface items                            working
+# 1.7) Program items                              working
+# 1.8) Checker items                              working
+# 1.9) Class items                                working
+# 1.10) Constraints                               working
+# 1.11) Package items                             working
 #================================================================================
 # 1.1) Library source text
 library_text
@@ -60,7 +60,7 @@ module_declaration
         "endmodule" OPTION( ":" module_identifier )
     | module_ansi_header OPTION( timeunits_declaration ) STAR( non_port_module_item )
         "endmodule" OPTION( ":" module_identifier )
-    | STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifier "(" ".*" ")" ";"
+    | STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifeir "(" ".*" ")" ";"
         OPTION( timeunits_declaration ) STAR( module_item ) 
         "endmodule" OPTION( ":" module_identifier )
     | "extern" module_nonansi_header
@@ -267,7 +267,7 @@ bind_directive
     | "bind" bind_target_instance bind_instantiation ";"
     ;
 bind_target_scope
-    : module_identifier
+    : module_identiier
     | interface_identifier
     ;
 bind_target_instance
@@ -345,312 +345,52 @@ non_port_interface_item
     ;
 
 # 1.7) Program items
-program_item
-    : port_declaration ";"
-    | non_port_program_item
-    ;
-non_port_program_item
-    : STAR( attribute_instance ) continuous_assign
-    | STAR( attribute_instance ) module_or_generate_item_declaration
-    | STAR( attribute_instance ) initial_construct
-    | STAR( attribute_instance ) final_construct
-    | STAR( attribute_instance ) concurrent_assertion_item
-    | timeunits_declaration
-    | program_generate_item
-    ;
-program_generate_item
-    : loop_generate_construct
-    | conditional_generate_construct
-    | generate_region
-    | elaboration_system_task
-    ;
+
 
 # 1.8) Checker items
-checker_port_list
-    : LIST( checker_port_item, "," )
-    ;
-checker_port_item
-    : STAR( attribute_instance ) OPTION( checker_port_direction ) property_formal_type formal_port_identifier
-        STAR( variable_dimension ) OPTION( "=" property_actual_arg )
-    ;
-checker_port_direction
-    : "input" | "output"
-    ;
-checker_or_generate_item
-    : checker_or_generate_item_declaration
-    | initial_construct
-    | always_construct
-    | final_construct
-    | assertion_item
-    | continuous_assign
-    | checker_generate_item
-    ;
-checker_or_generate_item_declaration
-    : OPTION( "rand" ) data_declaration
-    | function_declaration
-    | checker_declaration
-    | assertion_item_declaration
-    | covergroup_declaration
-    | overload_declaration
-    | genvar_declaration
-    | clocking_declaration
-    | "default" "clocking" clocking_identifier ";"
-    | "default" "disable" "iff" expression_or_dist ";"
-    ;
-checker_generate_item
-    : loop_generate_construct
-    | conditional_generate_construct
-    | generate_region
-    | elaboration_system_task
-    ;
+
 
 # 1.9) Class items
-class_item
-    : STAR( attribute_instance ) class_property
-    | STAR( attribute_instance ) class_method
-    | STAR( attribute_instance ) class_constraint
-    | STAR( attribute_instance ) class_declaration
-    | STAR( attribute_instance ) covergroup_declaration
-    | local_parameter_declaration ";"
-    | parameter_declaration ";"
-    | ";"
-    ;
-class_property
-    : STAR( property_qualifier ) data_declaration
-    | "const" STAR( class_item_qualifier ) data_type const_identifier OPTION( "=" constant_expression ) ";"
-    ;
-class_method
-    : STAR( method_qualifier ) task_declaration
-    | STAR( method_qualifier ) function_declaration
-    | "pure" "virtual" STAR( class_item_qualifier ) method_prototype ";"
-    | "extern" STAR( method_qualifier ) method_prototype ";"
-    | STAR( method_qualifier ) class_constructor_declaration
-    | "extern" STAR( method_qualifier ) class_constructor_prototype
-    ;
-class_constructor_prototype
-    : "function" "new" OPTION( "(" OPTION( tf_port_list ) ")" ) ";"
-    ;
-class_constraint
-    : constraint_prototype
-    | constraint_declaration
-    ;
-class_item_qualifier
-    : "static" | "protected" | "local"
-    ;
-property_qualifier
-    : random_qualifier
-    | class_item_qualifier
-    ;
-random_qualifier
-    : "rand" | "randc"
-    ;
-method_qualifier
-    : OPTION( "pure" ) "virtual"
-    | class_item_qualifier
-    ;
-method_prototype
-    : task_prototype
-    | function_prototype
-    ;
-class_constructor_declaration
-    : "function" OPTION( class_scope ) "new" OPTION( "(" OPTION( tf_port_list ) ")" ) ";"
-        STAR( block_item_declaration )
-        OPTION( "super" "." "new" OPTION( "(" list_of_arguments ")" ) ";" )
-        STAR( function_statement_or_null )
-        "endfunction" OPTION( ":" "new" )
-    ;
+
 
 # 1.10) Constraints
-constraint_declaration
-    : OPTION( "static" ) "constraint" constraint_identifier constraint_block
-    ;
-constraint_block
-    : "{" STAR( constraint_block_item ) "}"
-    ;
-constraint_block_item
-    : "solve" solve_before_list "before" solve_before_list ";"
-    | constraint_expression
-    ;
-solve_before_list
-    : LIST( constraint_primary, "," )
-    ;
-constraint_primary
-    : OPTION( implicit_class_handle "." | class_scope ) hierarchical_identifier select
-    ;
-constraint_expression
-    : OPTION( "soft" ) expression_or_dist ";"
-    | uniqueness_constraint ";"
-    | expression "->" constraint_set
-    | "if" "(" expression ")" constraint_set OPTION( "else" constraint_set )
-    | "foreach" "(" ps_or_hierarchical_array_identifier "[" loop_variables "]" ")" constraint_set
-    | "disable" "soft" constraint_primary ";"
-    ;
-uniqueness_constraint
-    : "unique" "{" open_range_list "}"
-    ;
-constraint_set
-    : constraint_expression
-    | "{" STAR( constraint_expression ) "}"
-    ;
-dist_list
-    : LIST( dist_item, "," )
-    ;
-dist_item
-    : value_range OPTION( dist_weight )
-    ;
-dist_weight
-    : ":=" expression
-    | ":/" expression
-    ;
-constraint_prototype
-    : OPTION( constraint_prototype_qualifier ) OPTION( "static" ) "constraint" constraint_identifier ";"
-    ;
-constraint_prototype_qualifier
-    : "extern" | "pure"
-    ;
-extern_constraint_declaration
-    : OPTION( "static" ) "constraint" class_scope constraint_identifier constraint_block
-    ;
-identifier_list
-    : LIST( identifier, "," )
-    ;
+
 
 # 1.11) Package items
-package_item
-    : package_or_generate_item_declaration
-    | anonymous_program
-    | package_event_declaration
-    | timeunits_declaration
-    ;
-package_or_generate_item_declaration
-    : net_declaration
-    | data_declaration 
-    | task_declaration 
-    | function_declaration 
-    | checker_declaration 
-    | dpi_import_export
-    | extern_constraint_declaration 
-    | class_declaration 
-    | class_constructor_declaration 
-    | local_parameter_declaration ";"
-    | parameter_declaration ";"
-    | covergroup_declaration 
-    | overload_declaration 
-    | assertion_item_declaration 
-    | ";"
-    ;
-anonymous_program
-    : "program" ";" STAR( anonymous_program_item ) "endprogram"
-    ;
-anonymous_program_item
-    : task_declaration
-    | function_declaration
-    | class_declaration
-    | covergroup_declaration
-    | class_constructor_declaration
-    | ";"
-    ;
-
 
 
 #================================================================================
 # NEW SECTION
 # 2. Declarations
 #--------------------------------------------------------------------------------
-# 2.1) Declaration types                          
-# 2.1.1) Module parameter declarations            
-# 2.1.2) Port declarations                        
-# 2.1.3) Type declarations                        
-# 2.2) Declaration data types                     
-# 2.2.1) Net and variable types                   
+# 2.1) Declaration types                          working
+# 2.1.1) Module parameter declarations            working
+# 2.1.2) Port declarations                        working
+# 2.1.3) Type declarations                        working
+# 2.2) Declaration data types                     working
+# 2.2.1) Net and variable types                   working
 # 2.2.2) Strengths                                
 # 2.2.3) Delays                                   
 # 2.3) Declaration lists                          
 # 2.4) Declaration assignments                    
 # 2.5) Declaration ranges                         
-# 2.6) Function declarations                      
-# 2.7) Task declarations                          
-# 2.8) Block item declarations                    
-# 2.9) Interface declarations                     
+# 2.6) Function declarations                      working
+# 2.7) Task declarations                          working
+# 2.8) Block item declarations                    working
+# 2.9) Interface declarations                     working
 # 2.10) Assertion declarations                    working
 # 2.11) Covergroup declarations                   working
+# 2.12) -----------------                         working
 #================================================================================
 # 2.1) Declaration types
 # 2.1.1) Module parameter declarations
-local_parameter_declaration
-    : "localparam" data_type_or_implicit list_of_param_assignments
-    | "localparam" "type" list_of_type_assignments
-    ;
-parameter_declaration
-    : "parameter" data_type_or_implicit list_of_param_assignments
-    | "parameter" "type" list_of_type_assignments
-    ;
-specparam_declaration
-    : "specparam" OPTION( packed_dimension ) list_of_specparam_assignments ";"
-    ;
+
 
 # 2.1.2) Port declarations
-inout_declaration
-    : "inout" net_port_type list_of_port_identifiers
-    ;
-input_declaration
-    : "input" net_port_type list_of_port_identifiers
-    | "input" variable_port_type list_of_variable_identifiers
-    ;
-output_declaration
-    : "output" net_port_type list_of_port_identifiers
-    | "output" variable_port_type list_of_variable_port_identifiers
-    ;
-interface_port_declaration
-    : interface_identifier list_of_interface_identifiers
-    | interface_identifier "." modport_identifier list_of_interface_identifiers
-    ;
-ref_declaration
-    : "ref" variable_port_type list_of_variable_identifiers
-    ;
+
 
 # 2.1.3) Type declarations
-data_declaration
-    : OPTION( "const" ) OPTION( "var" ) OPTION( lifetime ) data_type_or_implicit list_of_variable_decl_assignments ";"
-    | type_declaration
-    | package_import_declaration
-    | net_type_declaration
-    ;
-package_import_declaration
-    : "import" LIST( package_import_item, "," ) ";"
-    ;
-package_import_item
-    : package_identifier "::" identifier
-    | package_identifier "::" "*"
-    ;
-package_export_declaration
-    : "export" "*::*" ";"
-    | "export" LIST( package_import_item, "," ) ";"
-    ;
-genvar_declaration
-    : "genvar" list_of_genvar_identifiers ";"
-    ;
-net_declaration
-    : net_type OPTION( drive_strength | charge_strength ) OPTION( "vectored" | "scalared" )
-        data_type_or_implicit OPTION( delay3 ) list_of_net_decl_assignments ";"
-    | net_type_identifier OPTION( delay_control )
-        list_of_net_decl_assignments ";"
-    | "interconnect" implicit_data_type OPTION( "#" delay_value )
-        LIST( net_identifier STAR( unpacked_dimension ), "," ) ";"
-    ;
-type_declaration
-    : "typedef" data_type type_identifier STAR( variable_dimension ) ";"
-    | "typedef" interface_instance_identifier constant_bit_select "." type_identifier type_identifier ";"
-    | "typedef" OPTION( "enum" | "struct" | "union" | "class" | "interface" "class" ) type_identifier ";"
-    ;
-net_type_declaration
-    : "nettype" data_type net_type_identifier
-        OPTION( "with" OPTION( package_scope | class_scope ) tf_identifier ) ";"
-    | "nettype" OPTION( package_scope | class_scope ) net_type_identifier net_type_identifier ";"
-    ;
-lifetime
-    : "static" | "automatic"
-    ;
+
 
 # 2.2) Declaration data types
 # 2.2.1) Net and variable types
@@ -661,36 +401,13 @@ casting_type
     | "string"
     | "const"
     ;
-data_type
-    : integer_vector_type OPTION( signing ) STAR( packed_dimension )
-    | integer_atom_type OPTION( signing )
-    | non_integer_type
-    | struct_union OPTION( "packed" OPTION( signing ) ) "{" LIST( struct_union_member, "" ) "}" STAR( packed_dimension )
-    | "enum" OPTION( enum_base_type ) "{" LIST( enum_name_declaration, "," ) "}" STAR( packed_dimension )
-    | "string"
-    | "chandle"
-    | "virtual" OPTION( "interface" ) interface_identifier OPTION( parameter_value_assignment ) OPTION( "." modport_identifier )
-    | OPTION( class_scope | package_scope ) type_identifier STAR( packed_dimension )
-    | class_type
-    | "event"
-    | ps_covergroup_identifier
-    | type_reference
+data_type # WORKING
+    : "string"
     ;
-data_type_or_implicit
-    : data_type
-    | implicit_data_type
-    ;
-implicit_data_type
-    : OPTION( signing ) STAR( packed_dimension )
-    ;
-enum_base_type
-    : integer_atom_type OPTION( signing )
-    | integer_vector_type OPTION( signing ) OPTION( packed_dimension )
-    | type_identifier OPTION( packed_dimension )
-    ;
-enum_name_declaration
-    : enum_identifier OPTION( "[" integral_number OPTION( ":" integral_number ) "]" ) OPTION( "=" constant_expression )
-    ;
+# data_type_or_implicit
+# implicit_data_type
+# enum_base_type
+# enum_name_declaration
 class_scope
     : class_type "::"
     ;
@@ -711,21 +428,10 @@ integer_vector_type
 non_integer_type
     : "shortreal" | "real" | "realtime"
     ;
-net_type
-    : "supply0" | "supply1" | "tri" | "triand" | "trior" | "trireg" | "tri0" | "tri1" | "uwire" | "wire" | "wand" | "wor"
-    ;
-net_port_type
-    : OPTION( net_type ) data_type_or_implicit
-    | net_type_identifier
-    | "interconnect" implicit_data_type
-    ;
-variable_port_type
-    : var_data_type
-    ;
-var_data_type
-    : data_type
-    | "var" data_type_or_implicit
-    ;
+# net_type
+# net_port_type
+# variable_port_type
+# var_data_type
 signing
     : "signed" | "unsigned"
     ;
@@ -735,9 +441,7 @@ simple_type
     | ps_type_identifier
     | ps_parameter_identifier
     ;
-struct_union_member
-    : STAR( attribute_instance ) OPTION( random_qualifier ) data_type_or_void list_of_variable_decl_assignments ";"
-    ;
+# struct_union_member
 data_type_or_void
     : data_type
     | "void"
@@ -899,328 +603,18 @@ unsized_dimension
     ;
 
 # 2.6) Function declarations
-function_data_type_or_implicit
-    : data_type_or_void
-    | implicit_data_type
-    ;
-function_declaration
-    : "function" OPTION( lifetime ) function_body_declaration
-    ;
-function_body_declaration
-    : function_data_type_or_implicit
-        OPTION( interface_identifier "." | class_scope ) function_identifier ";"
-        STAR( tf_item_declaration )
-        STAR( function_statement_or_null )
-        "endfunction" OPTION( ":" function_identifier )
-    | function_data_type_or_implicit
-        OPTION( interface_identifier "." | class_scope ) function_identifier "(" OPTION( tf_port_list ) ")" ";"
-        STAR( block_item_declaration )
-        STAR( function_statement_or_null )
-        "endfunction" OPTION( ":" function_identifier )
-    ;
-function_prototype
-    : "function" data_type_or_void function_identifier OPTION( "(" OPTION( tf_port_list ) ")" )
-    ;
-dpi_import_export
-    : "import" dpi_spec_string OPTION( dpi_function_import_property ) OPTION( c_identifier "=" ) dpi_function_proto ";"
-    | "import" dpi_spec_string OPTION( dpi_task_import_property ) OPTION( c_identifier "=" ) dpi_task_proto ";"
-    | "export" dpi_spec_string OPTION( c_identifier "=" ) "function" function_identifier ";"
-    | "export" dpi_spec_string OPTION( c_identifier "=" ) "task" task_identifier ";"
-    ;
-dpi_spec_string
-    : "DPI-C" | "DPI"
-    ;
-dpi_function_import_property
-    : "context" | "pure"
-    ;
-dpi_task_import_property
-    : "context"
-    ;
-dpi_function_proto
-    : function_prototype
-    ;
-dpi_task_proto
-    : task_prototype
-    ;
 
 # 2.7) Task declarations
-task_declaration
-    : "task" OPTION( lifetime ) task_body_declaration
-    ;
-task_body_declaration
-    : OPTION( interface_identifier "." | class_scope ) task_identifier ";"
-        STAR( tf_item_declaration )
-        STAR( statement_or_null )
-        "endtask" OPTION( ":" task_identifier )
-    | OPTION( interface_identifier "." | class_scope ) task_identifier "(" OPTION( tf_port_list ) ")" ";"
-        STAR( block_item_declaration )
-        STAR( statement_or_null )
-        "endtask" OPTION( ":" task_identifier )
-    ;
-tf_item_declaration
-    : block_item_declaration
-    | tf_port_declaration
-    ;
-tf_port_list
-    : LIST( tf_port_item, "," )
-    ;
-tf_port_item
-    : STAR( attribute_instance )
-        OPTION( tf_port_direction ) OPTION( "var" ) data_type_or_implicit
-        OPTION( port_identifier STAR( variable_dimension ) OPTION( "=" expression ) )
-    ;
-tf_port_direction
-    : port_direction
-    | "const" "ref"
-    ;
-tf_port_declaration
-    : STAR( attribute_instance ) tf_port_direction OPTION( "var" ) data_type_or_implicit list_of_tf_variable_identifiers ";"
-    ;
-task_prototype
-    : "task" task_identifier OPTION( "(" OPTION( tf_port_list ) ")" )
-    ;
 
 # 2.8) Block item declarations
-block_item_declaration
-    : STAR( attribute_instance ) data_declaration
-    | STAR( attribute_instance ) local_parameter_declaration ";"
-    | STAR( attribute_instance ) parameter_declaration ";"
-    | STAR( attribute_instance ) overload_declaration
-    | STAR( attribute_instance ) let_declaration
-    ;
-overload_declaration
-    : "bind" overload_operator "function" data_type function_identifier "(" overload_proto_formals ")" ";"
-    ;
-overload_operator
-    : "+" | "++" | "-" | "--" | "*" | "**" | "/" | "%" | "==" | "!=" | "<" | "<=" | ">" | ">=" | "="
-    ;
-overload_proto_formals
-    : LIST( data_type, "," )
-    ;
 
 # 2.9) Interface declarations
-modport_declaration
-    : "modport" LIST( modport_item, "," ) ";"
-    ;
-modport_item
-    : modport_identifier "(" LIST( modport_ports_declaration, "," ) ")"
-    ;
-modport_ports_declaration
-    : STAR( attribute_instance ) modport_simple_ports_declaration
-    | STAR( attribute_instance ) modport_tf_ports_declaration
-    | STAR( attribute_instance ) modport_clocking_declaration
-    ;
-modport_clocking_declaration
-    : "clocking" clocking_identifier
-    ;
-modport_simple_ports_declaration
-    : port_direction LIST( modport_simple_port, "," )
-    ;
-modport_simple_port
-    : port_identifier
-    | "." port_identifier "(" OPTION( expression ) ")"
-    ;
-modport_tf_ports_declaration
-    : import_export LIST( modport_tf_port, "," ) 
-    ;
-modport_tf_port
-    : method_prototype
-    | tf_identifier
-    ;
-import_export
-    : "import" | "export"
-    ;
 
 # 2.10) Assertion declarations
-concurrent_assertion_item
-    : OPTION( block_identifier ":" ) concurrent_assertion_statement
-    | checker_instantiation
-    ;
-concurrent_assertion_statement
-    : assert_property_statement
-    | assume_property_statement
-    | cover_property_statement
-    | cover_sequence_statement
-    | restrict_property_statement
-    ;
-assert_property_statement
-    : "assert" "property" "(" property_spec ")" action_block
-    ;
-assume_property_statement
-    : "assume" "property" "(" property_spec ")" action_block
-    ;
-cover_property_statement
-    : "cover" "property" "(" property_spec ")" statement_or_null
-    ;
-expect_property_statement
-    : "expect" "(" property_spec ")" action_block
-    ;
-cover_sequence_statement
-    : "cover" "sequence" "(" 
-        OPTION( clocking_event ) OPTION( "disable" "iff" "(" expression_or_dist ")" )
-        ")" statement_or_null
-    ;
-restrict_property_statement
-    : "restrict" "property" "(" property_spec ")" ";"
-    ;
-property_instance
-    : ps_or_hierarchical_property_identifier OPTION( "(" OPTION( property_list_of_arguments ) ")" )
-    ;
-property_list_of_arguments
-    : LIST( OPTION( property_actual_arg ), "," ) STAR( "," "." identifier "(" OPTION( property_actual_arg ) ")" )
-    | LIST( "."  identifier "(" OPTION( property_actual_arg ) ")", "," )
-    ;
-property_actual_arg
-    : property_expr
-    | sequence_actual_arg
-    ;
-assertion_item_declaration
-    : property_declaration
-    | sequence_declaration
-    | let_declaration
-    ;
-property_declaration
-    : "property" property_identifier OPTION( "(" OPTION( property_port_list ) ")" ) ";"
-        STAR( assertion_variable_declaration )
-        property_spec OPTION( ";" )
-        "endproperty" OPTION( ":" property_identifier )
-    ;
-property_port_list
-    : LIST( property_port_item, "," )
-    ;
-property_port_item
-    : STAR( attribute_instance ) OPTION( "local" OPTION( property_lvar_port_direction ) )
-        property_formal_type formal_port_identifier STAR( variable_dimension ) OPTION( "=" property_actual_arg )
-    ;
-property_lvar_port_direction
-    : "input"
-    ;
-property_formal_type
-    : sequence_formal_type
-    | "property"
-    ;
-property_spec
-    : OPTION( clocking_event ) OPTION( "disable" "iff" "(" expression_or_dist ")" ) property_expr
-    ;
-property_expr
-    : sequence_expr
-    # WORKING
-    ;
-property_case_item
-    : LIST( expression_or_dist, "," ) ":" property_expr OPTION( ";" )
-    | "default" OPTION( ":" ) property_expr OPTION( ";" )
-    ;
-sequence_declaration
-    : "sequence" sequence_identifier OPTION( "(" OPTION( sequence_port_list ) ")" ) ";"
-        STAR( assertion_variable_declaration )
-        sequence_expr OPTION( ";" )
-        "endsequence" OPTION( ":" sequence_identifier )
-    ;
-sequence_port_list
-    : LIST( sequence_port_item, "," )
-    ;
-sequence_port_item
-    : STAR( attribute_instance ) OPTION( "local" OPTION( sequence_lvar_port_direction ) ) 
-        sequence_formal_type formal_port_identifier STAR( variable_dimension ) OPTION( "=" sequence_actual_arg )
-    ;
-sequence_lvar_port_direction
-    : "input" | "inout" | "output"
-    ;
-sequence_formal_type
-    : data_type_or_implicit
-    | "sequence"
-    | "untyped"
-    ;
-sequence_expr
-    : LIST( cycle_delay_range sequence_expr, "" )
-    # WORKING
-    ;
-cycle_delay_range
-    : "##" constant_primary
-    | "##" "[" cycle_delay_const_range_expression "]"
-    | "##" "[*]"
-    | "##" "[+]"
-    ;
-sequence_method_call
-    : sequence_instance "." method_identifier
-    ;
-sequence_match_item
-    : operator_assignment
-    | inc_or_dec_expression
-    | subroutine_call
-    ;
-sequence_instance
-    : ps_or_hierarchical_sequence_identifier OPTION( "(" sequence_list_of_arguments ")" )
-    ;
-sequence_list_of_arguments
-    : LIST( OPTION( sequence_actual_arg ), "," ) STAR( "," "." identifier "(" OPTION( sequence_actual_arg ) ")" )
-    | LIST( "." identifier "(" OPTION( sequence_actual_arg ) ")", "," )
-    ;
-sequence_actual_arg
-    : event_expression
-    | sequence_expr
-    ;
-boolean_abbrev
-    : consecutive_repetition
-    | non_consecutive_repetition
-    | goto_repetition
-    ;
-sequence_abbrev
-    : consecutive_repetition
-    ;
-consecutive_repetition
-    : "[*" const_or_range_expression "]"
-    | "[*]"
-    | "[+]"
-    ;
-non_consecutive_repetition
-    : "[=" const_or_range_expression "]"
-    ;
-goto_repetition
-    : "[->" const_or_range_expression "]"
-    ;
-const_or_range_expression
-    : constant_expression
-    | cycle_delay_const_range_expression
-    ;
-cycle_delay_const_range_expression
-    : constant_expression ":" constant_expression
-    | constant_expression ":" "$"
-    ;
-expression_or_dist
-    : expression OPTION( "dist" "{" dist_list "}" )
-    ;
-assertion_variable_declaration
-    : var_data_type list_of_variable_decl_assignments ";"
-    ;
-let_declaration
-    : "let" let_identifier OPTION( "(" OPTION( let_port_list ) ")" ) "=" expression ";"
-    ;
-let_identifier
-    : identifier
-    ;
-let_port_list
-    : LIST( let_port_item, "," )
-    ;
-let_port_item
-    : STAR( attribute_instance ) let_formal_type formal_port_identifier STAR( variable_dimension ) OPTION( "=" expression )
-    ;
-let_formal_type
-    : data_type_or_implicit
-    | "untyped"
-    ;
-let_expression
-    : OPTION( package_scope ) let_identifier OPTION( "(" OPTION( let_list_of_arguments ) ")" )
-    ;
-let_list_of_arguments
-    : LIST( OPTION( let_actual_arg ), "," ) STAR( "," "." identifier "(" OPTION( let_actual_arg ) ")" )
-    | LIST( "." identifier "(" OPTION( let_actual_arg ) ")", "," )
-    ;
-let_actual_arg
-    : expression
-    ;
 
 # 2.11) Covergroup declarations
+
+# 2.12) -----------------
 
 
 
@@ -1345,17 +739,17 @@ parameter_value_assignment
     : "#" "(" OPTION( list_of_parameter_assignments ) ")"
     ;
 list_of_parameter_assignments
-    : LIST( ordered_parameter_assignment, "," )
-    | LIST( named_parameter_assignment, "," )
+    : LIST( ordered_parameter_assignments, "," )
+    | LIST( named_parameter_assignments, "," )
     ;
-ordered_parameter_assignment
+ordered_parameter_assignments
     : param_expression
     ;
-named_parameter_assignment
+named_parameter_assignments
     : "." parameter_identifier "(" OPTION( param_expression ) ")"
     ;
 hierarchical_instance
-    : name_of_instance "(" OPTION( list_of_port_connections ) ")"
+    : name_of_instance "(" OPTION( list_of_port_connection ) ")"
     ;
 name_of_instance
     : instance_identifier STAR( unpacked_dimension )
@@ -1394,7 +788,7 @@ ordered_checker_port_connection
     : STAR( attribute_instance ) OPTION( property_actual_arg )
     ;
 named_checker_port_connection
-    : STAR( attribute_instance ) "." formal_port_identifier OPTION( "(" OPTION( property_actual_arg ) ")" )
+    : STAR( attribute_instance ) "." formal_port_identifier OPTION( "(" OPTION( property_actual_tag ) ")" )
     | STAR( attribute_instance ) "." "*"
     ;
 
@@ -2124,7 +1518,7 @@ path_delay_value
     : list_of_path_delay_expressions
     | "(" list_of_path_delay_expressions ")"
     ;
-list_of_path_delay_expressions
+list_of_path_delay_expression
     : t_path_delay_expression
     | trise_path_delay_expression "," tfall_path_delay_expression
     | trise_path_delay_expression "," tfall_path_delay_expression "," tz_path_delay_expression
@@ -2853,8 +2247,8 @@ unbased_unsized_literal
     : "'0" | "'1" | "'" z_or_x
     ;
 # 8.8) Strings
-string_literal
-    : TOKEN( "STRING" )
+string_literal SKIP
+    : CSTRING
     ;
 
 
@@ -2921,7 +2315,7 @@ class_variable_identifier
 clocking_identifier
     : identifier
     ;
-config_identifier
+config_identfier
     : identifier
     ;
 const_identifier
@@ -3142,9 +2536,5 @@ white_space SKIP
     : NULL
     ;
 
-# ADDITIONAL DEFINITION
-file_path_spec
-    : TOKEN( "FILE_PATH" )
-    # FILE_PATH_WINDOWS | FILE_PATH_LINUX
-    ;
+
 

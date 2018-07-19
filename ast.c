@@ -206,6 +206,9 @@ void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
     case AST_STAR_PARAMETER:
         ast_star_parameter_describe(self->u.ast_star_parameter);
         break;
+	case AST_TOKEN_DEFINITION:
+		ast_token_definition_describe(self->u.ast_token_definition);
+		break;
     case AST_CSTRING:
         tab_depth();
         printf("C\"%s\" \n", self->u.cstring);
@@ -214,6 +217,9 @@ void ast_symbol_value_element_describe(struct ast_symbol_value_element *self) {
         tab_depth();
         printf("%s \n", self->u.null_);
         break;
+	case AST_TOKEN:
+		ast_token_definition_describe(self->u.ast_token_definition);
+		break;
     default:
         fprintf(stderr, "invalid symbol value element [%d] \n", self->elem_type);
         exit(1);
@@ -269,7 +275,14 @@ void ast_star_parameter_value_describe(struct ast_star_parameter_value *self) {
 
     describe_end();
 }
+// 
+void ast_token_definition_describe(struct ast_token_definition *self) {
+    describe_begin();
+    tab_depth();
+    printf("%s \n", ast_str(self->type));
 
+    describe_end();
+}
 
 
 
@@ -478,12 +491,18 @@ void ast_symbol_value_element_action(struct ast_symbol_value_element *self) {
     case AST_STAR_PARAMETER:
         ast_star_parameter_action(self->u.ast_star_parameter);
         break;
+    case AST_TOKEN_DEFINITION:
+        ast_token_definition_action(self->u.ast_token_definition);
+        break;
     case AST_CSTRING:
         printf("C\"%s\" ", self->u.cstring);
         break;
     case AST_NULL:
         printf("%s ", self->u.null_);
         break;
+	case AST_TOKEN:
+		ast_token_definition_action(self->u.ast_token_definition);
+		break;
     default:
         fprintf(stderr, "invalid symbol value element [%d] \n", self->elem_type);
         exit(1);
@@ -532,6 +551,18 @@ void ast_star_parameter_value_action(struct ast_star_parameter_value *self) {
 	// printf("%s \n", ast_str(self->type));
 	printf("6");
 }
+// 
+void ast_token_definition_action(struct ast_token_definition *self) {
+	printf("<%s> ", self->token_key);
+	// printf("6");
+}
+
+
+
+
+
+
+
 
 
 

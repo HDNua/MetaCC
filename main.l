@@ -54,6 +54,7 @@ char *mcc_string_ptr;
 
 "CSTRING"		return CSTRING;
 "NULL"			return NULL_;
+"TOKEN"			return TOKEN;
 
 
 

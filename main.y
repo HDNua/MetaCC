@@ -31,6 +31,7 @@ int yyerror(char const *str);
 	struct ast_list_parameter_value         *ast_list_parameter_value;
 	struct ast_option_parameter_value       *ast_option_parameter_value;
 	struct ast_star_parameter_value         *ast_star_parameter_value;
+	struct ast_token_definition             *ast_token_definition;
 }
 
 %token	COLON SEMICOLON
@@ -41,11 +42,12 @@ int yyerror(char const *str);
 %token	LIST OPTION STAR
 %token	CSTRING NULL_
 %token	SKIP TERMINAL
+%token	TOKEN
 
 %type <token_str> MCC_STRING
 %type <token_str> MCC_SYMBOL MCC_METHOD
 %type <token_str> list_parameter_delim
-%type <token_str> SKIP TERMINAL
+%type <token_str> SKIP TERMINAL TOKEN
 
 %type <ast_list> symbol_definition_list
 %type <ast_list> symbol_value_list 
@@ -61,6 +63,7 @@ int yyerror(char const *str);
 %type <ast_list_parameter_value> list_parameter_value
 %type <ast_option_parameter_value> option_parameter_value
 %type <ast_star_parameter_value> star_parameter_value
+%type <ast_token_definition> token_definition
 
 %%
 source_text
@@ -216,24 +219,33 @@ symbol_value_element
 		ret->u.ast_star_parameter = $3;
 		$$ = ret;
 	}
+	/*
 	| CSTRING
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
 		ret->type = AST_SYMBOL_VALUE_ELEMENT;
 		ret->elem_type = AST_CSTRING;
-		// ret->type = AST_STAR_PARAMETER;
-		// ret->u.ast_star_parameter = $3;
+		ret->u.cstring = strdup($1);
 		$$ = ret;
 	}
+	*/
 	| NULL_
 	{
 		struct ast_symbol_value_element *ret = 
 			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
 		ret->type = AST_SYMBOL_VALUE_ELEMENT;
 		ret->elem_type = AST_NULL;
-		// ret->type = AST_STAR_PARAMETER;
-		// ret->u.ast_star_parameter = $3;
+		ret->u.null_ = NULL; // strdup($1);
+		$$ = ret;
+	}
+	| token_definition
+	{
+		struct ast_symbol_value_element *ret = 
+			(struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
+		ret->type = AST_SYMBOL_VALUE_ELEMENT;
+		ret->elem_type = AST_TOKEN_DEFINITION;
+		ret->u.ast_token_definition = $1;
 		$$ = ret;
 	}
 	;
@@ -301,7 +313,17 @@ star_parameter_value
 		$$ = ret;
 	}
 	;
-
+token_definition
+	: TOKEN LP MCC_STRING RP
+	{
+		struct ast_token_definition *ret = (struct ast_token_definition *)
+			malloc(sizeof(struct ast_token_definition));
+		ret->type = AST_TOKEN_DEFINITION;
+		ret->token_key = strdup($3);
+		// ret->token_value = strdup($5);
+		$$ = ret;
+	}
+	;
 
 
 /*************************************************************/
@@ -359,9 +381,12 @@ int main(void) {
 	printf("\n");
 	printf("PARSER_END(%s)\n", parser_name);
 	printf("\n");
-	printf("\n");
-	printf("\n");
 	printf("SKIP: { <[\" \", \"\\t\", \"\\r\", \"\\n\"]> }\n");
+	printf("\n");
+	printf("TOKEN: {\n");
+	printf("    <FILE_PATH: ([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\".\",\"/\"])+ >\n");
+	printf("}\n");
+	printf("\n");
 	printf("\n");
 	printf("\n");
 	printf("\n");
