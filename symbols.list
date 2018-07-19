@@ -519,7 +519,7 @@ identifier_list
 package_item
     : package_or_generate_item_declaration
     | anonymous_program
-    | package_event_declaration
+    | package_export_declaration
     | timeunits_declaration
     ;
 package_or_generate_item_declaration
@@ -1221,8 +1221,137 @@ let_actual_arg
     ;
 
 # 2.11) Covergroup declarations
-
-
+covergroup_declaration
+    : "covergroup" covergroup_identifier OPTION( "(" OPTION( tf_port_list ) ")" ) OPTION( coverage_event ) ";"
+        STAR( coverage_spec_or_option )
+        "endgroup" OPTION( ":" covergroup_identifier )
+    ;
+coverage_spec_or_option
+    : STAR( attribute_instance ) coverage_spec
+    | STAR( attribute_instance ) coverage_option ";"
+    ;
+coverage_option
+    : "option" "." member_identifier "=" expression
+    | "type_option" "." member_identifier "=" constant_expression
+    ;
+coverage_spec
+    : cover_point
+    | cover_cross
+    ;
+coverage_event
+    : clocking_event
+    | "with" "function" "sample" "(" OPTION( tf_port_list ) ")"
+    | "@@" "(" block_event_expression ")"
+    ;
+block_event_expression
+    : block_event_expression "or" block_event_expression
+    | "begin" hierarchical_btf_identifier
+    | "end" hierarchical_btf_identifier
+    ;
+hierarchical_btf_identifier
+    : hierarchical_tf_identifier
+    | hierarchical_block_identifier
+    | OPTION( hierarchical_identifier "." | class_scope ) method_identifier
+    ;
+cover_point
+    : OPTION( OPTION( data_type_or_implicit ) cover_point_identifier ":" ) 
+        "coverpoint" expression OPTION( "iff" "(" expression ")" ) 
+        bins_or_empty
+    ;
+bins_or_empty
+    : "{" STAR( attribute_instance ) STAR( bins_or_options ";" ) "}"
+    | ";"
+    ;
+bins_or_options
+    : coverage_option
+    # WORKING
+    ;
+bins_keyword
+    : "bins" | "illegal_bins" | "ignore_bins"
+    ;
+trans_list
+    : LIST( "(" trans_set ")", "," )
+    ;
+trans_set
+    : LIST( trans_range_list, "=>" )
+    ;
+trans_range_list
+    : trans_item 
+    | trans_item "[*" repeat_range "]"
+    | trans_item "[->" repeat_range "]"
+    | trans_item "[=" repeat_range "]"
+    ;
+trans_item
+    : covergroup_range_list
+    ;
+repeat_range
+    : covergroup_expression
+    | covergroup_expression ":" covergroup_expression
+    ;
+cover_cross
+    : OPTION( cross_identifier ":" ) "cross" list_of_cross_items OPTION( "iff" "(" expression ")" ) cross_body
+    ;
+list_of_cross_items
+    : cross_item "," LIST( cross_item , "," )
+    ;
+cross_item
+    : cover_point_identifier
+    | variable_identifier
+    ;
+cross_body
+    : "{" STAR( cross_body_item ";" ) "}"
+    | ";"
+    ;
+cross_body_item
+    : function_declaration
+    | bins_selection_or_option ";"
+    ;
+bins_selection_or_option
+    : STAR( attribute_instance ) coverage_option
+    | STAR( attribute_instance ) bins_selection
+    ;
+bins_selection
+    : bins_keyword bin_identifier "=" select_expression OPTION( "iff" "(" expression ")" )
+    ;
+select_expression
+    : select_condition
+    | "!" select_condition
+    | select_expression "&&" select_expression
+    | select_expression "||" select_expression
+    | "(" select_expression ")"
+    | select_expression "with" "(" with_covergroup_expression ")" OPTION( "matches" integer_covergroup_expression )
+    | cross_identifier
+    | cross_set_expression OPTION( "matches" integer_covergroup_expression )
+    ;
+select_condition
+    : "binsof" "(" bins_expression ")" OPTION( "intersect" "{" covergroup_range_list "}" )
+    ;
+bins_expression
+    : variable_identifier
+    | cover_point_identifier OPTION( "." bin_identifier )
+    ;
+covergroup_range_list
+    : LIST( covergroup_value_range, "," )
+    ;
+covergroup_value_range
+    : covergroup_expression
+    | "[" covergroup_expression ":" covergroup_expression "]"
+    ;
+with_covergroup_expression
+    : covergroup_expression
+    ;
+set_covergroup_expression
+    : covergroup_expression
+    ;
+integer_covergroup_expression
+    : covergroup_expression
+    ;
+cross_set_expression
+    : covergroup_expression
+    ;
+covergroup_expression
+    : expression
+    ;
 
 #================================================================================
 # NEW SECTION
@@ -1383,7 +1512,7 @@ program_instantiation
     ;
 
 # 4.1.4) Checker instantiation
-checker_instance
+checker_instantiation
     : ps_checker_identifier name_of_instance "(" OPTION( list_of_checker_port_connections ) ")" ";"
     ;
 list_of_checker_port_connections
@@ -2854,7 +2983,7 @@ unbased_unsized_literal
     ;
 # 8.8) Strings
 string_literal
-    : TOKEN( "STRING" )
+    : TOKEN( "SV_STRING" )
     ;
 
 
