@@ -366,8 +366,8 @@ int main(void) {
 	printf("class %s {\n", parser_name);
 	printf("    public static void main(String[] args) {\n");
 	printf("        try {\n");
-	printf("        \n");
-	printf("        \n");
+	printf("            \n");
+	printf("            \n");
 	printf("        }\n");
 	printf("        catch (ParseException ex) {\n");
 	printf("            System.err.println(ex.getMessage());\n");
@@ -381,10 +381,21 @@ int main(void) {
 	printf("\n");
 	printf("PARSER_END(%s)\n", parser_name);
 	printf("\n");
+	printf("\n");
+	printf("\n");
+
+	// 
+	ast_list_traverse(symbol_definition_list);
+
+	// 
+	printf("\n");
+	printf("\n");
+	printf("\n");
 	printf("SKIP: { <[\" \", \"\\t\", \"\\r\", \"\\n\"]> }\n");
 	printf("\n");
 	printf("TOKEN: {\n");
 	printf("    <FILE_PATH: ([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\".\",\"/\"])+ >\n");
+	printf("|   <IDENTIFIER: [\"a\"-\"z\",\"A\"-\"Z\",\"_\"]([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\"$\"])* >\n");
 	printf("    \n");
 	printf("}\n");
 	printf("\n");
@@ -410,7 +421,7 @@ int main(void) {
 	
 	// 
 	// ast_list_iterate(symbol_definition_list);
-	ast_list_traverse(symbol_definition_list);
+	// ast_list_traverse(symbol_definition_list);
 	
 	// 
 	return 0;

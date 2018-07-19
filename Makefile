@@ -32,11 +32,15 @@ cc_dbg:
 
 test:
 	./$(EXE) < symbols.list > SVObject.jj
+	javacc SVObject.jj
+	javac *.java
 	mv SVObject.jj out
-	javacc out/SVObject.jj
+	mv *.java out
+	mv *.class out 
 
 clean:
 	rmtmp
+	rm -rf *.java
 	rm -rf y.tab.c y.tab.h lex.yy.c
 	rm -rf y.output y.dot
 	rm -rf $(EXE)

@@ -1,3 +1,14 @@
+MetaCC - Meta Compiler Compiler v0.0.4.4
+----
+
+- JJ 파일 출력... 일단 완료.
+
+- 아직 작업할 게 남았지만 일단 성공이라고 하자.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.0.4.3
 ----
 

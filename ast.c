@@ -516,7 +516,12 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
 	// printf("2");
 	// printf("%s ( %s %s )*", self->ast_list_parameter_value;
 	ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_element_list);
-	printf("( \"%s\" ", self->list_parameter_delim);
+
+	printf("( ");
+	if (strcmp(self->list_parameter_delim, "") != 0) {
+		printf("\"%s\" ", self->list_parameter_delim);
+	}
+
 	ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_element_list);
 	printf(")* ");
 }
