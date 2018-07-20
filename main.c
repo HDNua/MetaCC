@@ -7,6 +7,16 @@
 #include <sys/stat.h>
 
 
+
+//==============================================================================
+// 
+void paste_file(FILE *out, FILE *in) {
+    char buf[256];
+    while (fgets(buf, sizeof(buf), in) != NULL) {
+        fputs(buf, out);
+    }
+}
+
 //==============================================================================
 // 
 int metacc_init(int argc, const char *argv[]) {
@@ -28,15 +38,18 @@ int metacc_init(int argc, const char *argv[]) {
     }
     else if (strcmp(argv[1], "lyc") == 0) {
         extern FILE *out_lyc;
+        extern FILE *out_lyc_y;
+        extern FILE *out_lyc_y_token;
         extern FILE *out_lyc_l;
         extern FILE *out_lyc_ast_h;
         extern FILE *out_lyc_ast_c;
 
         // 
-        out_lyc         = fopen("out/parser.y", "wt");
-        out_lyc_l       = fopen("out/parser.l", "wt");
-        out_lyc_ast_h   = fopen("out/parser_ast.h", "wt");
-        out_lyc_ast_c   = fopen("out/parser_ast.c", "wt");
+        out_lyc                 = fopen("out/parser.y.syntax", "wt");
+        out_lyc_y_token         = fopen("out/parser.y.token", "wt");
+        out_lyc_l               = fopen("out/parser.l", "wt");
+        out_lyc_ast_h           = fopen("out/parser_ast.h", "wt");
+        out_lyc_ast_c           = fopen("out/parser_ast.c", "wt");
 
         // 
     }
@@ -63,9 +76,6 @@ int metacc_main(int argc, const char *argv[]) {
     if (yyparse()) {
         fprintf(stderr, "compilation has failed. \n");
     }
-
-    // 
-    // fprintf(out_jj, "done. \n\n");
 
     // templates
     if (out_jj) {
@@ -112,8 +122,8 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_jj, "SKIP: { <[\" \", \"\\t\", \"\\r\", \"\\n\"]> }\n");
         fprintf(out_jj, "\n");
         fprintf(out_jj, "TOKEN: {\n");
-        fprintf(out_jj, "    <FILE_PATH: ([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\".\",\"/\"])+ >\n");
-        fprintf(out_jj, "|   <IDENTIFIER: [\"a\"-\"z\",\"A\"-\"Z\",\"_\"]([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\"$\"])* >\n");
+        fprintf(out_jj, "  <FILE_PATH: ([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\".\",\"/\"])+ >\n");
+        fprintf(out_jj, "| <IDENTIFIER: [\"a\"-\"z\",\"A\"-\"Z\",\"_\"]([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\"$\"])* >\n");
         fprintf(out_jj, "    \n");
         fprintf(out_jj, "}\n");
         fprintf(out_jj, "\n");
@@ -136,15 +146,41 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_jj, "\n");
         fprintf(out_jj, "\n");
         fprintf(out_jj, "\n");
+
+        // 
+        fclose(out_jj);
+        fclose(out_java);
     }
     else if (out_lyc) {
+        extern struct ast_list *symbol_definition_list;
+        ast_list_traverse(symbol_definition_list);    
 
+        // 
+        fclose(out_lyc);
+        fclose(out_lyc_y_token);
+        fclose(out_lyc_l);
+        fclose(out_lyc_ast_h);
+        fclose(out_lyc_ast_c);
+
+        // 
+        FILE *in_lyc_y_token = fopen("out/parser.y.token", "rt");
+        FILE *in_lyc_l       = fopen("out/parser.l", "rt");
+        FILE *in_lyc_ast_h   = fopen("out/parser_ast.h", "rt");
+        FILE *in_lyc_ast_c   = fopen("out/parser_ast.c", "rt");
+
+        //
+        out_lyc_y = fopen("out/parser.y", "wt");
+
+        // 
+        fprintf(out_lyc_y, "%%%%\n");
+        fprintf(out_lyc_y, "\n");
+        paste_file(out_lyc_y, in_lyc_y_token);
+        fprintf(out_lyc_y, "\n");
+        fprintf(out_lyc_y, "%%%%\n");
+        fprintf(out_lyc_y, "\n");
+        fclose(out_lyc_y);
     }
-
-    // 
-    // ast_list_iterate(symbol_definition_list);
-    // ast_list_traverse(symbol_definition_list);    
-
+    
     return 0;
 }
 

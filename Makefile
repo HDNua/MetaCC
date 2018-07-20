@@ -30,14 +30,21 @@ lex_dbg:
 cc_dbg: 
 	$(CC) -g -o $(EXE) *.c $(LINK) -DYYDEBUG 
 
-test:
-	# ./$(EXE) < symbols.list > SVObject.jj
-	# javacc SVObject.jj
-	# javac *.java
-	# mv SVObject.jj out
-	# mv *.java out
-	# mv *.class out 
+test: test2
+
+test_dep:
+	./$(EXE) < symbols.list > SVObject.jj
+	javacc SVObject.jj
+	javac *.java
+	mv SVObject.jj out
+	mv *.java out
+	mv *.class out 
+
+test1:
 	./$(EXE) javacc < symbols.list
+
+test2:
+	./$(EXE) lyc < symbols.list
 
 clean:
 	rmtmp

@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.1.0.2
+----
+
+- JavaCC와 Lex & Yacc 출력 분리 중.
+> 시범작 나오는 중..이지만 JavaCC를 제대로 하는 게 더 낫겠다 싶다.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.1.0.1
 ----
 
