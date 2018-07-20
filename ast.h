@@ -1,6 +1,7 @@
 #ifndef __HANDY_AST_H__
 #define __HANDY_AST_H__
 
+#include <stdio.h>
 #include <string.h>
 
 
@@ -205,10 +206,18 @@ void ast_token_definition_action(struct ast_token_definition *);
 
 
 
+//==============================================================================
+extern FILE *out_jj;
+extern FILE *out_java;
 
+//------------------------------------------------------------------------------
+extern FILE *out_lyc;
+extern FILE *out_lyc_l;
+extern FILE *out_lyc_ast_h;
+extern FILE *out_lyc_ast_c;
 
-
-
+//------------------------------------------------------------------------------
+extern FILE *out_lycpp;
 
 
 

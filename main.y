@@ -340,89 +340,20 @@ yyerror(char const *str)
 }
 
 // 
-int main(void) {
-	extern int yyparse(void);
-	extern FILE *yyin;
+int main(int argc, const char *argv[]) {
+	extern int metacc_init(int, const char *[]);
+	extern int metacc_main(int, const char *[]);
 
-	const char *parser_name = "SVParser";
-	const char *start_symbol = "expression";
-
-	yyin = stdin;
-	if (yyparse()) {
-		fprintf(stderr, "ERROR \n");
+	if (metacc_init(argc, argv) == 0) {
+		return metacc_main(argc, argv);
 	}
-
-	// 
-	// printf("done. \n\n");
-
-	// templates
-	printf("options {\n");
-	printf("    STATIC = false;\n");
-	printf("}\n");
-	printf("\n");
-	printf("PARSER_BEGIN(%s)\n", parser_name);
-	printf("import java.io.*;\n");
-	printf("\n");
-	printf("class %s {\n", parser_name);
-	printf("    public static void main(String[] args) {\n");
-	printf("        try {\n");
-	printf("            \n");
-	printf("            \n");
-	printf("        }\n");
-	printf("        catch (ParseException ex) {\n");
-	printf("            System.err.println(ex.getMessage());\n");
-	printf("        }\n");
-	printf("    }\n");
-	printf("    public static String check(String s) throws ParseException {\n");
-	printf("        Reader reader = new Reader(s);\n");
-	printf("        return new SVParser(reader).%s();\n", start_symbol);
-	printf("    }\n");
-	printf("}\n");
-	printf("\n");
-	printf("PARSER_END(%s)\n", parser_name);
-	printf("\n");
-	printf("\n");
-	printf("\n");
-
-	// 
-	ast_list_traverse(symbol_definition_list);
-
-	// 
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	printf("SKIP: { <[\" \", \"\\t\", \"\\r\", \"\\n\"]> }\n");
-	printf("\n");
-	printf("TOKEN: {\n");
-	printf("    <FILE_PATH: ([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\".\",\"/\"])+ >\n");
-	printf("|   <IDENTIFIER: [\"a\"-\"z\",\"A\"-\"Z\",\"_\"]([\"a\"-\"z\",\"A\"-\"Z\",\"0\"-\"9\",\"_\",\"$\"])* >\n");
-	printf("    \n");
-	printf("}\n");
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	printf("//=========================================================================================\n");
-	printf("// STRING \n");
-	printf("//-----------------------------------------------------------------------------------------\n");
-	printf("MORE: { <\"\\\"\">: IN_SV_STRING }\n");
-	printf("<IN_SV_STRING> MORE: {\n");
-	printf("    \"\\\\\": IN_SV_STRING_ESCAPE \n");
-	printf("}\n");
-	printf("<IN_SV_STRING> TOKEN: {\n");
-	printf("    <SV_STRING:\"\\\"\">: DEFAULT \n");
-	printf("|   <CHAR:~[\"\\\"\",\"\\\\\"]> \n");
-	printf("}\n");
-	printf("<IN_SV_STRING_ESCAPE> TOKEN: {\n");
-	printf("    <[\"\\\"\",\"\\\\\",\"/\",\"b\",\"f\",\"n\",\"r\",\"t\"]>: IN_SV_STRING \n");
-	printf("}\n");
-	printf("\n");
-	printf("\n");
-	printf("\n");
-	
-	// 
-	// ast_list_iterate(symbol_definition_list);
-	// ast_list_traverse(symbol_definition_list);
-	
-	// 
-	return 0;
+	else {
+		return 0;
+	}
 }
+
+
+
+
+
+

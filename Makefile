@@ -37,6 +37,7 @@ test:
 	# mv SVObject.jj out
 	# mv *.java out
 	# mv *.class out 
+	./$(EXE) javacc < symbols.list
 
 clean:
 	rmtmp
@@ -44,3 +45,4 @@ clean:
 	rm -rf y.tab.c y.tab.h lex.yy.c
 	rm -rf y.output y.dot
 	rm -rf $(EXE)
+	rm -rf out/*

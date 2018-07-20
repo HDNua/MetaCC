@@ -6,12 +6,21 @@
 
 #define MAX_TOKEN_LEN   2048
 
+
+//==============================================================================
 FILE *out_jj;
+FILE *out_java;
+
+//------------------------------------------------------------------------------
 FILE *out_lyc;
+FILE *out_lyc_l;
+FILE *out_lyc_ast_h;
+FILE *out_lyc_ast_c;
+
+//------------------------------------------------------------------------------
 FILE *out_lycpp;
 
-
-
+//==============================================================================
 // 
 static const char *ast_str(ast_type type) {
     static const char *ast_str_[] = {
@@ -37,6 +46,7 @@ static const char *ast_str(ast_type type) {
 
 
 
+//==============================================================================
 // 
 static struct ast_list_node *ast_list_node_new(void *elem, ast_type type) {
     struct ast_list_node *ret = (struct ast_list_node *)malloc(sizeof(struct ast_list_node));
