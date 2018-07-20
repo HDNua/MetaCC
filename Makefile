@@ -30,7 +30,7 @@ lex_dbg:
 cc_dbg: 
 	$(CC) -g -o $(EXE) *.c $(LINK) -DYYDEBUG 
 
-test: test1
+test: test2
 
 test_dep:
 	./$(EXE) < symbols.list > SVObject.jj

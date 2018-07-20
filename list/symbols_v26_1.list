@@ -1314,16 +1314,38 @@ bins_selection_or_option
 bins_selection
     : bins_keyword bin_identifier "=" select_expression OPTION( "iff" "(" expression ")" )
     ;
+
+### select_expression
+###     : select_condition
+###     | "!" select_condition
+###     | select_expression "&&" select_expression
+###     | select_expression "||" select_expression
+###     | "(" select_expression ")"
+###     | select_expression "with" "(" with_covergroup_expression ")" OPTION( "matches" integer_covergroup_expression )
+###     | cross_identifier
+###     | cross_set_expression OPTION( "matches" integer_covergroup_expression )
+###     ;
 select_expression
+    : ""
+    | select_expression_1 STAR( select_expression_1_right )
+    ;
+select_expression_1
+    : select_expression_2
+    | LIST( select_expression_2, "&&" )
+    | LIST( select_expression_2, "||" )
+    ;
+select_expression_1_right
+    : "with" "(" with_covergroup_expression ")" OPTION( "matches" integer_covergroup_expression )
+    ;
+select_expression_2
     : select_condition
     | "!" select_condition
-    | select_expression "&&" select_expression
-    | select_expression "||" select_expression
     | "(" select_expression ")"
-    | select_expression "with" "(" with_covergroup_expression ")" OPTION( "matches" integer_covergroup_expression )
     | cross_identifier
     | cross_set_expression OPTION( "matches" integer_covergroup_expression )
     ;
+### select_expression
+
 select_condition
     : "binsof" "(" bins_expression ")" OPTION( "intersect" "{" covergroup_range_list "}" )
     ;
@@ -1845,13 +1867,25 @@ event_control
     | "@" "(" "*" ")"                               # "@" "(*)"
     | "@" ps_or_hierarchical_sequence_identifier
     ;
+
+### event_expression
+###     : OPTION( edge_identifier ) expression OPTION( "iff" expression )
+###     | sequence_instance OPTION( "iff" expression )
+###     | event_expression "or" event_expression
+###     | event_expression "," event_expression
+###     | "(" event_expression ")"
+###     ;
 event_expression
+    : LIST( event_expression_1, "or" )
+    | LIST( event_expression_1, "," )
+    ;
+event_expression_1
     : OPTION( edge_identifier ) expression OPTION( "iff" expression )
     | sequence_instance OPTION( "iff" expression )
-    | event_expression "or" event_expression
-    | event_expression "," event_expression
     | "(" event_expression ")"
     ;
+### event_expression
+
 procedural_timing_control
     : delay_control
     | event_control
@@ -2670,13 +2704,25 @@ inc_or_dec_expression
 conditional_expression
     : cond_predicate "?" STAR( attribute_instance ) expression ":" expression
     ;
+
+### constant_expression
+###     : constant_primary
+###     | unary_operator STAR( attribute_instance ) constant_primary
+###     | constant_expression binary_operator STAR( attribute_instance ) constant_expression
+###     | constant_expression "?" STAR( attribute_instance ) 
+###         constant_expression ":" constant_expression
+###     ;
 constant_expression
+    : ""
+    | constant_expression_1 STAR( binary_operator STAR( attribute_instance ) constant_expression )
+    | constant_expression_1 STAR( "?" STAR( attribute_instance ) constant_expression ":" constant_expression )
+    ;
+constant_expression_1
     : constant_primary
     | unary_operator STAR( attribute_instance ) constant_primary
-    | constant_expression binary_operator STAR( attribute_instance ) constant_expression
-    | constant_expression "?" STAR( attribute_instance ) 
-        constant_expression ":" constant_expression
     ;
+### constant_expression
+
 constant_mintypmax_expression
     : constant_expression
     | constant_expression ":" constant_expression ":" constant_expression
@@ -2706,16 +2752,32 @@ constant_indexed_range
     : constant_expression "+:" constant_expression
     | constant_expression "-:" constant_expression
     ;
+
+### expression
+###     : primary
+###     | unary_operator STAR( attribute_instance ) primary
+###     | inc_or_dec_expression
+###     | "(" operator_assignment ")"
+###     | expression binary_operator STAR( attribute_instance ) expression
+###     | conditional_expression
+###     | inside_expression
+###     | tagged_union_expression
+###     ;
 expression
+    : ""
+    | expression_1 binary_operator STAR( attribute_instance ) expression
+    ;
+expression_1
     : primary
-    | unary_operator STAR( attribute_instance ) primary
+    | unary_operator STAR( attribute_instance )
     | inc_or_dec_expression
     | "(" operator_assignment ")"
-    | expression binary_operator STAR( attribute_instance ) expression
     | conditional_expression
     | inside_expression
     | tagged_union_expression
     ;
+### expression
+
 tagged_union_expression
     : "tagged" member_identifier OPTION( expression )
     ;
@@ -2734,12 +2796,24 @@ module_path_conditional_expression
     : module_path_expression "?" STAR( attribute_instance )
         module_path_expression ":" module_path_expression
     ;
+
+### module_path_expression # LEFT-RECURSION OCCURRED
+###     : module_path_primary
+###     | unary_module_path_operator STAR( attribute_instance ) module_path_primary
+###     | module_path_expression binary_module_path_operator STAR( attribute_instance )
+###         module_path_conditional_expression
+###     ;
 module_path_expression
-    : module_path_primary
-    | unary_module_path_operator STAR( attribute_instance ) module_path_primary
-    | module_path_expression binary_module_path_operator STAR( attribute_instance )
-        module_path_conditional_expression
+    : ""
+    | module_path_expression_1 STAR( 
+        binary_module_path_operator STAR( attribute_instance ) module_path_conditional_expression )
     ;
+module_path_expression_1
+    : module_path_primary
+    | unary_module_path_operator
+    ;
+### module_expression
+
 module_path_mintypmax_expression
     : module_path_expression
     | module_path_expression ":" module_path_expression ":" module_path_expression
@@ -2781,6 +2855,24 @@ module_path_primary
     | function_subroutine_call
     | "(" module_path_mintypmax_expression ")"
     ;
+
+### primary
+###     : primary_literal
+###     | OPTION( class_qualifier | package_scope ) hierarchical_identifier select
+###     | empty_queue
+###     | concatenation OPTION( "[" range_expression "]" )
+###     | multiple_concatenation OPTION( "[" range_expression "]" )
+###     | function_subroutine_call
+###     | let_expression
+###     | "(" mintypmax_expression ")"
+###     | cast
+###     | assignment_pattern_expression
+###     | streaming_concatenation
+###     | sequence_method_call
+###     | "this"
+###     | "$"
+###     | "null"
+###     ;
 primary
     : primary_literal
     | OPTION( class_qualifier | package_scope ) hierarchical_identifier select
@@ -2798,6 +2890,8 @@ primary
     | "$"
     | "null"
     ;
+### primary
+
 class_qualifier
     : OPTION( "local::" ) OPTION( implicit_class_handle "." | class_scope )
     ;

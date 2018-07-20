@@ -676,13 +676,16 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
     }
 
     if (out_lyc) {
+        // 
         ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_element_list);
-
-        fprintf(out_lyc, "( ");
+        
+        // 
+        // fprintf(out_lyc, "%s ", "_list");
         if (strcmp(self->list_parameter_delim, "") != 0) {
             fprintf(out_lyc, "\"%s\" ", self->list_parameter_delim);
         }
-
+        
+        // 
         ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_element_list);
         fprintf(out_lyc, ")* ");
     }

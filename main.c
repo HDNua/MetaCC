@@ -9,12 +9,29 @@
 
 
 //==============================================================================
+//
+const char *LYC_Y_SYNTAX = "out/parser.y.syntax";
+const char *LYC_Y_TOKEN = "out/parser.y.token";
+const char *LYC_L = "out/parser.l";
+const char *LYC_AST_H = "out/parser_ast.h";
+const char *LYC_AST_C = "out/parser_ast.c";
+
+//==============================================================================
 // 
-void paste_file(FILE *out, FILE *in) {
+void paste_file(FILE *fout, FILE *fin) {
     char buf[256];
-    while (fgets(buf, sizeof(buf), in) != NULL) {
-        fputs(buf, out);
+    while (fgets(buf, sizeof(buf), fin) != NULL) {
+        fputs(buf, fout);
     }
+}
+void paste_s2f(FILE *out, const char *srcname) {
+    FILE *fin = fopen(srcname, "rt");
+    if (fin == NULL) {
+        fprintf(stderr, "cannot open file named [%s]; no such file or directory. \n", srcname);
+        exit(1);
+    }
+    paste_file(out, fin);
+    fclose(fin);
 }
 
 //==============================================================================
@@ -45,11 +62,11 @@ int metacc_init(int argc, const char *argv[]) {
         extern FILE *out_lyc_ast_c;
 
         // 
-        out_lyc                 = fopen("out/parser.y.syntax", "wt");
-        out_lyc_y_token         = fopen("out/parser.y.token", "wt");
-        out_lyc_l               = fopen("out/parser.l", "wt");
-        out_lyc_ast_h           = fopen("out/parser_ast.h", "wt");
-        out_lyc_ast_c           = fopen("out/parser_ast.c", "wt");
+        out_lyc                 = fopen(LYC_Y_SYNTAX,   "wt");
+        out_lyc_y_token         = fopen(LYC_Y_TOKEN,    "wt");      
+        out_lyc_l               = fopen(LYC_L,          "wt");
+        out_lyc_ast_h           = fopen(LYC_AST_H,      "wt");
+        out_lyc_ast_c           = fopen(LYC_AST_C,      "wt");
 
         // 
     }
@@ -153,31 +170,151 @@ int metacc_main(int argc, const char *argv[]) {
     }
     else if (out_lyc) {
         extern struct ast_list *symbol_definition_list;
+        FILE *out;
+
+        // 
+        {
+            out = out_lyc;
+            fprintf(out, "\n");
+        }
+        // 
+        {
+            out = out_lyc_y_token;
+            fprintf(out, "\n");
+        }
+        // 
+        {
+            out = out_lyc_l;
+            fprintf(out, "%%{\n");
+            fprintf(out, "#define MAX_TOKEN_LEN 2048\n");
+            fprintf(out, "\n");
+            fprintf(out, "#include <stdio.h>\n");
+            fprintf(out, "#include \"y.tab.h\"\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "#ifdef YYDEBUG\n");
+            fprintf(out, "extern int yydebug;\n");
+            fprintf(out, "#endif\n");
+            fprintf(out, "\n");
+            fprintf(out, "extern int line_count;\n");
+            fprintf(out, "\n");
+            fprintf(out, "int\n");
+            fprintf(out, "yywrap(void)\n");
+            fprintf(out, "{\n");
+            fprintf(out, "    return 1;\n");
+            fprintf(out, "}\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "%%}\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+        }
+        // 
+        {
+            out = out_lyc_ast_h;
+            fprintf(out, "#ifndef __HANDY_VAST_H__\n");
+            fprintf(out, "#define __HANDY_VAST_H__\n");
+            fprintf(out, "\n");
+            fprintf(out, "#include <stdio.h>\n");
+            fprintf(out, "#include <string.h>\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list_node {\n");
+            fprintf(out, "    ast_type             type;\n");
+            fprintf(out, "    ast_type             elem_type;\n");
+            fprintf(out, "    void                 *elem;\n");
+            fprintf(out, "    struct ast_list_node *next;\n");
+            fprintf(out, "};\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_node_describe(struct ast_list_node *node);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_node_action(struct ast_list_node *node);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list {\n");
+            fprintf(out, "\n");
+            fprintf(out, "};\n");
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list *ast_list_new(ast_type type);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_append(struct ast_list *list, void *elem, ast_type type);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_iterate(struct ast_list *list);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_traverse(struct ast_list *list);\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+        }
+        // 
+        {
+            out = out_lyc_ast_c;
+            fprintf(out, "#include <stdio.h>\n");
+            fprintf(out, "#include <stdlib.h>\n");
+            fprintf(out, "#include \"%s\"\n", LYC_AST_H);
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+        }
+
+        // 
         ast_list_traverse(symbol_definition_list);    
 
         // 
-        fclose(out_lyc);
-        fclose(out_lyc_y_token);
-        fclose(out_lyc_l);
-        fclose(out_lyc_ast_h);
-        fclose(out_lyc_ast_c);
-
+        {
+            out = out_lyc;
+            fclose(out_lyc);
+        }
         // 
-        FILE *in_lyc_y_token = fopen("out/parser.y.token", "rt");
-        FILE *in_lyc_l       = fopen("out/parser.l", "rt");
-        FILE *in_lyc_ast_h   = fopen("out/parser_ast.h", "rt");
-        FILE *in_lyc_ast_c   = fopen("out/parser_ast.c", "rt");
+        {
+            out = out_lyc_y_token;
+            fclose(out_lyc_y_token);
+        }
+        // 
+        {
+            out = out_lyc_l;
+            paste_s2f(out, LYC_L);
+            fclose(out_lyc_l);
+        }
+        // 
+        {
+            out = out_lyc_ast_h;
+
+            // type definitions
+            
+            //
+
+            fprintf(out, "#endif\n");
+            fclose(out_lyc_ast_h);
+        }
+        // 
+        {
+            out = out_lyc_ast_c;
+            fclose(out_lyc_ast_c);
+        }
 
         //
         out_lyc_y = fopen("out/parser.y", "wt");
 
         // 
+        fprintf(out_lyc_y, "%%{\n");
+        fprintf(out_lyc_y, "\n");
+        fprintf(out_lyc_y, "%%}\n");
+        paste_s2f(out_lyc_y, LYC_Y_TOKEN);
+        fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "%%%%\n");
         fprintf(out_lyc_y, "\n");
-        paste_file(out_lyc_y, in_lyc_y_token);
-        fprintf(out_lyc_y, "\n");
-        fprintf(out_lyc_y, "%%%%\n");
-        fprintf(out_lyc_y, "\n");
+        paste_s2f(out_lyc_y, LYC_Y_SYNTAX);
         fclose(out_lyc_y);
     }
     
