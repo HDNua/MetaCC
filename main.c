@@ -102,8 +102,8 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_jj, "        }\n");
         fprintf(out_jj, "    }\n");
         fprintf(out_jj, "    public static String check(String s) throws ParseException {\n");
-        fprintf(out_jj, "        Reader reader = new Reader(s);\n");
-        fprintf(out_jj, "        return new SVParser(reader).%s();\n", start_symbol);
+        fprintf(out_jj, "        Reader reader = new StringReader(s);\n");
+        fprintf(out_jj, "        return new SVParser(reader).%s().toString();\n", start_symbol);
         fprintf(out_jj, "    }\n");
         fprintf(out_jj, "}\n");
         fprintf(out_jj, "\n");

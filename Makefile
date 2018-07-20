@@ -30,7 +30,7 @@ lex_dbg:
 cc_dbg: 
 	$(CC) -g -o $(EXE) *.c $(LINK) -DYYDEBUG 
 
-test: test2
+test: test1
 
 test_dep:
 	./$(EXE) < symbols.list > SVObject.jj
@@ -52,4 +52,10 @@ clean:
 	rm -rf y.tab.c y.tab.h lex.yy.c
 	rm -rf y.output y.dot
 	rm -rf $(EXE)
+	if [ -f out/Makefile ]; then \
+		mv out/Makefile Makefile_out; \
+	fi
 	rm -rf out/*
+	if [ -f Makefile_out ]; then \
+		mv Makefile_out out/Makefile; \
+	fi

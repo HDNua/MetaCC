@@ -310,9 +310,44 @@ void ast_token_definition_describe(struct ast_token_definition *self) {
 
 // 
 void ast_list_traverse(struct ast_list *self) {
+    static int depth = 0;
     struct ast_list_node *node;
-    for (node=self->head.next; node; node=node->next) {
-        ast_list_node_action(node);
+
+    // 
+    if (out_jj) {
+        if (self->elem_type == AST_SYMBOL_VALUE) {
+            ++depth;
+            for (node=self->head.next; node; node=node->next) {
+                ast_list_node_action(node);
+
+                if (node->next) {
+                    if (depth >= 1) {
+                        fprintf(out_jj, "| ");
+                    }
+                }
+            }
+            --depth;
+        }
+        else {
+            for (node=self->head.next; node; node=node->next) {
+                ast_list_node_action(node);
+            }
+        }
+    }
+
+    // 
+    if (out_lyc) {
+        for (node=self->head.next; node; node=node->next) {
+            ast_list_node_action(node);
+
+            if (self->elem_type == AST_SYMBOL_VALUE) {
+                if (node->next) {
+                    if (depth == 0) {
+                        fprintf(out_lyc, ":");
+                    }
+                }
+            }
+        }
     }
 }
 // 
@@ -357,6 +392,9 @@ void ast_list_node_action(struct ast_list_node *self) {
         exit(1);
     }
 }
+
+
+
 // 
 void ast_symbol_definition_action(struct ast_symbol_definition *self) {
     static char symbol_key_className[MAX_TOKEN_LEN];
@@ -404,6 +442,15 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
             }
             *dst = '\0';
         }
+
+        // 
+        fprintf(out_java, "class %s {\n", symbol_key_className);
+        fprintf(out_java, "    public String toString() {\n");
+        fprintf(out_java, "        return \"%s\";\n", symbol_key_className);
+        fprintf(out_java, "    }\n");
+        fprintf(out_java, "}\n\n");
+
+        // 
         fprintf(out_jj, "%s %s(): {\n", symbol_key_className, symbol_name);
 
         // gather token list.
@@ -433,8 +480,7 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
                 struct ast_list_node *node2;
 
                 // 
-                // fprintf(out_jj, "\t%c", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
-                fprintf(out_jj, "    ");
+                fprintf(out_jj, "    %s", (elem_list_flag ? "|\n    " : (elem_list_flag=1, "")));
                 for (node2 = ast_elem_list->head.next; node2; node2 = node2->next) {
                     struct ast_symbol_value_element *ast_elem = node2->elem;
                     // fprintf(out_jj, "%c%s", (elem_list_flag ? '|' : (elem_list_flag=1, ' ')), 
@@ -443,7 +489,7 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
                     // fprintf(out_jj, " ");
                     ast_symbol_value_element_action(ast_elem);
                 }
-                fprintf(out_jj, "\n    {\n        \n    }\n");
+                fprintf(out_jj, "\n    {\n        return null;\n    }\n");
             }
         }
 
@@ -490,7 +536,7 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
                     // fprintf(out_jj, " ");
                     ast_symbol_value_element_action(ast_elem);
                 }
-                fprintf(out_lyc, "\n    {\n        \n    }\n");
+                fprintf(out_lyc, "\n    {\n        $$ = NULL;\n    }\n");
             }
         }
 
@@ -743,7 +789,55 @@ void ast_token_definition_action(struct ast_token_definition *self) {
 
 
 
-
+// 
+void ast_symbol_value_list_node_action(struct ast_list_node *self) {
+    if (self->type == AST_LIST_NODE) {
+        switch (self->elem_type) {
+            case AST_LIST:
+                ast_list_traverse(self->elem);
+                break;
+            case AST_SYMBOL_DEFINITION:
+                ast_symbol_definition_action(self->elem);
+                break;
+            case AST_SYMBOL_KEY:
+                ast_symbol_key_action(self->elem);
+                break;
+            case AST_KEY_ATTRIBUTES:
+                ast_key_attributes_action(self->elem);
+                break;
+            case AST_SYMBOL_VALUE:
+                ast_symbol_value_action(self->elem);
+                break;
+            case AST_SYMBOL_VALUE_ELEMENT:
+                ast_symbol_value_element_action(self->elem);
+                break;
+            case AST_LIST_PARAMETER:
+                ast_list_parameter_action(self->elem);
+                break;
+            case AST_OPTION_PARAMETER:
+                ast_option_parameter_action(self->elem);
+                break;
+            case AST_STAR_PARAMETER:
+                ast_star_parameter_action(self->elem);
+                break;
+            default:
+                fprintf(stderr, "invalid node element type [%d] \n", self->elem_type);
+                exit(1);
+                break;
+        }
+    }
+    else {
+        fprintf(stderr, "invalid node \n");
+        exit(1);
+    }
+}
+// 
+void ast_symbol_value_list_traverse(struct ast_list *self) {
+    struct ast_list_node *node;
+    for (node=self->head.next; node; node=node->next) {
+        ast_symbol_value_list_node_action(node);
+    }
+}
 
 
 

@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.1.1.0
+----
+
+- OPTION 구현 성공!
+> 와 개 천재인줄 알았다 ㄹㅇ
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.1.0.2
 ----
 
