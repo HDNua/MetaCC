@@ -13,6 +13,9 @@
 const char *LYC_Y                   = "out/parser.y";
 const char *LYC_Y_SYNTAX            = "out/parser.y.syntax";
 const char *LYC_Y_TOKEN             = "out/parser.y.token";
+const char *LYC_Y_LIST              = "out/parser.y.list";
+const char *LYC_Y_OPT               = "out/parser.y.opt";
+const char *LYC_Y_STAR              = "out/parser.y.star";
 const char *LYC_L                   = "out/parser.l";
 const char *LYC_L_TOKENDEF          = "out/parser.l.tokendef";
 const char *LYC_AST_H               = "out/parser_ast.h";
@@ -65,6 +68,9 @@ int metacc_init(int argc, const char *argv[]) {
         extern FILE *out_lyc;
         extern FILE *out_lyc_y;
         extern FILE *out_lyc_y_token;
+        extern FILE *out_lyc_y_list;
+        extern FILE *out_lyc_y_option;
+        extern FILE *out_lyc_y_star;
         extern FILE *out_lyc_l;
         extern FILE *out_lyc_l_tokendef;
         extern FILE *out_lyc_ast_h;
@@ -77,6 +83,9 @@ int metacc_init(int argc, const char *argv[]) {
         out_lyc                             = fopen(LYC_Y_SYNTAX,           "wt");
         out_lyc_y                           = fopen(LYC_Y,                  "wt");
         out_lyc_y_token                     = fopen(LYC_Y_TOKEN,            "wt");      
+        out_lyc_y_list                      = fopen(LYC_Y_LIST,             "wt");      
+        out_lyc_y_option                    = fopen(LYC_Y_OPT,              "wt");      
+        out_lyc_y_star                      = fopen(LYC_Y_STAR,             "wt");      
         out_lyc_l                           = fopen(LYC_L,                  "wt");
         out_lyc_l_tokendef                  = fopen(LYC_L_TOKENDEF,         "wt");
         out_lyc_ast_h                       = fopen(LYC_AST_H,              "wt");
@@ -336,6 +345,11 @@ int metacc_main(int argc, const char *argv[]) {
         // 
         {
             out = out_lyc;
+
+            // 
+            paste_s2f(out, LYC_Y_LIST);
+            paste_s2f(out, LYC_Y_OPT);
+            paste_s2f(out, LYC_Y_STAR);
 
             // 
             fclose(out_lyc);

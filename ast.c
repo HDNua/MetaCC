@@ -15,6 +15,9 @@ FILE *out_java;
 FILE *out_lyc;
 FILE *out_lyc_y;
 FILE *out_lyc_y_token;
+FILE *out_lyc_y_list;
+FILE *out_lyc_y_option;
+FILE *out_lyc_y_star;
 FILE *out_lyc_l;
 FILE *out_lyc_l_tokendef;
 FILE *out_lyc_ast_h;
@@ -1143,12 +1146,16 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
         }
 
         // 
+        fprintf(out_lyc_y_list, "LIST_%d\n", index);
+        fprintf(out_lyc_y_list, "    : ");
+        ast_list_parameter_value_action(self->ast_list_parameter_value);
+        fprintf(out_lyc_y_list, "\n");
+        fprintf(out_lyc_y_list, "    | LIST_%d %s ", index, self->list_parameter_delim);
+        ast_list_parameter_value_action(self->ast_list_parameter_value);
+        fprintf(out_lyc_y_list, "    ;\n");
+
+        // 
         fprintf(out_lyc, "LIST_%d ", index);
-        fprintf(out_lyc, "    : ");
-        ast_list_parameter_value_action(self->ast_list_parameter_value);
-        fprintf(out_lyc, "    | LIST_%d %s ", index, self->list_parameter_delim);
-        ast_list_parameter_value_action(self->ast_list_parameter_value);
-        fprintf(out_lyc, "    ; ");
 
         /*
         struct ast_list *ast_symbol_value_list = self->ast_list_parameter_value->ast_symbol_value_list;
@@ -1355,7 +1362,8 @@ void ast_list_parameter_value_action(struct ast_list_parameter_value *self) {
 
     // 
     if (out_lyc) {
-        fprintf(out_lyc, "4");
+        ast_list_traverse(self->ast_symbol_value_list);
+        // fprintf(out_lyc, "4");
     }
 }
 // 
@@ -1368,7 +1376,8 @@ void ast_option_parameter_value_action(struct ast_option_parameter_value *self) 
 
     // 
     if (out_lyc) {
-        fprintf(out_lyc, "5");
+        ast_list_traverse(self->ast_symbol_value_list);
+        // fprintf(out_lyc, "5");
     }
 }
 // 
@@ -1381,7 +1390,8 @@ void ast_star_parameter_value_action(struct ast_star_parameter_value *self) {
 
     // 
     if (out_lyc) {
-        fprintf(out_lyc, "6");
+        ast_list_traverse(self->ast_symbol_value_list);
+        // fprintf(out_lyc, "6");
     }
 }
 // 
