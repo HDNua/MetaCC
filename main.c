@@ -14,6 +14,7 @@ const char *LYC_Y                   = "out/parser.y";
 const char *LYC_Y_SYNTAX            = "out/parser.y.syntax";
 const char *LYC_Y_TOKEN             = "out/parser.y.token";
 const char *LYC_L                   = "out/parser.l";
+const char *LYC_L_TOKENDEF          = "out/parser.l.tokendef";
 const char *LYC_AST_H               = "out/parser_ast.h";
 const char *LYC_AST_H_TYPEDEF       = "out/parser_ast.h.typedef";
 const char *LYC_AST_H_DECLARATION   = "out/parser_ast.h.declaration";
@@ -23,9 +24,10 @@ const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.c.templates";
 //==============================================================================
 // 
 void paste_file(FILE *fout, FILE *fin) {
-    char buf[256];
+    char buf[1024] = "";
     while (fgets(buf, sizeof(buf), fin) != NULL) {
         fputs(buf, fout);
+        memset(buf, 0, sizeof(buf));
     }
 }
 void paste_s2f(FILE *out, const char *srcname) {
@@ -35,6 +37,7 @@ void paste_s2f(FILE *out, const char *srcname) {
         exit(1);
     }
     paste_file(out, fin);
+    fflush(out);
     fclose(fin);
 }
 
@@ -62,6 +65,7 @@ int metacc_init(int argc, const char *argv[]) {
         extern FILE *out_lyc_y;
         extern FILE *out_lyc_y_token;
         extern FILE *out_lyc_l;
+        extern FILE *out_lyc_l_tokendef;
         extern FILE *out_lyc_ast_h;
         extern FILE *out_lyc_ast_h_typedef;
         extern FILE *out_lyc_ast_h_declaration;
@@ -73,6 +77,7 @@ int metacc_init(int argc, const char *argv[]) {
         out_lyc_y                           = fopen(LYC_Y,                  "wt");
         out_lyc_y_token                     = fopen(LYC_Y_TOKEN,            "wt");      
         out_lyc_l                           = fopen(LYC_L,                  "wt");
+        out_lyc_l_tokendef                  = fopen(LYC_L_TOKENDEF,         "wt");
         out_lyc_ast_h                       = fopen(LYC_AST_H,              "wt");
         out_lyc_ast_h_typedef               = fopen(LYC_AST_H_TYPEDEF,      "wt");
         out_lyc_ast_h_declaration           = fopen(LYC_AST_H_DECLARATION,  "wt");
@@ -344,10 +349,21 @@ int metacc_main(int argc, const char *argv[]) {
         }
         // 
         {
+            int i, len;
+            extern struct table tokens;
+            extern struct table string_token_keys;
+            extern struct table string_token_values;
             out = out_lyc_y_token;
 
-            // 
-            ;
+            // define string tokens list.
+            for (i=0, len=string_token_keys.count; i < len; ++i) {
+                fprintf(out, "%%token TOKEN_%-5d /* %s */\n", i, string_token_values.list[i]);
+            }
+
+            // define extended tokens list.
+            for (i=0, len=tokens.count; i < len; ++i) {
+                fprintf(out, "%%token %-12s /* %s */\n", tokens.list[i], tokens.list[i]);
+            }
 
             //
             fclose(out_lyc_y_token);

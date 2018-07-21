@@ -16,6 +16,7 @@ FILE *out_lyc;
 FILE *out_lyc_y;
 FILE *out_lyc_y_token;
 FILE *out_lyc_l;
+FILE *out_lyc_l_tokendef;
 FILE *out_lyc_ast_h;
 FILE *out_lyc_ast_h_typedef;
 FILE *out_lyc_ast_h_declaration;
@@ -55,31 +56,88 @@ static const char *ast_str(ast_type type) {
 }
 
 //==============================================================================
-// symbols table.
-struct {
-    char *table[1024];
-    int count;
-
-} symbols;
+// tables.
 // 
-void symbols_init() {
-    symbols.count = 0;
+void table_init(struct table *table) {
+    table->count = 0;
 }
 // 
-int symbols_index(const char *symbol_name) {
+int table_index(struct table *table, const char *key) {
     int i, len;
-    const char **table = (const char **)symbols.table;
+    const char **list = (const char **)table->list;
 
-    for (i=0, len=symbols.count; i < len; ++i) {
-        if (strcmp(table[i], symbol_name) == 0) {
+    for (i=0, len=table->count; i < len; ++i) {
+        if (strcmp(list[i], key) == 0) {
             return i;
         }
     }
     return -1;
 }
 // 
-void symbols_add(const char *symbol_name) {
-    symbols.table[symbols.count++] = strdup(symbol_name);
+void table_add(struct table *table, const char *key) {
+    table->list[table->count++] = strdup(key);
+}
+
+
+//------------------------------------------------------------------------------
+// 
+struct table symbols;
+// 
+void symbols_init() {
+    table_init(&symbols);
+}
+// 
+int symbols_index(const char *symbol_name) {
+    return table_index(&symbols, symbol_name);
+}
+// 
+int symbols_add(const char *symbol_name) {
+    if (symbols_index(symbol_name) < 0) {
+        table_add(&symbols, symbol_name);
+        return 0;
+    }
+    else {
+        return 1;
+    }
+}
+
+//------------------------------------------------------------------------------
+struct table string_token_keys;
+struct table string_token_values;
+// 
+void string_tokens_init() {
+    table_init(&string_token_keys);
+    table_init(&string_token_values);
+}
+// 
+int string_tokens_index(const char *symbol_name) {
+    return table_index(&string_token_values, symbol_name);
+}
+// 
+int string_tokens_add(const char *key, const char *value) {
+    if (string_tokens_index(key) < 0) {
+        table_add(&string_token_keys, key);
+        table_add(&string_token_values, value);
+        return 0;
+    }
+    else {
+        return 1;
+    }
+}
+
+//------------------------------------------------------------------------------
+struct table tokens;
+// 
+void tokens_init() {
+    table_init(&tokens);
+}
+// 
+int tokens_index(const char *symbol_name) {
+    return table_index(&tokens, symbol_name);
+}
+// 
+void tokens_add(const char *token_name) {
+    table_add(&tokens, token_name);
 }
 
 
@@ -130,18 +188,22 @@ void ast_list_iterate(struct ast_list *self) {
 
 // 
 static int description_depth = 0;
+// 
 static int describe_begin() {
     return ++description_depth;
 }
+// 
 static int describe_end() {
     return --description_depth;
 }
+// 
 static void indent_depth(const char *s) {
     int i;
     for (i=0; i<description_depth; ++i) {
         fprintf(out_jj, "%s", s); 
     }
 }
+// 
 static void tab_depth() {
     indent_depth("    ");
 }
@@ -573,6 +635,7 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
 
             // 
             fprintf(out_lyc_ast_h_typedef, "    %s,\n", buf);
+
             // 
             fprintf(out_lyc_ast_h_declaration, "// \n");
             fprintf(out_lyc_ast_h_declaration, "struct ast_%s {\n", symbol_name);
@@ -590,12 +653,7 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
             fprintf(out_lyc_ast_h_declaration, "\n");
             fprintf(out_lyc_ast_h_declaration, "\n");
  
-
             // 
-            // fprintf(out_lyc_ast_c_templates, "// \n");
-            // fprintf(out_lyc_ast_c_templates, "struct ast_%s {\n", symbol_name);
-            // fprintf(out_lyc_ast_c_templates, "    %-31s %s;\n", "ast_type", "type");
-            // fprintf(out_lyc_ast_c_templates, "};\n");
             fprintf(out_lyc_ast_c_templates, "// \n");
             fprintf(out_lyc_ast_c_templates, "void ast_%s_describe(struct ast_%s *self) {\n", symbol_name, symbol_name);
             fprintf(out_lyc_ast_c_templates, "    \n");
@@ -726,7 +784,8 @@ void ast_symbol_value_element_action(struct ast_symbol_value_element *self) {
     if (out_lyc) {
         switch (self->elem_type) {
             case AST_MCC_STRING:
-                fprintf(out_lyc, "\"%s\" ", self->u.mcc_string);
+                // fprintf(out_lyc, "\"%s\" ", self->u.mcc_string);
+                mcc_string_action(self->u.mcc_string);
                 break;
             case AST_MCC_SYMBOL:
                 fprintf(out_lyc, "%s ", self->u.mcc_symbol);
@@ -759,6 +818,23 @@ void ast_symbol_value_element_action(struct ast_symbol_value_element *self) {
     }
 }
 // 
+void mcc_string_action(const char *string_value) {
+    char key_name[256];
+    int index = string_tokens_index(string_value);
+
+    // 
+    sprintf(key_name, "TOKEN_%d", index);
+    if (index < 0) {
+        index = string_token_keys.count;
+        string_tokens_add(key_name, string_value);
+
+        // 
+        sprintf(key_name, "TOKEN_%d", index);
+        fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", string_value, key_name);
+    }
+    fprintf(out_lyc, "%s /* %s */ ", key_name, string_value);
+}
+// 
 void ast_list_parameter_action(struct ast_list_parameter *self) {
     if (out_jj) {
         ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
@@ -781,47 +857,41 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
             struct ast_list *list = ast_symbol_value->ast_symbol_value_element_list;
 
             // 
-            {
-                if (list->count == 1) {
-                    char symbol_name[256] = "";
-                    struct ast_symbol_value_element *ast_symbol_value_element = ast_list_first(list)->elem;
-                    ast_type type = ast_symbol_value_element->elem_type;
+            if (list->count == 1) {
+                char symbol_name[256] = "";
+                struct ast_symbol_value_element *ast_symbol_value_element = ast_list_first(list)->elem;
+                ast_type type = ast_symbol_value_element->elem_type;
 
-                    // fprintf(stderr, "type: [%s]\n", ast_str(ast_list_first(list)->type));
-                    // fprintf(stderr, "type: [%s]\n", ast_str(ast_symbol_value_element->type));
-
-                    switch (type) {
-                        case AST_MCC_STRING:
-                            sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_string);
-                            break;
-                        case AST_MCC_SYMBOL:
-                            sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_symbol);
-                            break;
-                        case AST_CSTRING:
-                            sprintf(symbol_name, "%s", ast_symbol_value_element->u.cstring);
-                            break;
-                        case AST_NULL:
-                            sprintf(symbol_name, "%s", ast_symbol_value_element->u.null_);
-                            break;
-                        case AST_TOKEN:
-                            sprintf(symbol_name, "%s", "ast_token");
-                            break;
-                            // case AST_LIST_NODE:
-                            //    sprintf(symbol_name, "%s", "ast_list_node");
-                            //    break;
-                        default:
-                            fprintf(stderr, "\tunknown type [%s] \n", ast_str(type));
-                            break;
-                    }
-
-                    fprintf(out_lyc, "%s_LIST ", symbol_name);
-                    if (symbols_index(symbol_name) < 0) {
-                        symbols_add(symbol_name);
-                    }
+                switch (type) {
+                    case AST_MCC_STRING:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_string);
+                        break;
+                    case AST_MCC_SYMBOL:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_symbol);
+                        break;
+                    case AST_CSTRING:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.cstring);
+                        break;
+                    case AST_NULL:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.null_);
+                        break;
+                    case AST_TOKEN:
+                        sprintf(symbol_name, "%s", "ast_token");
+                        break;
+                    default:
+                        fprintf(stderr, "\tlist_parameter_action >> unknown type [%s] \n", ast_str(type));
+                        break;
                 }
-                else {
-                    fprintf(out_lyc, "LIST(%d) ", list->count);
+
+                fprintf(out_lyc, "%s_LIST ", symbol_name);
+                if (symbols_index(symbol_name) < 0) {
+                    symbols_add(symbol_name);
+
+                    // 
                 }
+            }
+            else {
+                fprintf(out_lyc, "LIST(%d) ", list->count);
             }
 
             // 
@@ -838,11 +908,6 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
             //// ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
             //// fprintf(out_lyc, ")* ");
         }
-
-
-    }
-    else {
-
     }
 }
 // 
@@ -855,10 +920,56 @@ void ast_option_parameter_action(struct ast_option_parameter *self) {
     }
     
     // 
+    //
     if (out_lyc) {
-        fprintf(out_lyc, "( ");
-        ast_list_traverse(self->ast_option_parameter_value->ast_symbol_value_list);
-        fprintf(out_lyc, ")? ");
+        struct ast_list *ast_symbol_value_list = self->ast_option_parameter_value->ast_symbol_value_list;
+
+        if (ast_symbol_value_list->count == 1) {
+            struct ast_symbol_value *ast_symbol_value = ast_list_first(ast_symbol_value_list)->elem;
+            struct ast_list *list = ast_symbol_value->ast_symbol_value_element_list;
+
+            // 
+            if (list->count == 1) {
+                char symbol_name[256] = "";
+                struct ast_symbol_value_element *ast_symbol_value_element = ast_list_first(list)->elem;
+                ast_type type = ast_symbol_value_element->elem_type;
+
+                switch (type) {
+                    case AST_MCC_STRING:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_string);
+                        break;
+                    case AST_MCC_SYMBOL:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_symbol);
+                        break;
+                    case AST_CSTRING:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.cstring);
+                        break;
+                    case AST_NULL:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.null_);
+                        break;
+                    case AST_TOKEN:
+                        sprintf(symbol_name, "%s", "ast_token");
+                        break;
+                    default:
+                        fprintf(stderr, "\toption_parameter_action >> unknown type [%s] \n", ast_str(type));
+                        break;
+                }
+
+                fprintf(out_lyc, "%s_OPT ", symbol_name);
+                if (symbols_index(symbol_name) < 0) {
+                    symbols_add(symbol_name);
+
+                    // 
+                }
+            }
+            else {
+                fprintf(out_lyc, "OPT(%d) ", list->count);
+            }
+        }
+
+        //// fprintf(out_lyc, "( ");
+        //// ast_list_traverse(self->ast_option_parameter_value->ast_symbol_value_list);
+        //// fprintf(out_lyc, ")? ");
     }
 }
 // 
@@ -875,9 +986,54 @@ void ast_star_parameter_action(struct ast_star_parameter *self) {
     
     // 
     if (out_lyc) {
-        fprintf(out_lyc, "( ");
-        ast_list_traverse(self->ast_star_parameter_value->ast_symbol_value_list);
-        fprintf(out_lyc, ")* ");
+        struct ast_list *ast_symbol_value_list = self->ast_star_parameter_value->ast_symbol_value_list;
+
+        if (ast_symbol_value_list->count == 1) {
+            struct ast_symbol_value *ast_symbol_value = ast_list_first(ast_symbol_value_list)->elem;
+            struct ast_list *list = ast_symbol_value->ast_symbol_value_element_list;
+
+            // 
+            if (list->count == 1) {
+                char symbol_name[256] = "";
+                struct ast_symbol_value_element *ast_symbol_value_element = ast_list_first(list)->elem;
+                ast_type type = ast_symbol_value_element->elem_type;
+
+                switch (type) {
+                    case AST_MCC_STRING:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_string);
+                        break;
+                    case AST_MCC_SYMBOL:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.mcc_symbol);
+                        break;
+                    case AST_CSTRING:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.cstring);
+                        break;
+                    case AST_NULL:
+                        sprintf(symbol_name, "%s", ast_symbol_value_element->u.null_);
+                        break;
+                    case AST_TOKEN:
+                        sprintf(symbol_name, "%s", "ast_token");
+                        break;
+                    default:
+                        fprintf(stderr, "\tstar_parameter_action >> unknown type [%s] \n", ast_str(type));
+                        break;
+                }
+
+                fprintf(out_lyc, "%s_STAR ", symbol_name);
+                if (symbols_index(symbol_name) < 0) {
+                    symbols_add(symbol_name);
+
+                    // 
+                }
+            }
+            else {
+                fprintf(out_lyc, "STAR(%d) ", list->count);
+            }
+        }
+
+        //// fprintf(out_lyc, "( ");
+        //// ast_list_traverse(self->ast_star_parameter_value->ast_symbol_value_list);
+        //// fprintf(out_lyc, ")* ");
     }
 }
 // 
@@ -928,17 +1084,21 @@ void ast_token_definition_action(struct ast_token_definition *self) {
     
     // 
     if (out_lyc) {
-        char token_key_buf[256];
-        char token_value_buf[256];
-        sprintf(token_key_buf, "\"%s\"", self->token_key);
-        sprintf(token_value_buf, "%s", self->token_key);
-        fprintf(out_lyc_l, "%-40s return %s;\n", token_key_buf, token_value_buf);
+        // char token_key_buf[128];
+        // char token_value_buf[128];
+        // sprintf(token_key_buf, "\"%s\"", self->token_key);
+        // sprintf(token_value_buf, "%s", self->token_key);
+
+        // fprintf(out_lyc_l_tokendef, "%-40s return %s;\n", token_key_buf, token_value_buf);
         
         // 
-        fprintf(out_lyc_y_token, "%%token %s\n", self->token_key);
+        if (tokens_index(self->token_key) < 0) {
+            tokens_add(self->token_key);
+        }
+        // fprintf(out_lyc_y_token, "%%token %s\n", self->token_key);
         
         // 
-        fprintf(out_lyc, "%s", self->token_key);
+        // fprintf(out_lyc, "%s", self->token_key);
     }
 }
 
