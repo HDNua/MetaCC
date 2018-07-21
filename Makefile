@@ -45,6 +45,7 @@ test1:
 
 test2:
 	./$(EXE) lyc < symbols.list
+	make clean_lyc
 
 clean:
 	rmtmp
@@ -59,3 +60,9 @@ clean:
 	if [ -f Makefile_out ]; then \
 		mv Makefile_out out/Makefile; \
 	fi
+
+clean_lyc:
+	rm -rf out/parser.l.*
+	rm -rf out/parser.y.*
+	rm -rf out/parser_ast.c.*
+	rm -rf out/parser_ast.h.*

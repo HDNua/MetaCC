@@ -642,13 +642,9 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
             fprintf(out_lyc_ast_h_declaration, "    %-31s %s;\n", "ast_type", "type");
             fprintf(out_lyc_ast_h_declaration, "};\n");
             fprintf(out_lyc_ast_h_declaration, "// \n");
-            fprintf(out_lyc_ast_h_declaration, "void ast_%s_describe(struct ast_%s *self) {\n", symbol_name, symbol_name);
-            fprintf(out_lyc_ast_h_declaration, "    \n");
-            fprintf(out_lyc_ast_h_declaration, "}\n");
+            fprintf(out_lyc_ast_h_declaration, "void ast_%s_describe(struct ast_%s *self);\n", symbol_name, symbol_name);
             fprintf(out_lyc_ast_h_declaration, "// \n");
-            fprintf(out_lyc_ast_h_declaration, "void ast_%s_action(struct ast_%s *self) {\n", symbol_name, symbol_name);
-            fprintf(out_lyc_ast_h_declaration, "    \n");
-            fprintf(out_lyc_ast_h_declaration, "}\n");
+            fprintf(out_lyc_ast_h_declaration, "void ast_%s_action(struct ast_%s *self);\n", symbol_name, symbol_name);
             fprintf(out_lyc_ast_h_declaration, "\n");
             fprintf(out_lyc_ast_h_declaration, "\n");
             fprintf(out_lyc_ast_h_declaration, "\n");
@@ -691,7 +687,7 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
                     // fprintf(out_jj, " ");
                     ast_symbol_value_element_action(ast_elem);
                 }
-                fprintf(out_lyc, "\n    {\n        $$ = NULL;\n    }\n");
+                fprintf(out_lyc, "\n    {\n        $$ = 0;\n    }\n");
             }
         }
 
@@ -858,6 +854,7 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
 
             // 
             if (list->count == 1) {
+            // if (1) {
                 char symbol_name[256] = "";
                 struct ast_symbol_value_element *ast_symbol_value_element = ast_list_first(list)->elem;
                 ast_type type = ast_symbol_value_element->elem_type;
@@ -891,7 +888,8 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
                 }
             }
             else {
-                fprintf(out_lyc, "LIST(%d) ", list->count);
+                // fprintf(out_lyc, "LIST(%d) ", list->count);
+                fprintf(out_lyc, "/* LIST(%d) */", list->count);
             }
 
             // 
@@ -922,6 +920,7 @@ void ast_option_parameter_action(struct ast_option_parameter *self) {
     // 
     //
     if (out_lyc) {
+        /*
         struct ast_list *ast_symbol_value_list = self->ast_option_parameter_value->ast_symbol_value_list;
 
         if (ast_symbol_value_list->count == 1) {
@@ -966,10 +965,13 @@ void ast_option_parameter_action(struct ast_option_parameter *self) {
                 fprintf(out_lyc, "OPT(%d) ", list->count);
             }
         }
+        */
 
         //// fprintf(out_lyc, "( ");
         //// ast_list_traverse(self->ast_option_parameter_value->ast_symbol_value_list);
         //// fprintf(out_lyc, ")? ");
+        
+        fprintf(out_lyc, "/* OPTION */ ");
     }
 }
 // 
@@ -1027,7 +1029,8 @@ void ast_star_parameter_action(struct ast_star_parameter *self) {
                 }
             }
             else {
-                fprintf(out_lyc, "STAR(%d) ", list->count);
+                // fprintf(out_lyc, "STAR(%d) ", list->count);
+                fprintf(out_lyc, "/* STAR(%d) */ ", list->count);
             }
         }
 
