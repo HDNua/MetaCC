@@ -1,3 +1,15 @@
+MetaCC - Meta Compiler Compiler v0.2.2.0 (IMPORTANT)
+----
+
+- 와 진짜 너무 잘 된다 이거 개천재인줄 ㄹㅇ
+
+
+- 옵션이랑 스타 처리하고 세 개에서 나타나는 토큰에 대한 처리만 추가하자.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.2.1.5
 ----
 
