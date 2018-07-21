@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.2.0.1
+----
+
+- yacc 방식으로 vast 개발 중.
+> 템플릿 자동 생성 코드 작성 중.
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.2.0.0
 ----
 

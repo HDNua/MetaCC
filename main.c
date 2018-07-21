@@ -10,11 +10,14 @@
 
 //==============================================================================
 //
-const char *LYC_Y_SYNTAX = "out/parser.y.syntax";
-const char *LYC_Y_TOKEN = "out/parser.y.token";
-const char *LYC_L = "out/parser.l";
-const char *LYC_AST_H = "out/parser_ast.h";
-const char *LYC_AST_C = "out/parser_ast.c";
+const char *LYC_Y                   = "out/parser.y";
+const char *LYC_Y_SYNTAX            = "out/parser.y.syntax";
+const char *LYC_Y_TOKEN             = "out/parser.y.token";
+const char *LYC_L                   = "out/parser.l";
+const char *LYC_AST_H               = "out/parser_ast.h";
+const char *LYC_AST_H_TYPEDEF       = "out/parser_ast.h.typedef";
+const char *LYC_AST_C               = "out/parser_ast.c";
+const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.c.templates";
 
 //==============================================================================
 // 
@@ -62,11 +65,14 @@ int metacc_init(int argc, const char *argv[]) {
         extern FILE *out_lyc_ast_c;
 
         // 
-        out_lyc                 = fopen(LYC_Y_SYNTAX,   "wt");
-        out_lyc_y_token         = fopen(LYC_Y_TOKEN,    "wt");      
-        out_lyc_l               = fopen(LYC_L,          "wt");
-        out_lyc_ast_h           = fopen(LYC_AST_H,      "wt");
-        out_lyc_ast_c           = fopen(LYC_AST_C,      "wt");
+        out_lyc                 = fopen(LYC_Y_SYNTAX,           "wt");
+        out_lyc_y               = fopen(LYC_Y,                  "wt");
+        out_lyc_y_token         = fopen(LYC_Y_TOKEN,            "wt");      
+        out_lyc_l               = fopen(LYC_L,                  "wt");
+        out_lyc_ast_h           = fopen(LYC_AST_H,              "wt");
+        out_lyc_ast_h_typedef   = fopen(LYC_AST_H_TYPEDEF,      "wt");
+        out_lyc_ast_c           = fopen(LYC_AST_C,              "wt");
+        out_lyc_ast_c_templates = fopen(LYC_AST_C_TEMPLATES,    "wt");
 
         // 
     }
@@ -222,32 +228,6 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
-            fprintf(out, "// \n");
-            fprintf(out, "struct ast_list_node {\n");
-            fprintf(out, "    ast_type             type;\n");
-            fprintf(out, "    ast_type             elem_type;\n");
-            fprintf(out, "    void                 *elem;\n");
-            fprintf(out, "    struct ast_list_node *next;\n");
-            fprintf(out, "};\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_node_describe(struct ast_list_node *node);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_node_action(struct ast_list_node *node);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "struct ast_list {\n");
-            fprintf(out, "\n");
-            fprintf(out, "};\n");
-            fprintf(out, "// \n");
-            fprintf(out, "struct ast_list *ast_list_new(ast_type type);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_append(struct ast_list *list, void *elem, ast_type type);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_iterate(struct ast_list *list);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_traverse(struct ast_list *list);\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
         }
         // 
         {
@@ -258,7 +238,89 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
+            fprintf(out, "//==============================================================================\n");
+            fprintf(out, "// \n");
+            fprintf(out, "static struct ast_list_node *ast_list_node_new(void *elem, ast_type type) {\n");
+            fprintf(out, "    struct ast_list_node *ret = (struct ast_list_node *)malloc(sizeof(struct ast_list_node));\n");
+            fprintf(out, "    ret->type = AST_LIST_NODE;\n");
+            fprintf(out, "    ret->elem_type = type;\n");
+            fprintf(out, "    ret->elem = elem;\n");
+            fprintf(out, "    ret->next = NULL;\n");
+            fprintf(out, "    return ret;\n");
+            fprintf(out, "}\n");
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list *ast_list_new(ast_type type) {\n");
+            fprintf(out, "    struct ast_list *ret = (struct ast_list *)malloc(sizeof(struct ast_list));\n");
+            fprintf(out, "    ret->type = AST_LIST;\n");
+            fprintf(out, "    ret->elem_type = type;\n");
+            fprintf(out, "    ret->tail = &ret->head;\n");
+            fprintf(out, "    ret->count = 0;\n");
+            fprintf(out, "    return ret;\n");
+            fprintf(out, "};\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_append(struct ast_list *self, void *elem, ast_type type) {\n");
+            fprintf(out, "    struct ast_list_node *node = ast_list_node_new(elem, type);\n");
+            fprintf(out, "    self->tail->next = node;\n");
+            fprintf(out, "    self->tail = node;\n");
+            fprintf(out, "    self->count += 1;\n");
+            fprintf(out, "}\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_iterate(struct ast_list *self) {\n");
+            fprintf(out, "    struct ast_list_node *node;\n");
+            fprintf(out, "    for (node=self->head.next; node; node=node->next) {\n");
+            fprintf(out, "        ast_list_node_describe(node);\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "}\n");
             fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "// \n");
+            fprintf(out, "static int description_depth = 0;\n");
+            fprintf(out, "static int describe_begin() {\n");
+            fprintf(out, "    return ++description_depth;\n");
+            fprintf(out, "}\n");
+            fprintf(out, "static int describe_end() {\n");
+            fprintf(out, "    return --description_depth;\n");
+            fprintf(out, "}\n");
+            fprintf(out, "static void indent_depth(const char *s) {\n");
+            fprintf(out, "    int i;\n");
+            fprintf(out, "    for (i=0; i<description_depth; ++i) {\n");
+            fprintf(out, "        fprintf(out_jj, \"%%s\", s);\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "}\n");
+            fprintf(out, "static void tab_depth() {\n");
+            fprintf(out, "    indent_depth(\"    \");\n");
+            fprintf(out, "}\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_iterate(struct ast_list *list) {\n");
+            fprintf(out, "    \n");
+            fprintf(out, "}\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_node_describe(struct ast_list_node *node) {\n");
+            fprintf(out, "    \n");
+            fprintf(out, "}\n");
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list *ast_list_new(ast_type type) {\n");
+            fprintf(out, "    \n");
+            fprintf(out, "}\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_append(struct ast_list *list, void *elem, ast_type type) {\n");
+            fprintf(out, "    \n");
+            fprintf(out, "}\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_traverse(struct ast_list *list) {\n");
+            fprintf(out, "    \n");
+            fprintf(out, "}\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_node_action(struct ast_list_node *node) {\n");
+            fprintf(out, "    \n");
+            fprintf(out, "}\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
@@ -278,22 +340,75 @@ int metacc_main(int argc, const char *argv[]) {
         // 
         {
             out = out_lyc_y_token;
+
+            // 
+            ;
+
+            //
             fclose(out_lyc_y_token);
         }
         // 
         {
             out = out_lyc_l;
+
+            // 
             paste_s2f(out, LYC_L);
+
+            // 
             fclose(out_lyc_l);
         }
         // 
         {
             out = out_lyc_ast_h;
 
-            // type definitions
+            // type definitions.
+            fprintf(out, "typedef enum ast_type {\n");
+            fprintf(out, "    AST_UNTYPED,\n");
+            fprintf(out, "    AST_LIST,\n");
+            fprintf(out, "    AST_LIST_NODE,\n");
+            paste_s2f(out, LYC_AST_H_TYPEDEF);
+            fprintf(out, "} ast_type;\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
             
-            //
+            // common list & node definitions.
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list_node {\n");
+            fprintf(out, "    ast_type                      type;\n");
+            fprintf(out, "    ast_type                      elem_type;\n");
+            fprintf(out, "    void                          *elem;\n");
+            fprintf(out, "    struct ast_list_node          *next;\n");
+            fprintf(out, "};\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_node_describe(struct ast_list_node *node);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_node_action(struct ast_list_node *node);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list {\n");
+            fprintf(out, "    ast_type                      type;\n");
+            fprintf(out, "    ast_type                      elem_type;\n");
+            fprintf(out, "    \n");
+            fprintf(out, "    struct ast_list_node          head;\n");
+            fprintf(out, "    struct ast_list_node          *tail;\n");
+            fprintf(out, "    int                           count;\n");
+            fprintf(out, "};\n");
+            fprintf(out, "// \n");
+            fprintf(out, "struct ast_list *ast_list_new(ast_type type);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_append(struct ast_list *list, void *elem, ast_type type);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_iterate(struct ast_list *list);\n");
+            fprintf(out, "// \n");
+            fprintf(out, "void ast_list_traverse(struct ast_list *list);\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            
+            // 
+            paste_s2f(out, LYC_AST_C_TEMPLATES);
 
+            // 
             fprintf(out, "#endif\n");
             fclose(out_lyc_ast_h);
         }
@@ -304,7 +419,7 @@ int metacc_main(int argc, const char *argv[]) {
         }
 
         //
-        out_lyc_y = fopen("out/parser.y", "wt");
+        out_lyc_y = fopen(LYC_Y, "wt");
 
         // 
         fprintf(out_lyc_y, "%%{\n");

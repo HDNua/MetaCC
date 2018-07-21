@@ -17,7 +17,9 @@ FILE *out_lyc_y;
 FILE *out_lyc_y_token;
 FILE *out_lyc_l;
 FILE *out_lyc_ast_h;
+FILE *out_lyc_ast_h_typedef;
 FILE *out_lyc_ast_c;
+FILE *out_lyc_ast_c_templates;
 
 //------------------------------------------------------------------------------
 FILE *out_lycpp;
@@ -45,6 +47,15 @@ static const char *ast_str(ast_type type) {
 
     return ast_str_[type];
 }
+
+//==============================================================================
+// 
+
+
+
+
+
+
 
 
 
@@ -409,7 +420,6 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
             return;
         }
         else if (strcmp(ast_key_attr->attributes, "TERMINAL") == 0) {
-            // 
             // return;
         }
         else {
@@ -506,11 +516,48 @@ void ast_symbol_definition_action(struct ast_symbol_definition *self) {
     if (out_lyc)
     {
         // 
-        fprintf(out_lyc_ast_h, " \n");
-        fprintf(out_lyc_ast_c, " \n");
+        /// fprintf(out_lyc_ast_h, " \n");
+        /// fprintf(out_lyc_ast_c, " \n");
         
         // 
         fprintf(out_lyc, "%s \n", symbol_name);
+
+        {
+            // 
+            char buf[MAX_TOKEN_LEN];
+            char *dst = buf;
+            const char *src = symbol_name;
+
+            // 
+            *dst++ = 'A';
+            *dst++ = 'S';
+            *dst++ = 'T';
+            *dst++ = '_';
+            while (*src) {
+                *dst++ = toupper(*src++);
+            }
+            *dst++ = '\0';
+
+            // 
+            fprintf(out_lyc_ast_h_typedef, "    %s,\n", buf);
+
+            // 
+            // fprintf(out_lyc_ast_c_templates, "// \n");
+            // fprintf(out_lyc_ast_c_templates, "struct ast_%s {\n", symbol_name);
+            // fprintf(out_lyc_ast_c_templates, "    %-31s %s;\n", "ast_type", "type");
+            // fprintf(out_lyc_ast_c_templates, "};\n");
+            fprintf(out_lyc_ast_c_templates, "// \n");
+            fprintf(out_lyc_ast_c_templates, "void ast_%s_describe(struct ast_%s *self) {\n", symbol_name, symbol_name);
+            fprintf(out_lyc_ast_c_templates, "    \n");
+            fprintf(out_lyc_ast_c_templates, "}\n");
+            fprintf(out_lyc_ast_c_templates, "// \n");
+            fprintf(out_lyc_ast_c_templates, "void ast_%s_action(struct ast_%s *self) {\n", symbol_name, symbol_name);
+            fprintf(out_lyc_ast_c_templates, "    \n");
+            fprintf(out_lyc_ast_c_templates, "}\n");
+            fprintf(out_lyc_ast_c_templates, "\n");
+            fprintf(out_lyc_ast_c_templates, "\n");
+            fprintf(out_lyc_ast_c_templates, "\n");
+        }
 
         // gather syntax list.
         {
@@ -681,6 +728,7 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
         
         // 
         // fprintf(out_lyc, "%s ", "_list");
+        fprintf(out_lyc, "( ");
         if (strcmp(self->list_parameter_delim, "") != 0) {
             fprintf(out_lyc, "\"%s\" ", self->list_parameter_delim);
         }

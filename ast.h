@@ -216,7 +216,9 @@ extern FILE *out_lyc_y;
 extern FILE *out_lyc_y_token;
 extern FILE *out_lyc_l;
 extern FILE *out_lyc_ast_h;
+extern FILE *out_lyc_ast_h_typedef;
 extern FILE *out_lyc_ast_c;
+extern FILE *out_lyc_ast_c_templates;
 
 //------------------------------------------------------------------------------
 extern FILE *out_lycpp;
