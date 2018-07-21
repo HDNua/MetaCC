@@ -728,15 +728,24 @@ void ast_list_traverse(FILE *out, struct ast_list *self) {
 
     // 
     if (out_lyc) {
-        for (node=self->head.next; node; node=node->next) {
-            ast_list_node_action(out, node);
+        if (self->elem_type == AST_SYMBOL_VALUE) {
+            ++depth;
+            for (node=self->head.next; node; node=node->next) {
+                ast_list_node_action(out, node);
 
-            if (self->elem_type == AST_SYMBOL_VALUE) {
-                if (node->next) {
-                    if (depth == 0) {
-                        fprintf(out_lyc, ":");
+                if (self->elem_type == AST_SYMBOL_VALUE) {
+                    if (node->next) {
+                        if (depth == 0) {
+                            fprintf(out_lyc, ":");
+                        }
                     }
                 }
+            }
+            --depth;
+        }
+        else {
+            for (node=self->head.next; node; node=node->next) {
+                ast_list_node_action(out, node);
             }
         }
     }
@@ -1172,6 +1181,35 @@ void ast_option_parameter_action(FILE *out, struct ast_option_parameter *self) {
     
     //
     if (out_lyc) {
+        char key_name[256];
+        int index;
+
+        ast_option_parameter_value_action(out, self->ast_option_parameter_value);
+        // ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
+
+        index = ast_table_OPT_index(self);
+        if (index < 0) {
+            index = table_OPT_keys.count;
+
+            // 
+            sprintf(key_name, "OPT_%d", index);
+            ast_table_OPT_add(key_name, self);
+
+            // 
+            fprintf(out_lyc_y_option, "OPT_%d\n", index);
+            fprintf(out_lyc_y_option, "    : /* empty */\n");
+            fprintf(out_lyc_y_option, "    | ");
+            
+            // ast_list_parameter_value_action(self->ast_list_parameter_value);
+            ast_list_traverse(out_lyc_y_option, self->ast_option_parameter_value->ast_symbol_value_list);
+
+            fprintf(out_lyc_y_option, "\n");
+            fprintf(out_lyc_y_option, "    ;\n");
+        }
+
+        // 
+        fprintf(out, "OPT_%d ", index);
+
     }
 }
 // 
@@ -1185,6 +1223,39 @@ void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self) {
     
     // 
     if (out_lyc) {
+        char key_name[256];
+        int index;
+
+        ast_star_parameter_value_action(out, self->ast_star_parameter_value);
+
+        index = ast_table_STAR_index(self);
+        if (index < 0) {
+            index = table_STAR_keys.count;
+
+            // 
+            sprintf(key_name, "STAR_%d", index);
+            ast_table_STAR_add(key_name, self);
+
+            // 
+            fprintf(out_lyc_y_star, "STAR_%d\n", index);
+            fprintf(out_lyc_y_star, "    : /* empty */\n");
+            fprintf(out_lyc_y_star, "    | ");
+            
+            ast_list_traverse(out_lyc_y_star, self->ast_star_parameter_value->ast_symbol_value_list);
+
+            fprintf(out_lyc_y_star, "\n");
+            fprintf(out_lyc_y_star, "    | STAR_%d ", index);
+
+            // ast_list_parameter_value_action(self->ast_list_parameter_value);
+            ast_list_traverse(out_lyc_y_star, self->ast_star_parameter_value->ast_symbol_value_list);
+
+            fprintf(out_lyc_y_star, "\n");
+            fprintf(out_lyc_y_star, "    ;\n");
+        }
+
+        // 
+        fprintf(out, "STAR_%d ", index);
+
     }
 }
 // 
@@ -1196,7 +1267,7 @@ void ast_list_parameter_value_action(FILE *out, struct ast_list_parameter_value 
 
     // 
     if (out_lyc) {
-        fprintf(stderr, "/* LIST(%d) */\n", self->ast_symbol_value_list->count);
+        // fprintf(stderr, "/* LIST(%d) */\n", self->ast_symbol_value_list->count);
         ast_list_traverse(out, self->ast_symbol_value_list);
     }
 }
@@ -1209,7 +1280,7 @@ void ast_option_parameter_value_action(FILE *out, struct ast_option_parameter_va
 
     // 
     if (out_lyc) {
-        fprintf(stderr, "/* OPTION(%d) */\n", self->ast_symbol_value_list->count);
+        // fprintf(stderr, "/* OPTION(%d) */\n", self->ast_symbol_value_list->count);
         ast_list_traverse(out, self->ast_symbol_value_list);
     }
 }
@@ -1222,7 +1293,7 @@ void ast_star_parameter_value_action(FILE *out, struct ast_star_parameter_value 
 
     // 
     if (out_lyc) {
-        fprintf(stderr, "/* STAR(%d) */\n", self->ast_symbol_value_list->count);
+        // fprintf(stderr, "/* STAR(%d) */\n", self->ast_symbol_value_list->count);
         ast_list_traverse(out, self->ast_symbol_value_list);
     }
 }

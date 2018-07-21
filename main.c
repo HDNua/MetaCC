@@ -347,8 +347,16 @@ int metacc_main(int argc, const char *argv[]) {
             out = out_lyc;
 
             // 
+            fclose(out_lyc_y_list);
+            out_lyc_y_list = NULL;
             paste_s2f(out, LYC_Y_LIST);
+
+            fclose(out_lyc_y_option);
+            out_lyc_y_option = NULL;
             paste_s2f(out, LYC_Y_OPT);
+
+            fclose(out_lyc_y_star);
+            out_lyc_y_star = NULL;
             paste_s2f(out, LYC_Y_STAR);
 
             // 

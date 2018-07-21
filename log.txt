@@ -1,3 +1,15 @@
+MetaCC - Meta Compiler Compiler v0.2.2.1
+----
+
+- 옵션과 스타에 대한 처리 완료.
+
+
+! Too many gotos... 문법이 너무 커서 담을 수가 없대요
+> identifier라던가 지울 수 있는 문법을 지워봅시다.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.2.2.0 (IMPORTANT)
 ----
 
