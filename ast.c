@@ -279,60 +279,164 @@ static void tab_depth() {
 // 
 int ast_list_node_compare(const struct ast_list_node *p1, const struct ast_list_node *p2) {
     if (p1 != p2) {
-        return 1;
+        if (p1->type != p2->type) {
+            fprintf(stderr, ">> super weird situation occurred \n");
+            return 1;
+        }
+        else if (p1->elem_type != p2->elem_type) {
+            return 1;
+        }
+        else {
+            switch (p1->elem_type) {
+                case AST_LIST:
+                    return ast_list_compare(p1->elem, p2->elem);
+                case AST_SYMBOL_DEFINITION:
+                    return ast_symbol_definition_compare(p1->elem, p2->elem);
+                case AST_SYMBOL_KEY:
+                    return ast_symbol_key_compare(p1->elem, p2->elem);
+                case AST_KEY_ATTRIBUTES:
+                    return ast_key_attributes_compare(p1->elem, p2->elem);
+                case AST_SYMBOL_VALUE:
+                    return ast_symbol_value_compare(p1->elem, p2->elem);
+                case AST_SYMBOL_VALUE_ELEMENT:
+                    return ast_symbol_value_element_compare(p1->elem, p2->elem);
+                case AST_LIST_PARAMETER:
+                    return ast_list_parameter_compare(p1->elem, p2->elem);
+                case AST_OPTION_PARAMETER:
+                    return ast_option_parameter_compare(p1->elem, p2->elem);
+                case AST_STAR_PARAMETER:
+                    return ast_star_parameter_compare(p1->elem, p2->elem);
+                case AST_TOKEN_DEFINITION:
+                    return ast_token_definition_compare(p1->elem, p2->elem);
+                default:
+                    fprintf(stderr, "list_node_cmp >> invalid type [%s] \n", ast_str(p1->elem_type));
+                    return 1;
+            }
+        }
     }
     return 0;
 }
 // 
 int ast_list_compare(const struct ast_list *p1, const struct ast_list *p2) {
     if (p1 != p2) {
-        return 1;
+        if (p1->type != p2->type) {
+            fprintf(stderr, ">> super weird situation occurred \n");
+            return -1;
+        }
+        else if (p1->elem_type != p2->elem_type) {
+            return 1;
+        }
+        else if (p1->count != p2->count) {
+            return 1;
+        }
+        else {
+            int i, len;
+            struct ast_list_node *n1 = ast_list_first((struct ast_list *)p1);
+            struct ast_list_node *n2 = ast_list_first((struct ast_list *)p2);
+            for (i=0, len=p1->count; i<len; ++i) {
+                if (ast_list_node_compare(n1, n2)) {
+                    return 1;
+                }
+            }
+        }
     }
     return 0;
 }
 // 
 int ast_symbol_definition_compare(const struct ast_symbol_definition *p1, const struct ast_symbol_definition *p2) {
     if (p1 != p2) {
-        return 1;
+        if (p1->type != p2->type) {
+            fprintf(stderr, ">> super weird situation occurred \n");
+            return -1;
+        }
+        else if (ast_symbol_key_compare(p1->ast_symbol_key, p2->ast_symbol_key)) {
+            return 1;
+        }
+        return ast_list_compare(p1->ast_symbol_value_list, p2->ast_symbol_value_list);
     }
     return 0;
 }
 // 
 int ast_symbol_key_compare(const struct ast_symbol_key *p1, const struct ast_symbol_key *p2) {
     if (p1 != p2) {
-        return 1;
+        if (p1->type != p2->type) {
+            fprintf(stderr, ">> super weird situation occurred \n");
+            return -1;
+        }
+        else if (strcmp(p1->symbol_name, p2->symbol_name)) {
+            return 1;
+        }
+        return ast_key_attributes_compare(p1->ast_key_attributes, p2->ast_key_attributes);
     }
     return 0;
 }
 // 
 int ast_key_attributes_compare(const struct ast_key_attributes *p1, const struct ast_key_attributes *p2) {
     if (p1 != p2) {
-        return 1;
+        if (p1->type != p2->type) {
+            fprintf(stderr, ">> super weird situation occurred \n");
+            return -1;
+        }
+        return strcmp(p1->attributes, p2->attributes);
     }
     return 0;
 }
 // 
 int ast_symbol_value_compare(const struct ast_symbol_value *p1, const struct ast_symbol_value *p2) {
     if (p1 != p2) {
-        return 1;
+        return ast_list_compare(p1->ast_symbol_value_element_list, p2->ast_symbol_value_element_list);
     }
     return 0;
 }
 // 
 int ast_symbol_value_element_compare(const struct ast_symbol_value_element *p1, const struct ast_symbol_value_element *p2) {
     if (p1 != p2) {
+        if (p1->type != p2->type) {
+            fprintf(stderr, ">> super weird situation occurred \n");
+            return -1;
+        }
+        else if (p1->elem_type != p2->elem_type) {
+            return 1;
+        }
+        else {
+            switch (p1->elem_type) {
+                case AST_MCC_STRING:
+                    return strcmp(p1->u.mcc_string, p2->u.mcc_string);
+                case AST_MCC_SYMBOL:
+                    return strcmp(p1->u.mcc_symbol, p2->u.mcc_symbol);
+                case AST_LIST_PARAMETER:
+                    return ast_list_parameter_compare(p1->u.ast_list_parameter, p2->u.ast_list_parameter);
+                case AST_OPTION_PARAMETER:
+                    return ast_option_parameter_compare(p1->u.ast_option_parameter, p2->u.ast_option_parameter);
+                case AST_STAR_PARAMETER:
+                    return ast_star_parameter_compare(p1->u.ast_star_parameter, p2->u.ast_star_parameter);
+                case AST_CSTRING:
+                    return strcmp(p1->u.cstring, p2->u.cstring);
+                case AST_NULL:
+                    return strcmp(p1->u.null_, p2->u.null_);
+                case AST_TOKEN_DEFINITION:
+                    return ast_token_definition_compare(p1->u.ast_token_definition, p2->u.ast_token_definition);
+                default:
+                    fprintf(stderr, "symbol_value_element_cmp >> invalid type [%s] \n", ast_str(p1->elem_type));
+                    return 1;
+            }
+        }
         return 1;
     }
     return 0;
 }
 // 
 int ast_list_parameter_compare(const struct ast_list_parameter *p1, const struct ast_list_parameter *p2) {
-    int ret;
-    if (ret = ast_list_parameter_value_compare(p1->ast_list_parameter_value, p2->ast_list_parameter_value)) {
-        return ret;
-    }
-    if (ret = strcmp(p1->list_parameter_delim, p2->list_parameter_delim)) {
-        return ret;
+    if (p1 != p2) {
+        if (p1->type != p2->type) {
+            return -1;
+        }
+        else if (ast_list_parameter_value_compare(p1->ast_list_parameter_value, p2->ast_list_parameter_value)) {
+            return 1;
+        }
+        else if (strcmp(p1->list_parameter_delim, p2->list_parameter_delim)) {
+            return 1;
+        }
     }
     return 0;
 }
