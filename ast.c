@@ -142,7 +142,73 @@ void tokens_add(const char *token_name) {
 
 
 
-
+//==============================================================================
+// 
+void ast_table_init(struct ast_table *table) {
+    table->count = 0;
+}
+int ast_table_index(struct ast_table *table, void *elem, int cmp(const void *, const void *)) {
+    int i, len;
+    void **list = table->list;
+    for (i=0, len=table->count; i<len; ++i) {
+        if (cmp(list[i], elem) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+void ast_table_add(struct ast_table *table, void *elem) {
+    table->list[table->count++] = elem;
+}
+//------------------------------------------------------------------------------
+struct table table_LIST_keys;
+struct table table_OPT_keys;
+struct table table_STAR_keys;
+struct ast_table table_LIST_values;
+struct ast_table table_OPT_values;
+struct ast_table table_STAR_values;
+// 
+void ast_table_LIST_init() {
+    table_init(&table_LIST_keys);
+    ast_table_init(&table_LIST_values);
+}
+// 
+int ast_table_LIST_index(struct ast_list_parameter *elem) {
+    return ast_table_index(&table_LIST_values, elem, (int(*)(const void *, const void *))ast_list_parameter_compare);
+}
+// 
+void ast_table_LIST_add(const char *key, struct ast_list_parameter *elem) {
+    table_add(&table_LIST_keys, key);
+    ast_table_add(&table_LIST_values, elem);
+}
+// 
+void ast_table_OPT_init() {
+    table_init(&table_OPT_keys);
+    ast_table_init(&table_OPT_values);
+}
+// 
+int ast_table_OPT_index(struct ast_option_parameter *elem) {
+    return ast_table_index(&table_OPT_values, elem, (int(*)(const void *, const void *))ast_option_parameter_compare);
+}
+// 
+void ast_table_OPT_add(const char *key, struct ast_option_parameter *elem) {
+    table_add(&table_OPT_keys, key);
+    ast_table_add(&table_OPT_values, elem);
+}
+// 
+void ast_table_STAR_init() {
+    table_init(&table_STAR_keys);
+    ast_table_init(&table_STAR_values);
+}
+// 
+int ast_table_STAR_index(struct ast_star_parameter *elem) {
+    return ast_table_index(&table_STAR_values, elem, (int(*)(const void *, const void *))ast_star_parameter_compare);
+}
+// 
+void ast_table_STAR_add(const char *key, struct ast_star_parameter *elem) {
+    table_add(&table_STAR_keys, key);
+    ast_table_add(&table_STAR_values, elem);
+}
 
 
 
@@ -206,6 +272,118 @@ static void indent_depth(const char *s) {
 // 
 static void tab_depth() {
     indent_depth("    ");
+}
+
+
+
+// 
+int ast_list_node_compare(const struct ast_list_node *p1, const struct ast_list_node *p2) {
+    if (p1 != p2) {
+        return 1;
+    }
+    return 0;
+}
+// 
+int ast_list_compare(const struct ast_list *p1, const struct ast_list *p2) {
+    if (p1 != p2) {
+        return 1;
+    }
+    return 0;
+}
+// 
+int ast_symbol_definition_compare(const struct ast_symbol_definition *p1, const struct ast_symbol_definition *p2) {
+    if (p1 != p2) {
+        return 1;
+    }
+    return 0;
+}
+// 
+int ast_symbol_key_compare(const struct ast_symbol_key *p1, const struct ast_symbol_key *p2) {
+    if (p1 != p2) {
+        return 1;
+    }
+    return 0;
+}
+// 
+int ast_key_attributes_compare(const struct ast_key_attributes *p1, const struct ast_key_attributes *p2) {
+    if (p1 != p2) {
+        return 1;
+    }
+    return 0;
+}
+// 
+int ast_symbol_value_compare(const struct ast_symbol_value *p1, const struct ast_symbol_value *p2) {
+    if (p1 != p2) {
+        return 1;
+    }
+    return 0;
+}
+// 
+int ast_symbol_value_element_compare(const struct ast_symbol_value_element *p1, const struct ast_symbol_value_element *p2) {
+    if (p1 != p2) {
+        return 1;
+    }
+    return 0;
+}
+// 
+int ast_list_parameter_compare(const struct ast_list_parameter *p1, const struct ast_list_parameter *p2) {
+    int ret;
+    if (ret = ast_list_parameter_value_compare(p1->ast_list_parameter_value, p2->ast_list_parameter_value)) {
+        return ret;
+    }
+    if (ret = strcmp(p1->list_parameter_delim, p2->list_parameter_delim)) {
+        return ret;
+    }
+    return 0;
+}
+// 
+int ast_option_parameter_compare(const struct ast_option_parameter *p1, const struct ast_option_parameter *p2) {
+    if (p1 != p2) {
+        return ast_option_parameter_value_compare(p1->ast_option_parameter_value, p2->ast_option_parameter_value);
+    }
+    return 0;
+}
+// 
+int ast_star_parameter_compare(const struct ast_star_parameter *p1, const struct ast_star_parameter *p2) {
+    if (p1 != p2) {
+        return ast_star_parameter_value_compare(p1->ast_star_parameter_value, p2->ast_star_parameter_value);
+    }
+    return 0;
+}
+// 
+int ast_list_parameter_value_compare(const struct ast_list_parameter_value *p1, const struct ast_list_parameter_value *p2) {
+    if (p1 != p2) {
+        return ast_list_compare(p1->ast_symbol_value_list, p2->ast_symbol_value_list);
+    }
+    return 0;
+}
+// 
+int ast_option_parameter_value_compare
+    (const struct ast_option_parameter_value *p1, const struct ast_option_parameter_value *p2) {
+    if (p1 != p2) {
+        return ast_list_compare(p1->ast_symbol_value_list, p2->ast_symbol_value_list);
+    }
+    return 0;
+}
+// 
+int ast_star_parameter_value_compare(const struct ast_star_parameter_value *p1, const struct ast_star_parameter_value *p2) {
+    if (p1 != p2) {
+        return ast_list_compare(p1->ast_symbol_value_list, p2->ast_symbol_value_list);
+    }
+    return 0;
+}
+// 
+int ast_token_definition_compare(const struct ast_token_definition *p1, const struct ast_token_definition *p2) {
+    if (p1 != p2) {
+        int ret;
+        if (ret = strcmp(p1->token_key, p2->token_key)) {
+            return ret;
+        }
+        if (ret = strcmp(p1->token_value, p2->token_value)) {
+            return ret;
+        }
+    }
+    return 0;
 }
 
 
@@ -846,6 +1024,29 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
 
     // 
     if (out_lyc) {
+        char key_name[256];
+        int index;
+
+        ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
+        
+        index = ast_table_LIST_index(self);
+        if (index < 0) {
+            index = table_LIST_keys.count;
+            
+            // 
+            sprintf(key_name, "LIST_%d", index);
+            ast_table_LIST_add(key_name, self);
+        }
+
+        // 
+        fprintf(out_lyc, "LIST_%d ", index);
+        fprintf(out_lyc, "    : ");
+        ast_list_parameter_value_action(self->ast_list_parameter_value);
+        fprintf(out_lyc, "    | LIST_%d %s ", index, self->list_parameter_delim);
+        ast_list_parameter_value_action(self->ast_list_parameter_value);
+        fprintf(out_lyc, "    ; ");
+
+        /*
         struct ast_list *ast_symbol_value_list = self->ast_list_parameter_value->ast_symbol_value_list;
 
         if (ast_symbol_value_list->count == 1) {
@@ -889,7 +1090,7 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
             }
             else {
                 // fprintf(out_lyc, "LIST(%d) ", list->count);
-                fprintf(out_lyc, "/* LIST(%d) */", list->count);
+                fprintf(out_lyc, "/""* LIST(%d) *""/", list->count);
             }
 
             // 
@@ -906,6 +1107,7 @@ void ast_list_parameter_action(struct ast_list_parameter *self) {
             //// ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
             //// fprintf(out_lyc, ")* ");
         }
+        */
     }
 }
 // 

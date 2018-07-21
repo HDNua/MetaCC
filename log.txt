@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.2.1.2 (IMPORTANT)
+----
+
+- Comparer 추가.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.2.1.1
 ----
 

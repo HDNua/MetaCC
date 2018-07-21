@@ -44,6 +44,11 @@ void ast_list_node_describe(struct ast_list_node *node);
 // 
 void ast_list_node_action(struct ast_list_node *node);
 // 
+int ast_list_node_compare(const struct ast_list_node *, const struct ast_list_node *);
+
+
+
+// 
 struct ast_list {
     ast_type                            type;
     ast_type                            elem_type;
@@ -62,6 +67,8 @@ struct ast_list_node *ast_list_first(struct ast_list *list);
 void ast_list_iterate(struct ast_list *list);
 // 
 void ast_list_traverse(struct ast_list *list);
+// 
+int ast_list_compare(const struct ast_list *, const struct ast_list *);
 
 
 
@@ -76,6 +83,9 @@ struct ast_symbol_definition {
 void ast_symbol_definition_describe(struct ast_symbol_definition *);
 //
 void ast_symbol_definition_action(struct ast_symbol_definition *);
+// 
+int ast_symbol_definition_compare(const struct ast_symbol_definition *, const struct ast_symbol_definition *);
+
 
 // 
 struct ast_symbol_key {
@@ -88,6 +98,9 @@ struct ast_symbol_key {
 void ast_symbol_key_describe(struct ast_symbol_key *);
 //
 void ast_symbol_key_action(struct ast_symbol_key *);
+// 
+int ast_symbol_key_compare(const struct ast_symbol_key *, const struct ast_symbol_key *);
+
 
 // 
 struct ast_key_attributes {
@@ -99,6 +112,9 @@ struct ast_key_attributes {
 void ast_key_attributes_describe(struct ast_key_attributes *);
 // 
 void ast_key_attributes_action(struct ast_key_attributes *);
+// 
+int ast_key_attributes_compare(const struct ast_key_attributes *, const struct ast_key_attributes *);
+
 
 // 
 struct ast_symbol_value {
@@ -110,6 +126,9 @@ struct ast_symbol_value {
 void ast_symbol_value_describe(struct ast_symbol_value *);
 // 
 void ast_symbol_value_action(struct ast_symbol_value *);
+// 
+int ast_symbol_value_compare(const struct ast_symbol_value *, const struct ast_symbol_value *);
+
 
 // 
 struct ast_symbol_value_element {
@@ -131,6 +150,9 @@ struct ast_symbol_value_element {
 void ast_symbol_value_element_describe(struct ast_symbol_value_element *);
 // 
 void ast_symbol_value_element_action(struct ast_symbol_value_element *);
+// 
+int ast_symbol_value_element_compare(const struct ast_symbol_value_element *, const struct ast_symbol_value_element *);
+
 
 // 
 struct ast_list_parameter {
@@ -142,6 +164,8 @@ struct ast_list_parameter {
 void ast_list_parameter_describe(struct ast_list_parameter *);
 // 
 void ast_list_parameter_action(struct ast_list_parameter *);
+// 
+int ast_list_parameter_compare(const struct ast_list_parameter *, const struct ast_list_parameter *);
 
 // 
 struct ast_option_parameter {
@@ -152,6 +176,8 @@ struct ast_option_parameter {
 void ast_option_parameter_describe(struct ast_option_parameter *);
 //
 void ast_option_parameter_action(struct ast_option_parameter *);
+// 
+int ast_option_parameter_compare(const struct ast_option_parameter *, const struct ast_option_parameter *);
 
 // 
 struct ast_star_parameter {
@@ -162,6 +188,8 @@ struct ast_star_parameter {
 void ast_star_parameter_describe(struct ast_star_parameter *);
 // 
 void ast_star_parameter_action(struct ast_star_parameter *);
+// 
+int ast_star_parameter_compare(const struct ast_star_parameter *, const struct ast_star_parameter *);
 
 
 
@@ -175,6 +203,10 @@ void ast_list_parameter_value_describe(struct ast_list_parameter_value *);
 // 
 void ast_list_parameter_value_action(struct ast_list_parameter_value *);
 // 
+int ast_list_parameter_value_compare(const struct ast_list_parameter_value *, const struct ast_list_parameter_value *);
+
+
+// 
 struct ast_option_parameter_value {
     ast_type	                        type;
     struct ast_list                     *ast_symbol_value_list;
@@ -184,6 +216,10 @@ void ast_option_parameter_value_describe(struct ast_option_parameter_value *);
 // 
 void ast_option_parameter_value_action(struct ast_option_parameter_value *);
 // 
+int ast_option_parameter_value_compare(const struct ast_option_parameter_value *, const struct ast_option_parameter_value *);
+
+
+// 
 struct ast_star_parameter_value {
     ast_type	                        type;
     struct ast_list                     *ast_symbol_value_list;
@@ -192,6 +228,9 @@ struct ast_star_parameter_value {
 void ast_star_parameter_value_describe(struct ast_star_parameter_value *);
 // 
 void ast_star_parameter_value_action(struct ast_star_parameter_value *);
+// 
+int ast_star_parameter_value_compare(const struct ast_star_parameter_value *, const struct ast_star_parameter_value *);
+
 
 
 
@@ -205,6 +244,9 @@ struct ast_token_definition {
 void ast_token_definition_describe(struct ast_token_definition *);
 // 
 void ast_token_definition_action(struct ast_token_definition *);
+// 
+int ast_token_definition_compare(const struct ast_token_definition *, const struct ast_token_definition *);
+
 
 
 
@@ -243,6 +285,20 @@ struct table {
     char *list[1024];
     int count;
 };
+struct ast_table {
+    void *list[1024];
+    int count;
+};
+
+
+
+
+
+
+
+
+
+
 
 
 #endif
