@@ -57,6 +57,8 @@ struct ast_list *ast_list_new(ast_type type);
 // 
 void ast_list_append(struct ast_list *list, void *elem, ast_type type);
 // 
+struct ast_list_node *ast_list_first(struct ast_list *list);
+// 
 void ast_list_iterate(struct ast_list *list);
 // 
 void ast_list_traverse(struct ast_list *list);
@@ -166,7 +168,7 @@ void ast_star_parameter_action(struct ast_star_parameter *);
 // 
 struct ast_list_parameter_value {
     ast_type	                        type;
-    struct ast_list                     *ast_symbol_value_element_list;
+    struct ast_list                     *ast_symbol_value_list;
 };
 // 
 void ast_list_parameter_value_describe(struct ast_list_parameter_value *);
@@ -175,7 +177,7 @@ void ast_list_parameter_value_action(struct ast_list_parameter_value *);
 // 
 struct ast_option_parameter_value {
     ast_type	                        type;
-    struct ast_list                     *ast_symbol_value_element_list;
+    struct ast_list                     *ast_symbol_value_list;
 };
 // 
 void ast_option_parameter_value_describe(struct ast_option_parameter_value *);
@@ -184,7 +186,7 @@ void ast_option_parameter_value_action(struct ast_option_parameter_value *);
 // 
 struct ast_star_parameter_value {
     ast_type	                        type;
-    struct ast_list                     *ast_symbol_value_element_list;
+    struct ast_list                     *ast_symbol_value_list;
 };
 // 
 void ast_star_parameter_value_describe(struct ast_star_parameter_value *);
@@ -217,6 +219,7 @@ extern FILE *out_lyc_y_token;
 extern FILE *out_lyc_l;
 extern FILE *out_lyc_ast_h;
 extern FILE *out_lyc_ast_h_typedef;
+extern FILE *out_lyc_ast_h_declaration;
 extern FILE *out_lyc_ast_c;
 extern FILE *out_lyc_ast_c_templates;
 

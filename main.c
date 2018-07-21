@@ -16,6 +16,7 @@ const char *LYC_Y_TOKEN             = "out/parser.y.token";
 const char *LYC_L                   = "out/parser.l";
 const char *LYC_AST_H               = "out/parser_ast.h";
 const char *LYC_AST_H_TYPEDEF       = "out/parser_ast.h.typedef";
+const char *LYC_AST_H_DECLARATION   = "out/parser_ast.h.declaration";
 const char *LYC_AST_C               = "out/parser_ast.c";
 const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.c.templates";
 
@@ -62,17 +63,21 @@ int metacc_init(int argc, const char *argv[]) {
         extern FILE *out_lyc_y_token;
         extern FILE *out_lyc_l;
         extern FILE *out_lyc_ast_h;
+        extern FILE *out_lyc_ast_h_typedef;
+        extern FILE *out_lyc_ast_h_declaration;
         extern FILE *out_lyc_ast_c;
+        extern FILE *out_lyc_ast_c_templates;
 
         // 
-        out_lyc                 = fopen(LYC_Y_SYNTAX,           "wt");
-        out_lyc_y               = fopen(LYC_Y,                  "wt");
-        out_lyc_y_token         = fopen(LYC_Y_TOKEN,            "wt");      
-        out_lyc_l               = fopen(LYC_L,                  "wt");
-        out_lyc_ast_h           = fopen(LYC_AST_H,              "wt");
-        out_lyc_ast_h_typedef   = fopen(LYC_AST_H_TYPEDEF,      "wt");
-        out_lyc_ast_c           = fopen(LYC_AST_C,              "wt");
-        out_lyc_ast_c_templates = fopen(LYC_AST_C_TEMPLATES,    "wt");
+        out_lyc                             = fopen(LYC_Y_SYNTAX,           "wt");
+        out_lyc_y                           = fopen(LYC_Y,                  "wt");
+        out_lyc_y_token                     = fopen(LYC_Y_TOKEN,            "wt");      
+        out_lyc_l                           = fopen(LYC_L,                  "wt");
+        out_lyc_ast_h                       = fopen(LYC_AST_H,              "wt");
+        out_lyc_ast_h_typedef               = fopen(LYC_AST_H_TYPEDEF,      "wt");
+        out_lyc_ast_h_declaration           = fopen(LYC_AST_H_DECLARATION,  "wt");
+        out_lyc_ast_c                       = fopen(LYC_AST_C,              "wt");
+        out_lyc_ast_c_templates             = fopen(LYC_AST_C_TEMPLATES,    "wt");
 
         // 
     }
@@ -404,17 +409,23 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
-            
-            // 
-            paste_s2f(out, LYC_AST_C_TEMPLATES);
 
-            // 
+            // rest of symbols definitions.
+            paste_s2f(out, LYC_AST_H_DECLARATION);
+            
+            // end of symbol definitions.
             fprintf(out, "#endif\n");
             fclose(out_lyc_ast_h);
         }
         // 
         {
+            // 
             out = out_lyc_ast_c;
+
+            // 
+            paste_s2f(out, LYC_AST_C_TEMPLATES);
+
+            // 
             fclose(out_lyc_ast_c);
         }
 
