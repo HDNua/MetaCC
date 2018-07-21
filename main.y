@@ -285,7 +285,7 @@ list_parameter_value
 	{
 		struct ast_list_parameter_value *ret = (struct ast_list_parameter_value *)
 			malloc(sizeof(struct ast_list_parameter_value));
-		ret->type = AST_LIST_PARAMETER;
+		ret->type = AST_LIST_PARAMETER_VALUE;
 		ret->ast_symbol_value_list = $1;
 		$$ = ret;
 	}
@@ -298,7 +298,7 @@ option_parameter_value
 	{
 		struct ast_option_parameter_value *ret = (struct ast_option_parameter_value *)
 			malloc(sizeof(struct ast_option_parameter_value));
-		ret->type = AST_OPTION_PARAMETER;
+		ret->type = AST_OPTION_PARAMETER_VALUE;
 		ret->ast_symbol_value_list = $1;
 		$$ = ret;
 	}
@@ -308,7 +308,7 @@ star_parameter_value
 	{
 		struct ast_star_parameter_value *ret = (struct ast_star_parameter_value *)
 			malloc(sizeof(struct ast_star_parameter_value));
-		ret->type = AST_STAR_PARAMETER;
+		ret->type = AST_STAR_PARAMETER_VALUE;
 		ret->ast_symbol_value_list = $1;
 		$$ = ret;
 	}

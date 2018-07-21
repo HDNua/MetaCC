@@ -1,3 +1,11 @@
+MetaCC - Meta Compiler Compiler v0.2.1.5
+----
+
+- 액션 출력에 파일 포인터 넣을 거임. 중요한 거야.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.2.1.4 (IMPORTANT)
 ----
 

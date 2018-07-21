@@ -28,6 +28,11 @@ typedef enum ast_type {
     AST_NULL,                       // 15
 	AST_TOKEN,                      // 16
 
+    // 
+    AST_LIST_PARAMETER_VALUE,
+    AST_OPTION_PARAMETER_VALUE,
+    AST_STAR_PARAMETER_VALUE,
+
 } ast_type;
 
 

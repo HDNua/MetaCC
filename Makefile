@@ -45,7 +45,7 @@ test1:
 
 test2:
 	./$(EXE) lyc < symbols.list
-	make clean_lyc
+	# make clean_lyc
 
 clean:
 	rmtmp
