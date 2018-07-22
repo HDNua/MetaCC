@@ -156,7 +156,7 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_jj, "\n");
 
         // 
-        ast_list_traverse(out_jj, symbol_definition_list);    
+        ast_list_traverse(out_jj, symbol_definition_list, 0);    
 
         // 
         fprintf(out_jj, "\n");
@@ -340,7 +340,7 @@ int metacc_main(int argc, const char *argv[]) {
         }
 
         // 
-        ast_list_traverse(out_lyc, symbol_definition_list);    
+        ast_list_traverse(out_lyc, symbol_definition_list, 0);    
 
         // 
         {

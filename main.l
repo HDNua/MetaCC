@@ -2,6 +2,7 @@
 #define MAX_TOKEN_LEN 2048
 
 #include <stdio.h>
+#include <string.h>
 #include "y.tab.h"
 
 

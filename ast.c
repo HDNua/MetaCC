@@ -700,7 +700,7 @@ void ast_token_definition_describe(FILE *out, struct ast_token_definition *self)
 
 
 // 
-void ast_list_traverse(FILE *out, struct ast_list *self) {
+void ast_list_traverse(FILE *out, struct ast_list *self, act_opt option) {
     static int depth = 0;
     struct ast_list_node *node;
 
@@ -709,7 +709,7 @@ void ast_list_traverse(FILE *out, struct ast_list *self) {
         if (self->elem_type == AST_SYMBOL_VALUE) {
             ++depth;
             for (node=self->head.next; node; node=node->next) {
-                ast_list_node_action(out, node);
+                ast_list_node_action(out, node, option);
 
                 if (node->next) {
                     if (depth >= 1) {
@@ -721,7 +721,7 @@ void ast_list_traverse(FILE *out, struct ast_list *self) {
         }
         else {
             for (node=self->head.next; node; node=node->next) {
-                ast_list_node_action(out, node);
+                ast_list_node_action(out, node, option);
             }
         }
     }
@@ -731,7 +731,7 @@ void ast_list_traverse(FILE *out, struct ast_list *self) {
         if (self->elem_type == AST_SYMBOL_VALUE) {
             ++depth;
             for (node=self->head.next; node; node=node->next) {
-                ast_list_node_action(out, node);
+                ast_list_node_action(out, node, option);
 
                 if (self->elem_type == AST_SYMBOL_VALUE) {
                     if (node->next) {
@@ -745,41 +745,41 @@ void ast_list_traverse(FILE *out, struct ast_list *self) {
         }
         else {
             for (node=self->head.next; node; node=node->next) {
-                ast_list_node_action(out, node);
+                ast_list_node_action(out, node, option);
             }
         }
     }
 }
 // 
-void ast_list_node_action(FILE *out, struct ast_list_node *self) {
+void ast_list_node_action(FILE *out, struct ast_list_node *self, act_opt option) {
     if (self->type == AST_LIST_NODE) {
         switch (self->elem_type) {
             case AST_LIST:
-                ast_list_traverse(out, self->elem);
+                ast_list_traverse(out, self->elem, option);
                 break;
             case AST_SYMBOL_DEFINITION:
-                ast_symbol_definition_action(out, self->elem);
+                ast_symbol_definition_action(out, self->elem, option);
                 break;
             case AST_SYMBOL_KEY:
-                ast_symbol_key_action(out, self->elem);
+                ast_symbol_key_action(out, self->elem, option);
                 break;
             case AST_KEY_ATTRIBUTES:
-                ast_key_attributes_action(out, self->elem);
+                ast_key_attributes_action(out, self->elem, option);
                 break;
             case AST_SYMBOL_VALUE:
-                ast_symbol_value_action(out, self->elem);
+                ast_symbol_value_action(out, self->elem, option);
                 break;
             case AST_SYMBOL_VALUE_ELEMENT:
-                ast_symbol_value_element_action(out, self->elem);
+                ast_symbol_value_element_action(out, self->elem, option);
                 break;
             case AST_LIST_PARAMETER:
-                ast_list_parameter_action(out, self->elem);
+                ast_list_parameter_action(out, self->elem, option);
                 break;
             case AST_OPTION_PARAMETER:
-                ast_option_parameter_action(out, self->elem);
+                ast_option_parameter_action(out, self->elem, option);
                 break;
             case AST_STAR_PARAMETER:
-                ast_star_parameter_action(out, self->elem);
+                ast_star_parameter_action(out, self->elem, option);
                 break;
             default:
                 fprintf(stderr, "invalid node element type [%d] \n", self->elem_type);
@@ -796,7 +796,7 @@ void ast_list_node_action(FILE *out, struct ast_list_node *self) {
 
 
 // 
-void ast_symbol_definition_action(FILE *out, struct ast_symbol_definition *self) {
+void ast_symbol_definition_action(FILE *out, struct ast_symbol_definition *self, act_opt option) {
     static char symbol_key_className[MAX_TOKEN_LEN];
     struct ast_symbol_key *ast_symbol_key = self->ast_symbol_key;
     struct ast_key_attributes *ast_key_attr = ast_symbol_key->ast_key_attributes;
@@ -886,7 +886,7 @@ void ast_symbol_definition_action(FILE *out, struct ast_symbol_definition *self)
                     //    ast_str(ast_elem->elem_type));
                     // fprintf(out_jj, " %s", ast_str(ast_elem->elem_type));
                     // fprintf(out_jj, " ");
-                    ast_symbol_value_element_action(out, ast_elem);
+                    ast_symbol_value_element_action(out, ast_elem, option);
                 }
                 fprintf(out_jj, "\n    {\n        return null;\n    }\n");
             }
@@ -973,7 +973,7 @@ void ast_symbol_definition_action(FILE *out, struct ast_symbol_definition *self)
                     //     ast_str(ast_elem->elem_type));
                     // fprintf(out_jj, " %s", ast_str(ast_elem->elem_type));
                     // fprintf(out_jj, " ");
-                    ast_symbol_value_element_action(out, ast_elem);
+                    ast_symbol_value_element_action(out, ast_elem, option);
                 }
                 fprintf(out_lyc, "\n    {\n        $$ = 0;\n    }\n");
             }
@@ -984,7 +984,7 @@ void ast_symbol_definition_action(FILE *out, struct ast_symbol_definition *self)
     }
 }
 // 
-void ast_symbol_key_action(FILE *out, struct ast_symbol_key *self) {
+void ast_symbol_key_action(FILE *out, struct ast_symbol_key *self, act_opt option) {
     if (out_jj) {
         // fprintf(out_jj, ": %s \n", self->symbol_name);
         // fprintf(out_jj, "%s: \n", self->symbol_name);
@@ -1011,7 +1011,7 @@ void ast_symbol_key_action(FILE *out, struct ast_symbol_key *self) {
     }
 }
 // 
-void ast_key_attributes_action(FILE *out, struct ast_key_attributes *self) {
+void ast_key_attributes_action(FILE *out, struct ast_key_attributes *self, act_opt option) {
     // describe_begin();
     // tab_depth();
     // fprintf(out_jj, "%s \n", ast_str(self->type));
@@ -1019,17 +1019,17 @@ void ast_key_attributes_action(FILE *out, struct ast_key_attributes *self) {
 }
 
 // 
-void ast_symbol_value_action(FILE *out, struct ast_symbol_value *self) {
+void ast_symbol_value_action(FILE *out, struct ast_symbol_value *self, act_opt option) {
     // describe_begin();
     // tab_depth();
     // fprintf(out_jj, "%s \n", ast_str(self->type));
 
-    ast_list_traverse(out, self->ast_symbol_value_element_list);
+    ast_list_traverse(out, self->ast_symbol_value_element_list, option);
 
     // describe_end();
 }
 // 
-void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element *self) {
+void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element *self, act_opt option) {
     if (out_jj) {
         switch (self->elem_type) {
             case AST_MCC_STRING:
@@ -1039,16 +1039,16 @@ void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element 
                 fprintf(out_jj, "%s() ", self->u.mcc_symbol);
                 break;
             case AST_LIST_PARAMETER:
-                ast_list_parameter_action(out, self->u.ast_list_parameter);
+                ast_list_parameter_action(out, self->u.ast_list_parameter, option);
                 break;
             case AST_OPTION_PARAMETER:
-                ast_option_parameter_action(out, self->u.ast_option_parameter);
+                ast_option_parameter_action(out, self->u.ast_option_parameter, option);
                 break;
             case AST_STAR_PARAMETER:
-                ast_star_parameter_action(out, self->u.ast_star_parameter);
+                ast_star_parameter_action(out, self->u.ast_star_parameter, option);
                 break;
             case AST_TOKEN_DEFINITION:
-                ast_token_definition_action(out, self->u.ast_token_definition);
+                ast_token_definition_action(out, self->u.ast_token_definition, option);
                 break;
             case AST_CSTRING:
                 fprintf(out_jj, "C\"%s\" ", self->u.cstring);
@@ -1057,7 +1057,7 @@ void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element 
                 fprintf(out_jj, "%s ", self->u.null_);
                 break;
             case AST_TOKEN:
-                ast_token_definition_action(out, self->u.ast_token_definition);
+                ast_token_definition_action(out, self->u.ast_token_definition, option);
                 break;
             default:
                 fprintf(stderr, "invalid symbol value element [%d] \n", self->elem_type);
@@ -1069,23 +1069,25 @@ void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element 
     if (out_lyc) {
         switch (self->elem_type) {
             case AST_MCC_STRING:
-                mcc_string_action(out, self->u.mcc_string);
+                mcc_string_action(out, self->u.mcc_string, option);
                 break;
             case AST_MCC_SYMBOL:
                 // fprintf(out, "/* out_lyc(%p) vs out(%p) */ ", out_lyc, out);
-                fprintf(out, "%s ", self->u.mcc_symbol);
+                if (option & ~ACTOPT_IS_NONTERMINAL) {
+                    fprintf(out, "%s ", self->u.mcc_symbol);
+                }
                 break;
             case AST_LIST_PARAMETER:
-                ast_list_parameter_action(out, self->u.ast_list_parameter);
+                ast_list_parameter_action(out, self->u.ast_list_parameter, option | ACTOPT_IS_NONTERMINAL);
                 break;
             case AST_OPTION_PARAMETER:
-                ast_option_parameter_action(out, self->u.ast_option_parameter);
+                ast_option_parameter_action(out, self->u.ast_option_parameter, option | ACTOPT_IS_NONTERMINAL);
                 break;
             case AST_STAR_PARAMETER:
-                ast_star_parameter_action(out, self->u.ast_star_parameter);
+                ast_star_parameter_action(out, self->u.ast_star_parameter, option | ACTOPT_IS_NONTERMINAL);
                 break;
             case AST_TOKEN_DEFINITION:
-                ast_token_definition_action(out, self->u.ast_token_definition);
+                ast_token_definition_action(out, self->u.ast_token_definition, option | ACTOPT_IS_NONTERMINAL);
                 break;
             case AST_CSTRING:
                 fprintf(out, "C\"%s\" ", self->u.cstring);
@@ -1094,7 +1096,7 @@ void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element 
                 fprintf(out, "%s ", self->u.null_);
                 break;
             case AST_TOKEN:
-                ast_token_definition_action(out, self->u.ast_token_definition);
+                ast_token_definition_action(out, self->u.ast_token_definition, option);
                 break;
             default:
                 fprintf(stderr, "invalid symbol value element [%d] \n", self->elem_type);
@@ -1103,7 +1105,7 @@ void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element 
     }
 }
 // 
-void mcc_string_action(FILE *out, const char *string_value) {
+void mcc_string_action(FILE *out, const char *string_value, act_opt option) {
     char key_name[256];
     int index = string_tokens_index(string_value);
 
@@ -1122,16 +1124,16 @@ void mcc_string_action(FILE *out, const char *string_value) {
     fprintf(out, "%s /* %s */ ", key_name, string_value);
 }
 // 
-void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
+void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self, act_opt option) {
     if (out_jj) {
-        ast_list_traverse(out, self->ast_list_parameter_value->ast_symbol_value_list);
+        ast_list_traverse(out, self->ast_list_parameter_value->ast_symbol_value_list, option);
 
         fprintf(out_jj, "( ");
         if (strcmp(self->list_parameter_delim, "") != 0) {
             fprintf(out_jj, "\"%s\" ", self->list_parameter_delim);
         }
 
-        ast_list_traverse(out, self->ast_list_parameter_value->ast_symbol_value_list);
+        ast_list_traverse(out, self->ast_list_parameter_value->ast_symbol_value_list, option);
         fprintf(out_jj, ")* ");
     }
 
@@ -1141,7 +1143,7 @@ void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
         int index;
 
         // ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
-        ast_list_parameter_value_action(out, self->ast_list_parameter_value);
+        ast_list_parameter_value_action(out, self->ast_list_parameter_value, option);
 
         index = ast_table_LIST_index(self);
         if (index < 0) {
@@ -1156,7 +1158,7 @@ void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
             fprintf(out_lyc_y_list, "    : ");
             
             // ast_list_parameter_value_action(self->ast_list_parameter_value);
-            ast_list_traverse(out_lyc_y_list, self->ast_list_parameter_value->ast_symbol_value_list);
+            ast_list_traverse(out_lyc_y_list, self->ast_list_parameter_value->ast_symbol_value_list, option);
 
             fprintf(out_lyc_y_list, "\n");
             fprintf(out_lyc_y_list, "    | LIST_%d ", index);
@@ -1165,7 +1167,7 @@ void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
                 // fprintf(out_lyc_y_list, "\"%s\" ", self->list_parameter_delim);
             }
             else {
-                mcc_string_action(out_lyc_y_list, self->list_parameter_delim);
+                mcc_string_action(out_lyc_y_list, self->list_parameter_delim, option);
                 // int token_index = string_tokens_index(self->list_parameter_delim);
                 // if (token_index < 0) {
                     // fprintf(out_lyc_y_list, "\"%s\" ", self->list_parameter_delim);
@@ -1176,7 +1178,7 @@ void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
             }
 
             // ast_list_parameter_value_action(self->ast_list_parameter_value);
-            ast_list_traverse(out_lyc_y_list, self->ast_list_parameter_value->ast_symbol_value_list);
+            ast_list_traverse(out_lyc_y_list, self->ast_list_parameter_value->ast_symbol_value_list, option);
 
             fprintf(out_lyc_y_list, "\n");
             fprintf(out_lyc_y_list, "    ;\n");
@@ -1187,11 +1189,11 @@ void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
     }
 }
 // 
-void ast_option_parameter_action(FILE *out, struct ast_option_parameter *self) {
+void ast_option_parameter_action(FILE *out, struct ast_option_parameter *self, act_opt option) {
     // 
     if (out_jj) {
         fprintf(out_jj, "( ");
-        ast_list_traverse(out, self->ast_option_parameter_value->ast_symbol_value_list);
+        ast_list_traverse(out, self->ast_option_parameter_value->ast_symbol_value_list, option);
         fprintf(out_jj, ")? ");
     }
     
@@ -1201,7 +1203,7 @@ void ast_option_parameter_action(FILE *out, struct ast_option_parameter *self) {
         int index;
 
         // ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
-        ast_option_parameter_value_action(out, self->ast_option_parameter_value);
+        ast_option_parameter_value_action(out, self->ast_option_parameter_value, option);
 
         index = ast_table_OPT_index(self);
         if (index < 0) {
@@ -1217,7 +1219,7 @@ void ast_option_parameter_action(FILE *out, struct ast_option_parameter *self) {
             fprintf(out_lyc_y_option, "    | ");
             
             // ast_list_parameter_value_action(self->ast_list_parameter_value);
-            ast_list_traverse(out_lyc_y_option, self->ast_option_parameter_value->ast_symbol_value_list);
+            ast_list_traverse(out_lyc_y_option, self->ast_option_parameter_value->ast_symbol_value_list, option);
 
             fprintf(out_lyc_y_option, "\n");
             fprintf(out_lyc_y_option, "    ;\n");
@@ -1229,11 +1231,11 @@ void ast_option_parameter_action(FILE *out, struct ast_option_parameter *self) {
     }
 }
 // 
-void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self) {
+void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self, act_opt option) {
     //
     if (out_jj) {
         fprintf(out_jj, "( ");
-        ast_list_traverse(out, self->ast_star_parameter_value->ast_symbol_value_list);
+        ast_list_traverse(out, self->ast_star_parameter_value->ast_symbol_value_list, option);
         fprintf(out_jj, ")* ");
     }
     
@@ -1242,7 +1244,7 @@ void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self) {
         char key_name[256];
         int index;
 
-        ast_star_parameter_value_action(out, self->ast_star_parameter_value);
+        ast_star_parameter_value_action(out, self->ast_star_parameter_value, option);
 
         index = ast_table_STAR_index(self);
         if (index < 0) {
@@ -1257,7 +1259,7 @@ void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self) {
             fprintf(out_lyc_y_star, "    : /* empty */\n");
             fprintf(out_lyc_y_star, "    | ");
             
-            ast_list_traverse(out_lyc_y_star, self->ast_star_parameter_value->ast_symbol_value_list);
+            ast_list_traverse(out_lyc_y_star, self->ast_star_parameter_value->ast_symbol_value_list, option);
 
             fprintf(out_lyc_y_star, "\n");
 
@@ -1265,7 +1267,7 @@ void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self) {
             fprintf(out_lyc_y_star, "    | STAR_%d ", index);
 
             // ast_list_parameter_value_action(self->ast_list_parameter_value);
-            ast_list_traverse(out_lyc_y_star, self->ast_star_parameter_value->ast_symbol_value_list);
+            ast_list_traverse(out_lyc_y_star, self->ast_star_parameter_value->ast_symbol_value_list, option);
 
             fprintf(out_lyc_y_star, "\n");
             fprintf(out_lyc_y_star, "    ;\n");
@@ -1277,7 +1279,7 @@ void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self) {
     }
 }
 // 
-void ast_list_parameter_value_action(FILE *out, struct ast_list_parameter_value *self) {
+void ast_list_parameter_value_action(FILE *out, struct ast_list_parameter_value *self, act_opt option) {
     //
     if (out_jj) {
         fprintf(out_jj, "4");
@@ -1286,11 +1288,11 @@ void ast_list_parameter_value_action(FILE *out, struct ast_list_parameter_value 
     // 
     if (out_lyc) {
         // fprintf(stderr, "/* LIST(%d) */\n", self->ast_symbol_value_list->count);
-        ast_list_traverse(out, self->ast_symbol_value_list);
+        ast_list_traverse(out, self->ast_symbol_value_list, option);
     }
 }
 // 
-void ast_option_parameter_value_action(FILE *out, struct ast_option_parameter_value *self) {
+void ast_option_parameter_value_action(FILE *out, struct ast_option_parameter_value *self, act_opt option) {
     // 
     if (out_jj) {
         fprintf(out_jj, "5");
@@ -1299,11 +1301,11 @@ void ast_option_parameter_value_action(FILE *out, struct ast_option_parameter_va
     // 
     if (out_lyc) {
         // fprintf(stderr, "/* OPTION(%d) */\n", self->ast_symbol_value_list->count);
-        ast_list_traverse(out, self->ast_symbol_value_list);
+        ast_list_traverse(out, self->ast_symbol_value_list, option);
     }
 }
 // 
-void ast_star_parameter_value_action(FILE *out, struct ast_star_parameter_value *self) {
+void ast_star_parameter_value_action(FILE *out, struct ast_star_parameter_value *self, act_opt option) {
     //
     if (out_jj) {
         fprintf(out_jj, "6");
@@ -1312,11 +1314,11 @@ void ast_star_parameter_value_action(FILE *out, struct ast_star_parameter_value 
     // 
     if (out_lyc) {
         // fprintf(stderr, "/* STAR(%d) */\n", self->ast_symbol_value_list->count);
-        ast_list_traverse(out, self->ast_symbol_value_list);
+        ast_list_traverse(out, self->ast_symbol_value_list, option);
     }
 }
 // 
-void ast_token_definition_action(FILE *out, struct ast_token_definition *self) {
+void ast_token_definition_action(FILE *out, struct ast_token_definition *self, act_opt option) {
     // 
     if (out_jj) {
         fprintf(out_jj, "<%s> ", self->token_key);
@@ -1348,35 +1350,35 @@ void ast_token_definition_action(FILE *out, struct ast_token_definition *self) {
 
 
 // 
-void ast_symbol_value_list_node_action(FILE *out, struct ast_list_node *self) {
+void ast_symbol_value_list_node_action(FILE *out, struct ast_list_node *self, act_opt option) {
     if (self->type == AST_LIST_NODE) {
         switch (self->elem_type) {
             case AST_LIST:
-                ast_list_traverse(out, self->elem);
+                ast_list_traverse(out, self->elem, option);
                 break;
             case AST_SYMBOL_DEFINITION:
-                ast_symbol_definition_action(out, self->elem);
+                ast_symbol_definition_action(out, self->elem, option);
                 break;
             case AST_SYMBOL_KEY:
-                ast_symbol_key_action(out, self->elem);
+                ast_symbol_key_action(out, self->elem, option);
                 break;
             case AST_KEY_ATTRIBUTES:
-                ast_key_attributes_action(out, self->elem);
+                ast_key_attributes_action(out, self->elem, option);
                 break;
             case AST_SYMBOL_VALUE:
-                ast_symbol_value_action(out, self->elem);
+                ast_symbol_value_action(out, self->elem, option);
                 break;
             case AST_SYMBOL_VALUE_ELEMENT:
-                ast_symbol_value_element_action(out, self->elem);
+                ast_symbol_value_element_action(out, self->elem, option);
                 break;
             case AST_LIST_PARAMETER:
-                ast_list_parameter_action(out, self->elem);
+                ast_list_parameter_action(out, self->elem, option);
                 break;
             case AST_OPTION_PARAMETER:
-                ast_option_parameter_action(out, self->elem);
+                ast_option_parameter_action(out, self->elem, option);
                 break;
             case AST_STAR_PARAMETER:
-                ast_star_parameter_action(out, self->elem);
+                ast_star_parameter_action(out, self->elem, option);
                 break;
             default:
                 fprintf(stderr, "invalid node element type [%d] \n", self->elem_type);
@@ -1390,10 +1392,10 @@ void ast_symbol_value_list_node_action(FILE *out, struct ast_list_node *self) {
     }
 }
 // 
-void ast_symbol_value_list_traverse(FILE *out, struct ast_list *self) {
+void ast_symbol_value_list_traverse(FILE *out, struct ast_list *self, act_opt option) {
     struct ast_list_node *node;
     for (node=self->head.next; node; node=node->next) {
-        ast_symbol_value_list_node_action(out, node);
+        ast_symbol_value_list_node_action(out, node, option);
     }
 }
 

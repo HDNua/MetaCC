@@ -37,6 +37,14 @@ typedef enum ast_type {
 
 
 
+typedef enum action_option {
+    ACTOPT_NONE,
+    ACTOPT_IS_NONTERMINAL,
+
+} act_opt;
+
+
+
 // 
 struct ast_list_node {
     ast_type                            type;
@@ -47,7 +55,7 @@ struct ast_list_node {
 // 
 void ast_list_node_describe(FILE *out, struct ast_list_node *node);
 // 
-void ast_list_node_action(FILE *out, struct ast_list_node *node);
+void ast_list_node_action(FILE *out, struct ast_list_node *node, act_opt);
 // 
 int ast_list_node_compare(const struct ast_list_node *, const struct ast_list_node *);
 
@@ -71,7 +79,7 @@ struct ast_list_node *ast_list_first(struct ast_list *list);
 // 
 void ast_list_iterate(FILE *out, struct ast_list *list);
 // 
-void ast_list_traverse(FILE *out, struct ast_list *list);
+void ast_list_traverse(FILE *out, struct ast_list *list, act_opt);
 // 
 int ast_list_compare(const struct ast_list *, const struct ast_list *);
 
@@ -87,7 +95,7 @@ struct ast_symbol_definition {
 // 
 void ast_symbol_definition_describe(FILE *out, struct ast_symbol_definition *);
 //
-void ast_symbol_definition_action(FILE *out, struct ast_symbol_definition *);
+void ast_symbol_definition_action(FILE *out, struct ast_symbol_definition *, act_opt);
 // 
 int ast_symbol_definition_compare(const struct ast_symbol_definition *, const struct ast_symbol_definition *);
 
@@ -102,7 +110,7 @@ struct ast_symbol_key {
 // 
 void ast_symbol_key_describe(FILE *out, struct ast_symbol_key *);
 //
-void ast_symbol_key_action(FILE *out, struct ast_symbol_key *);
+void ast_symbol_key_action(FILE *out, struct ast_symbol_key *, act_opt);
 // 
 int ast_symbol_key_compare(const struct ast_symbol_key *, const struct ast_symbol_key *);
 
@@ -116,7 +124,7 @@ struct ast_key_attributes {
 // 
 void ast_key_attributes_describe(FILE *out, struct ast_key_attributes *);
 // 
-void ast_key_attributes_action(FILE *out, struct ast_key_attributes *);
+void ast_key_attributes_action(FILE *out, struct ast_key_attributes *, act_opt);
 // 
 int ast_key_attributes_compare(const struct ast_key_attributes *, const struct ast_key_attributes *);
 
@@ -130,7 +138,7 @@ struct ast_symbol_value {
 // 
 void ast_symbol_value_describe(FILE *out, struct ast_symbol_value *);
 // 
-void ast_symbol_value_action(FILE *out, struct ast_symbol_value *);
+void ast_symbol_value_action(FILE *out, struct ast_symbol_value *, act_opt);
 // 
 int ast_symbol_value_compare(const struct ast_symbol_value *, const struct ast_symbol_value *);
 
@@ -154,7 +162,7 @@ struct ast_symbol_value_element {
 // 
 void ast_symbol_value_element_describe(FILE *out, struct ast_symbol_value_element *);
 // 
-void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element *);
+void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element *, act_opt);
 // 
 int ast_symbol_value_element_compare(const struct ast_symbol_value_element *, const struct ast_symbol_value_element *);
 
@@ -168,7 +176,7 @@ struct ast_list_parameter {
 // 
 void ast_list_parameter_describe(FILE *out, struct ast_list_parameter *);
 // 
-void ast_list_parameter_action(FILE *out, struct ast_list_parameter *);
+void ast_list_parameter_action(FILE *out, struct ast_list_parameter *, act_opt);
 // 
 int ast_list_parameter_compare(const struct ast_list_parameter *, const struct ast_list_parameter *);
 
@@ -180,7 +188,7 @@ struct ast_option_parameter {
 // 
 void ast_option_parameter_describe(FILE *out, struct ast_option_parameter *);
 //
-void ast_option_parameter_action(FILE *out, struct ast_option_parameter *);
+void ast_option_parameter_action(FILE *out, struct ast_option_parameter *, act_opt);
 // 
 int ast_option_parameter_compare(const struct ast_option_parameter *, const struct ast_option_parameter *);
 
@@ -192,7 +200,7 @@ struct ast_star_parameter {
 // 
 void ast_star_parameter_describe(FILE *out, struct ast_star_parameter *);
 // 
-void ast_star_parameter_action(FILE *out, struct ast_star_parameter *);
+void ast_star_parameter_action(FILE *out, struct ast_star_parameter *, act_opt);
 // 
 int ast_star_parameter_compare(const struct ast_star_parameter *, const struct ast_star_parameter *);
 
@@ -206,7 +214,7 @@ struct ast_list_parameter_value {
 // 
 void ast_list_parameter_value_describe(FILE *out, struct ast_list_parameter_value *);
 // 
-void ast_list_parameter_value_action(FILE *out, struct ast_list_parameter_value *);
+void ast_list_parameter_value_action(FILE *out, struct ast_list_parameter_value *, act_opt);
 // 
 int ast_list_parameter_value_compare(const struct ast_list_parameter_value *, const struct ast_list_parameter_value *);
 
@@ -219,7 +227,7 @@ struct ast_option_parameter_value {
 // 
 void ast_option_parameter_value_describe(FILE *out, struct ast_option_parameter_value *);
 // 
-void ast_option_parameter_value_action(FILE *out, struct ast_option_parameter_value *);
+void ast_option_parameter_value_action(FILE *out, struct ast_option_parameter_value *, act_opt);
 // 
 int ast_option_parameter_value_compare(const struct ast_option_parameter_value *, const struct ast_option_parameter_value *);
 
@@ -232,7 +240,7 @@ struct ast_star_parameter_value {
 // 
 void ast_star_parameter_value_describe(FILE *out, struct ast_star_parameter_value *);
 // 
-void ast_star_parameter_value_action(FILE *out, struct ast_star_parameter_value *);
+void ast_star_parameter_value_action(FILE *out, struct ast_star_parameter_value *, act_opt);
 // 
 int ast_star_parameter_value_compare(const struct ast_star_parameter_value *, const struct ast_star_parameter_value *);
 
@@ -248,7 +256,7 @@ struct ast_token_definition {
 // 
 void ast_token_definition_describe(FILE *out, struct ast_token_definition *);
 // 
-void ast_token_definition_action(FILE *out, struct ast_token_definition *);
+void ast_token_definition_action(FILE *out, struct ast_token_definition *, act_opt);
 // 
 int ast_token_definition_compare(const struct ast_token_definition *, const struct ast_token_definition *);
 
@@ -257,7 +265,7 @@ int ast_token_definition_compare(const struct ast_token_definition *, const stru
 
 //==============================================================================
 // 
-void mcc_string_action(FILE *out, const char *s);
+void mcc_string_action(FILE *out, const char *s, act_opt);
 
 
 
