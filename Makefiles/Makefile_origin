@@ -1,8 +1,11 @@
 EXE=metacc
-YACC_SRC=*.y
+YACC=bison
+YACC_SRC=*.yy
+LEX=flex
 LEX_SRC=*.l
 LINK=-lfl -lm
-CC=cc
+CC_SRC=*.cpp
+CC=g++
 
 default: all
 
@@ -13,35 +16,24 @@ debug: debug_build test
 debug_build: clean yacc_dbg lex_dbg cc_dbg
 
 yacc:
-	yacc -d $(YACC_SRC)
+	$(YACC) -d $(YACC_SRC)
 
 lex:
-	lex $(LEX_SRC)
+	$(LEX) $(LEX_SRC) --outfile=sv_lexer.yy.cc
 
 cc: 
-	$(CC) -o $(EXE) *.c $(LINK)
+	$(CC) -o $(EXE) $(CC_SRC) $(LINK)
 
 yacc_dbg:
-	yacc -g -d -v -t $(YACC_SRC)
+	$(YACC) -g -d -v -t $(YACC_SRC)
 
 lex_dbg:
-	lex $(LEX_SRC)
+	$(LEX) $(LEX_SRC) --outfile=sv_lexer.yy.cc
 
 cc_dbg: 
-	$(CC) -g -o $(EXE) *.c $(LINK) -DYYDEBUG 
+	$(CC) -g -o $(EXE) $(CC_SRC) $(LINK) -DYYDEBUG 
 
 test: test2
-
-test_dep:
-	./$(EXE) < symbols.list > SVObject.jj
-	javacc SVObject.jj
-	javac *.java
-	mv SVObject.jj out
-	mv *.java out
-	mv *.class out 
-
-test1:
-	./$(EXE) javacc < symbols.list
 
 test2:
 	./$(EXE) lyc < symbols.list
@@ -53,7 +45,8 @@ test3:
 clean:
 	rmtmp
 	rm -rf *.java
-	rm -rf y.tab.c y.tab.h lex.yy.c
+	# rm -rf y.tab.c y.tab.h lex.yy.c
+	rm -rf sv_parser.yy.tab.cc y.tab.h lex.yy.c
 	rm -rf y.output y.dot
 	rm -rf $(EXE)
 	if [ -f out/Makefile ]; then \

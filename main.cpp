@@ -122,7 +122,7 @@ int metacc_main(int argc, const char *argv[]) {
 
     // templates
     if (out_jj) {
-        extern struct ast_list *symbol_definition_list;
+        extern class ast::list *symbol_definition_list;
         const char *parser_name = "SVParser";
 
         // 
@@ -156,7 +156,8 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_jj, "\n");
 
         // 
-        ast_list_traverse(out_jj, symbol_definition_list, 0);    
+        /// ast_list_traverse(out_jj, symbol_definition_list, ast::ACTOPT_NONE);    
+        symbol_definition_list->action(out_jj, ast::ACTOPT_NONE);
 
         // 
         fprintf(out_jj, "\n");
@@ -195,7 +196,7 @@ int metacc_main(int argc, const char *argv[]) {
         fclose(out_java);
     }
     else if (out_lyc) {
-        extern struct ast_list *symbol_definition_list;
+        extern class ast::list *symbol_definition_list;
         FILE *out;
 
         // 
@@ -340,7 +341,8 @@ int metacc_main(int argc, const char *argv[]) {
         }
 
         // 
-        ast_list_traverse(out_lyc, symbol_definition_list, 0);    
+        /// ast_list_traverse(out_lyc, symbol_definition_list, ACTOPT_NONE);    
+        symbol_definition_list->action(out_lyc, ast::ACTOPT_NONE);
 
         // 
         {

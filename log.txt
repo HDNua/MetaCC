@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.3.0.0 (IMPORTANT)
+----
+
+- C++ 전환 완료... 으에엑
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.2.2.3
 ----
 

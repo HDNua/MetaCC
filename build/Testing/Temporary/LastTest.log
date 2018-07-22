@@ -1,0 +1,19 @@
+Start testing: Jul 23 05:29 KST
+----------------------------------------------------------
+Unable to find executable: /home/handy/Dropbox/work/yacc/metacc/latest/test/test0.pl
+1/1 Testing: basic
+1/1 Test: basic
+Command: ""
+Directory: /home/handy/Dropbox/work/yacc/metacc/latest/build
+"basic" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"basic" end time: Jul 23 05:29 KST
+"basic" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Jul 23 05:29 KST

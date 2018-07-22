@@ -1,9 +1,11 @@
 %{
 #define MAX_TOKEN_LEN 2048
 
+#include "ast.h"
 #include <stdio.h>
 #include <string.h>
-#include "y.tab.h"
+// #include "y.tab.h"
+#include "sv_parser.h"
 
 
 #ifdef YYDEBUG
@@ -12,8 +14,7 @@ extern int yydebug;
 
 extern int line_count;
 
-int 
-yywrap(void)
+extern "C" int yywrap(void)
 {
 	return 1;
 }
