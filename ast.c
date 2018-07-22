@@ -1072,6 +1072,7 @@ void ast_symbol_value_element_action(FILE *out, struct ast_symbol_value_element 
                 mcc_string_action(out, self->u.mcc_string);
                 break;
             case AST_MCC_SYMBOL:
+                // fprintf(out, "/* out_lyc(%p) vs out(%p) */ ", out_lyc, out);
                 fprintf(out, "%s ", self->u.mcc_symbol);
                 break;
             case AST_LIST_PARAMETER:
@@ -1116,6 +1117,8 @@ void mcc_string_action(FILE *out, const char *string_value) {
         sprintf(key_name, "TOKEN_%d", index);
         fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", string_value, key_name);
     }
+
+
     fprintf(out, "%s /* %s */ ", key_name, string_value);
 }
 // 
@@ -1137,8 +1140,8 @@ void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
         char key_name[256];
         int index;
 
-        ast_list_parameter_value_action(out, self->ast_list_parameter_value);
         // ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
+        ast_list_parameter_value_action(out, self->ast_list_parameter_value);
 
         index = ast_table_LIST_index(self);
         if (index < 0) {
@@ -1157,7 +1160,20 @@ void ast_list_parameter_action(FILE *out, struct ast_list_parameter *self) {
 
             fprintf(out_lyc_y_list, "\n");
             fprintf(out_lyc_y_list, "    | LIST_%d ", index);
-            fprintf(out_lyc_y_list, "\"%s\" ", self->list_parameter_delim);
+
+            if (strcmp(self->list_parameter_delim, "") == 0) {
+                // fprintf(out_lyc_y_list, "\"%s\" ", self->list_parameter_delim);
+            }
+            else {
+                mcc_string_action(out_lyc_y_list, self->list_parameter_delim);
+                // int token_index = string_tokens_index(self->list_parameter_delim);
+                // if (token_index < 0) {
+                    // fprintf(out_lyc_y_list, "\"%s\" ", self->list_parameter_delim);
+                    // token_index = tokens.count;
+                    // tokens_add(self->list_parameter_delim);
+                // }
+                // fprintf(out_lyc_y_list, "TOKEN_%d ", token_index);
+            }
 
             // ast_list_parameter_value_action(self->ast_list_parameter_value);
             ast_list_traverse(out_lyc_y_list, self->ast_list_parameter_value->ast_symbol_value_list);
@@ -1184,8 +1200,8 @@ void ast_option_parameter_action(FILE *out, struct ast_option_parameter *self) {
         char key_name[256];
         int index;
 
-        ast_option_parameter_value_action(out, self->ast_option_parameter_value);
         // ast_list_traverse(self->ast_list_parameter_value->ast_symbol_value_list);
+        ast_option_parameter_value_action(out, self->ast_option_parameter_value);
 
         index = ast_table_OPT_index(self);
         if (index < 0) {
@@ -1244,6 +1260,8 @@ void ast_star_parameter_action(FILE *out, struct ast_star_parameter *self) {
             ast_list_traverse(out_lyc_y_star, self->ast_star_parameter_value->ast_symbol_value_list);
 
             fprintf(out_lyc_y_star, "\n");
+
+            // WORKING
             fprintf(out_lyc_y_star, "    | STAR_%d ", index);
 
             // ast_list_parameter_value_action(self->ast_list_parameter_value);
@@ -1320,7 +1338,7 @@ void ast_token_definition_action(FILE *out, struct ast_token_definition *self) {
         // fprintf(out_lyc_y_token, "%%token %s\n", self->token_key);
         
         // 
-        // fprintf(out_lyc, "%s", self->token_key);
+        fprintf(out_lyc, "%s ", self->token_key);
     }
 }
 

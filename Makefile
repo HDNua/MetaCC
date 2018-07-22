@@ -22,7 +22,7 @@ cc:
 	$(CC) -o $(EXE) *.c $(LINK)
 
 yacc_dbg:
-	yacc -gdvt $(YACC_SRC)
+	yacc -g -d -v -t $(YACC_SRC)
 
 lex_dbg:
 	lex $(LEX_SRC)
@@ -45,7 +45,10 @@ test1:
 
 test2:
 	./$(EXE) lyc < symbols.list
-	# make clean_lyc
+
+test3:
+	./$(EXE) lyc < symbols.list
+	make clean_lyc
 
 clean:
 	rmtmp

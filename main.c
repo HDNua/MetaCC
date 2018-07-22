@@ -379,6 +379,7 @@ int metacc_main(int argc, const char *argv[]) {
             // define extended tokens list.
             for (i=0, len=tokens.count; i < len; ++i) {
                 fprintf(out, "%%token %-12s /* %s */\n", tokens.list[i], tokens.list[i]);
+                fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", tokens.list[i], tokens.list[i]);
             }
 
             //

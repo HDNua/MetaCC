@@ -1,3 +1,17 @@
+MetaCC - Meta Compiler Compiler v0.2.2.2
+----
+
+- Too many gotos는 도구를 yacc에서 bison으로 변경하면서 해결.
+
+- 홍진호
+- 홍진호
+
+- 다른 문제가 있어요. LIST를 보면, 리스트 안의 내용물이 한 번 출력된 다음에 LIST_0 토큰이 나오는 식입니다. 다른 것도 다 그래요.
+> 액션에 옵션을 넣어 문제를 해결해볼 생각입니다.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.2.2.1
 ----
 

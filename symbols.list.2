@@ -208,10 +208,10 @@ ansi_port_declaration
 
 # 1.4) Module items
 elaboration_system_task
-    : "dollarsign_fatal" OPTION( "(" finish_number OPTION( "," list_of_arguments ) ")" ) ";"
-    | "dollarsign_error" OPTION( "(" OPTION( list_of_arguments ) ")" ) ";"
-    | "dollarsign_warning" OPTION( "(" OPTION( list_of_arguments ) ")" ) ";"
-    | "dollarsign_info" OPTION( "(" OPTION( list_of_arguments ) ")" ) ";"
+    : "$fatal" OPTION( "(" finish_number OPTION( "," list_of_arguments ) ")" ) ";"
+    | "$error" OPTION( "(" OPTION( list_of_arguments ) ")" ) ";"
+    | "$warning" OPTION( "(" OPTION( list_of_arguments ) ")" ) ";"
+    | "$info" OPTION( "(" OPTION( list_of_arguments ) ")" ) ";"
     ;
 finish_number
     : "0" | "1" | "2"
@@ -846,8 +846,8 @@ type_assignment
     : type_identifier OPTION( "=" data_type )
     ;
 pulse_control_specparam
-    : "PATHPULSEdollarsign_" "=" "(" reject_limit_value OPTION( "," error_limit_value ) ")"
-    | "PATHPULSEdollarsign_"specify_input_terminal_descriptor"dollarsign_"specify_output_terminal_descriptor
+    : "PATHPULSE$" "=" "(" reject_limit_value OPTION( "," error_limit_value ) ")"
+    | "PATHPULSE$"specify_input_terminal_descriptor"$"specify_output_terminal_descriptor
         "=" "(" reject_limit_value OPTION( "," error_limit_value ) ")"
     ;
 error_limit_value
@@ -892,7 +892,7 @@ variable_dimension
     | queue_dimension
     ;
 queue_dimension
-    : "[" "dollarsign_" OPTION( ":" constant_expression ) "]"
+    : "[" "$" OPTION( ":" constant_expression ) "]"
     ;
 unsized_dimension
     : "[" "]"
@@ -1185,7 +1185,7 @@ const_or_range_expression
     ;
 cycle_delay_const_range_expression
     : constant_expression ":" constant_expression
-    | constant_expression ":" "dollarsign_"
+    | constant_expression ":" "$"
     ;
 expression_or_dist
     : expression OPTION( "dist" "{" dist_list "}" )
@@ -2360,31 +2360,31 @@ polarity_operator
 # 7.5) System timing checks
 # 7.5.1) System timing check commands
 system_timing_check
-    : dollarsign_setup_timing_check
-    | dollarsign_hold_timing_check
-    | dollarsign_setuphold_timing_check
-    | dollarsign_recovery_timing_check
-    | dollarsign_removal_timing_check
-    | dollarsign_recrem_timing_check
-    | dollarsign_skew_timing_check
-    | dollarsign_timeskew_timing_check
-    | dollarsign_fullskew_timing_check
-    | dollarsign_period_timing_check
-    | dollarsign_width_timing_check
-    | dollarsign_nochange_timing_check
+    : $setup_timing_check
+    | $hold_timing_check
+    | $setuphold_timing_check
+    | $recovery_timing_check
+    | $removal_timing_check
+    | $recrem_timing_check
+    | $skew_timing_check
+    | $timeskew_timing_check
+    | $fullskew_timing_check
+    | $period_timing_check
+    | $width_timing_check
+    | $nochange_timing_check
     ;
-dollarsign_setup_timing_check
-    : "dollarsign_setup" "(" data_event "," reference_event "," timing_check_limit
+$setup_timing_check
+    : "$setup" "(" data_event "," reference_event "," timing_check_limit
         OPTION( "," OPTION( notifier ) )
         ")" ";"
     ;
-dollarsign_hold_timing_check
-    : "dollarsign_hold" "(" reference_event "," data_event "," timing_check_limit
+$hold_timing_check
+    : "$hold" "(" reference_event "," data_event "," timing_check_limit
         OPTION( "," OPTION( notifier ) )
         ")" ";"
     ;
-dollarsign_setuphold_timing_check
-    : "dollarsign_setuphold" "("
+$setuphold_timing_check
+    : "$setuphold" "("
         reference_event "," data_event "," 
         timing_check_limit "," timing_check_limit 
         OPTION( "," OPTION( notifier )
@@ -2398,30 +2398,30 @@ dollarsign_setuphold_timing_check
         )
         ")" ";"
     ;
-dollarsign_recovery_timing_check
-    : "dollarsign_recovery" "(" reference_event "," data_event ","
+$recovery_timing_check
+    : "$recovery" "(" reference_event "," data_event ","
         timing_check_limit
         OPTION( "," OPTION( notifier ) )
         ")" ";"
     ;
-dollarsign_removal_timing_check
-    : "dollarsign_removal" "(" reference_event "," data_event ","
+$removal_timing_check
+    : "$removal" "(" reference_event "," data_event ","
         timing_check_limit
         OPTION( "," OPTION( notifier ) )
         ")" ";"
     ;
-dollarsign_recrem_timing_check
-    : "dollarsign_recrem" "(" reference_event "," data_event ","
+$recrem_timing_check
+    : "$recrem" "(" reference_event "," data_event ","
         ")" ";"
     ;
-dollarsign_skew_timing_check
-    : "dollarsign_skew" "(" reference_event "," data_event "," 
+$skew_timing_check
+    : "$skew" "(" reference_event "," data_event "," 
         timing_check_limit
         OPTION( "," OPTION ( notifier ) )
         ")" ";"
     ;
-dollarsign_timeskew_timing_check
-    : "dollarsign_timeskew" "(" reference_event "," data_event ","
+$timeskew_timing_check
+    : "$timeskew" "(" reference_event "," data_event ","
         timing_check_limit
         OPTION( "," OPTION( notifier )
             OPTION( "," OPTION( event_based_flag )
@@ -2430,8 +2430,8 @@ dollarsign_timeskew_timing_check
         )
         ")" ";"
     ;
-dollarsign_fullskew_timing_check
-    : "dollarsign_fullskew" "(" reference_event "," data_event "," 
+$fullskew_timing_check
+    : "$fullskew" "(" reference_event "," data_event "," 
         timing_check_limit "," timing_check_limit 
         OPTION( "," OPTION( notifier )
             OPTION( "," OPTION( event_based_flag )
@@ -2440,16 +2440,16 @@ dollarsign_fullskew_timing_check
         )
         ")" ";"
     ;
-dollarsign_period_timing_check
-    : "dollarsign_period" "("
+$period_timing_check
+    : "$period" "("
         ")" ";"
     ;
-dollarsign_width_timing_check
-    : "dollarsign_width" "(" controlled_reference_event "," timing_check_limit ","
+$width_timing_check
+    : "$width" "(" controlled_reference_event "," timing_check_limit ","
         threshold OPTION( "," OPTION( notifier ) ) ")" ";"
     ;
-dollarsign_nochange_timing_check
-    : "dollarsign_nochange" "(" reference_event "," data_event "," 
+$nochange_timing_check
+    : "$nochange" "(" reference_event "," data_event "," 
         start_edge_offset "," end_edge_offset OPTION( "," OPTION( notifier ) ) ")" ";"
     ;
 
@@ -2684,12 +2684,12 @@ constant_mintypmax_expression
 constant_param_expression
     : constant_mintypmax_expression
     | data_type
-    | "dollarsign_"
+    | "$"
     ;
 param_expression
     : mintypmax_expression
     | data_type
-    | "dollarsign_"
+    | "$"
     ;
 constant_range_expression
     : constant_expression
@@ -2795,7 +2795,7 @@ primary
     | streaming_concatenation
     | sequence_method_call
     | "this"
-    | "dollarsign_"
+    | "$"
     | "null"
     ;
 class_qualifier
@@ -3180,7 +3180,7 @@ package_identifier
     ;
 package_scope
     : package_identifier "::"
-    | "dollarsign_unit" "::"
+    | "$unit" "::"
     ;
 parameter_identifier
     : identifier
