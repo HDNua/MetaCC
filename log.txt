@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.3.0.4
+----
+
+- LIST에 대해 어느 정도 작업이 완료된 것 같다.
+> 옵션과 스타에 대해서도 처리하자.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.3.0.3
 ----
 
