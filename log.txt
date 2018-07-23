@@ -1,3 +1,11 @@
+MetaCC - Meta Compiler Compiler v0.3.0.5
+----
+
+- 뭔가 진짜 쫌만 더 하면 구현을 할 것 같은 느낌인데 말이야...
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.3.0.4
 ----
 
