@@ -349,14 +349,15 @@ option_parameter_value
 	}
 	;
 star_parameter_value
-	: symbol_value_list
+	: list_parameter_value // symbol_value_list
 	{
 		// struct ast_star_parameter_value *ret = (struct ast_star_parameter_value *)
 		//     malloc(sizeof(struct ast_star_parameter_value));
 		// ret->type = AST_STAR_PARAMETER_VALUE;
 		// ret->ast_symbol_value_list = $1;
 		// $$ = ret;
-		ast::star_parameter_value *ret = new ast::star_parameter_value($1);
+		ast::list_parameter *lp = new ast::list_parameter($1, "");
+		ast::star_parameter_value *ret = new ast::star_parameter_value(lp);
 		$$ = ret;
 	}
 	;

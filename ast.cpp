@@ -307,7 +307,8 @@ option_parameter_value::~option_parameter_value() {
     delete _symbol_value_list;
 }
 star_parameter_value::~star_parameter_value() {
-    delete _symbol_value_list;
+    // delete _symbol_value_list;
+    delete _list_parameter;
 }
 token_definition::~token_definition() {
 
@@ -567,7 +568,8 @@ int option_parameter_value::compare(const option_parameter_value *p2) const {
 // 
 int star_parameter_value::compare(const star_parameter_value *p2) const {
     if (this != p2) {
-        return list::compare(this->ast_symbol_value_list(), p2->ast_symbol_value_list());
+        // return list::compare(this->ast_symbol_value_list(), p2->ast_symbol_value_list());
+        return this->ast_list_parameter()->compare(p2->ast_list_parameter());
     }
     return 0;
 }
@@ -962,8 +964,33 @@ void symbol_definition::action(FILE *out, act_opt option) {
                 fprintf(out_lyc, "    %c ", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
                 for (node2 = ast_elem_list->first(); node2; node2 = node2->next()) {
                     symbol_value_element *ast_elem = dynamic_cast<symbol_value_element *>(node2->ast_elem());
-                    if (ast_elem != nullptr) {
-                        ast_elem->action(out, option);
+                    mcc_symbol *new_elem = nullptr;
+
+                    if (ast_elem == nullptr) {
+                        fprintf(out_lyc, "/""* empty *""/ ");
+                        continue;
+                    }
+
+                    switch (ast_elem->elem_type()) {
+                        case AST_MCC_STRING:
+                        case AST_MCC_SYMBOL:
+                        case AST_TOKEN_DEFINITION:
+                            ast_elem->glance(out, option);
+                            ast_elem->action(out, option);
+                            break;
+                        case AST_LIST_PARAMETER:
+                        case AST_OPTION_PARAMETER:
+                        case AST_STAR_PARAMETER:
+                            new_elem = new mcc_symbol(ast_elem->glance(out, option));
+                            delete ast_elem;
+                            node2->set_ast_elem(new_elem);
+                            new_elem->action(out, option);
+                            break;
+
+                        default:
+                            fprintf(stderr, "symbol_definition_action >> invalid type [%s] \n", 
+                                    ast_str(ast_elem->elem_type()));
+                            exit(1);
                     }
                 }
                 fprintf(out_lyc, "\n    {\n        $$ = 0;\n    }\n");
@@ -1010,12 +1037,15 @@ void symbol_value::action(FILE *out, act_opt option) {
     list *ast_symbol_value_element_list = this->ast_symbol_value_element_list();
     for (list_node *node=ast_symbol_value_element_list->first(); node; node=node->next()) {
         symbol_value_element *elem = dynamic_cast<symbol_value_element *>(node->ast_elem());
-        mcc_string *ret;
+        mcc_symbol *ret;
         
         // 
         switch (elem->elem_type()) {
             case AST_MCC_STRING:
-                elem->action(out, option);
+                ret = new mcc_symbol(elem->glance(out, option));
+                delete elem;
+                node->set_ast_elem(ret);
+                ret->action(out, option);
                 break;
 
             case AST_MCC_SYMBOL:
@@ -1023,21 +1053,21 @@ void symbol_value::action(FILE *out, act_opt option) {
                 break;
 
             case AST_LIST_PARAMETER:
-                ret = new mcc_string(elem->glance(out, option));
+                ret = new mcc_symbol(elem->glance(out, option));
                 delete elem;
                 node->set_ast_elem(ret);
                 ret->action(out, option);
                 break;
 
             case AST_OPTION_PARAMETER:
-                ret = new mcc_string(elem->glance(out, option));
+                ret = new mcc_symbol(elem->glance(out, option));
                 delete elem;
                 node->set_ast_elem(ret);
                 ret->action(out, option);
                 break;
 
             case AST_STAR_PARAMETER:
-                ret = new mcc_string(elem->glance(out, option));
+                ret = new mcc_symbol(elem->glance(out, option));
                 delete elem;
                 node->set_ast_elem(ret);
                 ret->action(out, option);
@@ -1101,22 +1131,40 @@ void symbol_value_element::action(FILE *out, act_opt option) {
 }
 // 
 void mcc_string::action(FILE *out, act_opt option) {
-    char key_name[256];
-    int index = string_tokens_index(_value.c_str());
-
-    // 
-    sprintf(key_name, "TOKEN_%d", index);
-    if (index < 0) {
-        index = string_token_keys.count;
-        string_tokens_add(key_name, _value.c_str());
+    if (0) {
+        char key_name[256];
+        int index = string_tokens_index(_value.c_str());
 
         // 
         sprintf(key_name, "TOKEN_%d", index);
-        fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
+        if (index < 0) {
+            index = string_token_keys.count;
+            string_tokens_add(key_name, _value.c_str());
+
+            // 
+            sprintf(key_name, "TOKEN_%d", index);
+            fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
+        }
+
+        // 
+        fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
+    }
+    else if (1) {
+        if (_value != "") {
+            char key_name[256];
+            int index = string_tokens_index(_value.c_str());
+
+            if (index < 0) {
+                fprintf(stderr, "mcc_string_action >> cannot find token definition of [%s] \n", _value.c_str());
+                exit(1);
+            }
+
+            // 
+            sprintf(key_name, "TOKEN_%d", index);
+            fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
+        }
     }
 
-    // 
-    fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
 }
 // 
 void mcc_symbol::action(FILE *out, act_opt option) {
@@ -1128,60 +1176,74 @@ void mcc_symbol::action(FILE *out, act_opt option) {
 void list_parameter::action(FILE *out, act_opt option) {
     // 
     if (out_lyc) {
-        char key_name[256];
-        int index;
+        if (0) {
+            char key_name[256];
+            int index;
 
-        // ast_list_traverse(this->list_parameter::value->ast_symbol_value_list);
-        // list_parameter_value::action(out, this->list_parameter::value, option);
-        this->ast_list_parameter_value()->glance(out, option);
+            // ast_list_traverse(this->list_parameter::value->ast_symbol_value_list);
+            // list_parameter_value::action(out, this->list_parameter::value, option);
+            std::string ret = this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
 
-        index = ast_table_LIST_index(this);
-        if (index < 0) {
-            index = table_LIST_keys.count;
+            index = ast_table_LIST_index(this);
+            if (index < 0) {
+                index = table_LIST_keys.count;
 
-            // 
-            sprintf(key_name, "LIST_%d", index);
-            ast_table_LIST_add(key_name, this);
+                // 
+                sprintf(key_name, "LIST_%d", index);
+                ast_table_LIST_add(key_name, this);
 
-            // 
-            fprintf(out_lyc_y_list, "LIST_%d\n", index);
-            fprintf(out_lyc_y_list, "    : ");
-            
-            // list_parameter_value::action(this->list_parameter::value);
-            // ast_list_traverse(out_lyc_y_list, this->list_parameter::value->ast_symbol_value_list, option);
-            this->ast_list_parameter_value()->ast_symbol_value_list()->action(out, option);
+                // 
+                fprintf(out_lyc_y_list, "LIST_%d\n", index);
+                fprintf(out_lyc_y_list, "    : ");
 
-            fprintf(out_lyc_y_list, "\n");
-            fprintf(out_lyc_y_list, "    | LIST_%d ", index);
-
-            // if (strcmp(this->list_parameter_delim, "") == 0) {
-            if (this->list_parameter_delim()->compare("") == 0) {
-                // fprintf(out_lyc_y_list, "\"%s\" ", this->list_parameter_delim);
-            }
-            else {
-                // mcc_string_action(out_lyc_y_list, this->list_parameter_delim, option);
-                this->list_parameter_delim()->action(out_lyc_y_list, option);
+                // list_parameter_value::action(this->list_parameter::value);
+                // ast_list_traverse(out_lyc_y_list, this->list_parameter::value->ast_symbol_value_list, option);
+                this->ast_list_parameter_value()->ast_symbol_value_list()->action(out_lyc_y_list, option);
 
 
-                // int token_index = string_tokens_index(this->list_parameter_delim);
-                // if (token_index < 0) {
+                fprintf(out_lyc_y_list, "\n");
+                fprintf(out_lyc_y_list, "    | LIST_%d ", index);
+
+                // if (strcmp(this->list_parameter_delim, "") == 0) {
+                if (this->list_parameter_delim()->compare("") == 0) {
+                    // fprintf(out_lyc_y_list, "\"%s\" ", this->list_parameter_delim);
+                }
+                else {
+                    // mcc_string_action(out_lyc_y_list, this->list_parameter_delim, option);
+                    this->list_parameter_delim()->action(out_lyc_y_list, option);
+
+
+                    // int token_index = string_tokens_index(this->list_parameter_delim);
+                    // if (token_index < 0) {
                     // fprintf(out_lyc_y_list, "\"%s\" ", this->list_parameter_delim);
                     // token_index = tokens.count;
                     // tokens_add(this->list_parameter_delim);
-                // }
-                // fprintf(out_lyc_y_list, "TOKEN_%d ", token_index);
+                    // }
+                    // fprintf(out_lyc_y_list, "TOKEN_%d ", token_index);
+                }
+
+                // list_parameter_value::action(this->list_parameter::value);
+                // ast_list_traverse(out_lyc_y_list, this->list_parameter::value->ast_symbol_value_list, option);
+                this->ast_list_parameter_value()->ast_symbol_value_list()->action(out_lyc_y_list, option);
+
+                fprintf(out_lyc_y_list, "\n");
+                fprintf(out_lyc_y_list, "    ;\n");
             }
 
-            // list_parameter_value::action(this->list_parameter::value);
-            // ast_list_traverse(out_lyc_y_list, this->list_parameter::value->ast_symbol_value_list, option);
-            this->ast_list_parameter_value()->ast_symbol_value_list()->action(out, option);
-
-            fprintf(out_lyc_y_list, "\n");
-            fprintf(out_lyc_y_list, "    ;\n");
+            // 
+            fprintf(out, "LIST_%d ", index);
         }
+        else {
+            std::string ret = this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
+            int index = ast_table_LIST_index(this);
+            if (index < 0) {
+                fprintf(stderr, "list_parameter_action >> cannot find definition of LIST \n");
+                exit(1);
+            }
 
-        // 
-        fprintf(out, "LIST_%d ", index);
+            // 
+            fprintf(out, "%s ", ret.c_str());
+        }
     }
 }
 // 
@@ -1193,7 +1255,7 @@ void option_parameter::action(FILE *out, act_opt option) {
 
         // ast_list_traverse(this->list_parameter::value->ast_symbol_value_list);
         // option_parameter_value::action(out, this->ast_option_parameter_value(), option);
-        this->ast_option_parameter_value()->glance(out, option);
+        this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
 
         index = ast_table_OPT_index(this);
         if (index < 0) {
@@ -1229,7 +1291,7 @@ void star_parameter::action(FILE *out, act_opt option) {
         int index;
 
         // star_parameter_value::action(out, this->ast_star_parameter_value, option);
-        this->ast_star_parameter_value()->glance(out, option);
+        this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
 
         index = ast_table_STAR_index(this);
         if (index < 0) {
@@ -1299,7 +1361,8 @@ void star_parameter_value::action(FILE *out, act_opt option) {
     if (out_lyc) {
         // fprintf(stderr, "/* STAR(%d) */\n", this->ast_symbol_value_list->count);
         // ast_list_traverse(out, this->ast_symbol_value_list, option);
-        this->ast_symbol_value_list()->action(out, option);
+        // this->ast_symbol_value_list()->action(out, option);
+        this->ast_list_parameter()->action(out, option);
     }
 }
 // 
@@ -1473,7 +1536,7 @@ std::string symbol_definition::glance(FILE *out, act_opt option) {
                     if (ast_elem != nullptr) {
                         std::string text = ast_elem->glance(out, option);
                         delete ast_elem;
-                        mcc_string *new_elem = new mcc_string(text);
+                        mcc_symbol *new_elem = new mcc_symbol(text);
                         node->set_ast_elem(new_elem);
                     }
                 }
@@ -1519,24 +1582,12 @@ std::string symbol_key::glance(FILE *out, act_opt option) {
 }
 // 
 std::string key_attributes::glance(FILE *out, act_opt option) {
-    // describe_begin();
-    // tab_depth();
-    // fprintf(out_jj, "%s \n", ast_str(this->type));
-    // describe_end();
-    
     return attributes();
 }
 
 // 
 std::string symbol_value::glance(FILE *out, act_opt option) {
-    // describe_begin();
-    // tab_depth();
-    // fprintf(out_jj, "%s \n", ast_str(this->type));
-
-    // ast_list_traverse(out, this->ast_symbol_value_element_list, option);
     return this->ast_symbol_value_element_list()->glance(out, option);
-
-    // describe_end();
 }
 // 
 std::string symbol_value_element::glance(FILE *out, act_opt option) {
@@ -1549,44 +1600,30 @@ std::string symbol_value_element::glance(FILE *out, act_opt option) {
 }
 // 
 std::string mcc_string::glance(FILE *out, act_opt option) {
-    char key_name[256];
-    int index = string_tokens_index(_value.c_str());
-
-    // 
-    sprintf(key_name, "TOKEN_%d", index);
-    if (index < 0) {
-        index = string_token_keys.count;
-        string_tokens_add(key_name, _value.c_str());
+    if (_value != "") {
+        char key_name[256];
+        int index = string_tokens_index(_value.c_str());
 
         // 
         sprintf(key_name, "TOKEN_%d", index);
-        fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
+        if (index < 0) {
+            index = string_token_keys.count;
+            string_tokens_add(key_name, _value.c_str());
+
+            // 
+            sprintf(key_name, "TOKEN_%d", index);
+            fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
+        }
+
+        // 
+        // fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
+        // return str(boost::format("%1% /""* %2% *""/") % key_name % _value.c_str());
+        return std::string(key_name);
     }
-    
-    // 
-    // fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
-    // return str(boost::format("%1% /""* %2% *""/") % key_name % _value.c_str());
-    return std::string(key_name);
+    return std::string("");
 }
 // 
 std::string mcc_symbol::glance(FILE *out, act_opt option) {
-    /*
-    char key_name[256];
-    int index = string_tokens_index(_value.c_str());
-
-    // 
-    sprintf(key_name, "TOKEN_%d", index);
-    if (index < 0) {
-        index = string_token_keys.count;
-        string_tokens_add(key_name, _value.c_str());
-
-        // 
-        sprintf(key_name, "TOKEN_%d", index);
-        fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
-    }
-
-    fprintf(out, "%s /""* %s *""/ ", key_name, _value.c_str());
-    */
     return value();
 }
 
@@ -1599,7 +1636,7 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
 
         // ast_list_traverse(this->list_parameter::value->ast_symbol_value_list);
         // list_parameter_value::glance(out, this->list_parameter::value, option);
-        this->ast_list_parameter_value()->glance(out, option);
+        std::string ret = this->ast_list_parameter_value()->glance(out, option);
 
         index = ast_table_LIST_index(this);
         if (index < 0) {
@@ -1626,7 +1663,7 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
             }
             else {
                 // mcc_string_glance(out_lyc_y_list, this->list_parameter_delim, option);
-                this->list_parameter_delim()->glance(out_lyc_y_list, option);
+                this->list_parameter_delim()->action(out_lyc_y_list, option);
 
 
                 // int token_index = string_tokens_index(this->list_parameter_delim);
@@ -1649,7 +1686,8 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
         // 
         // fprintf(out, "LIST_%d ", index);
         // return std::string("LIST_") + std::string(index);
-        return str(boost::format("LIST_%1%") % index);
+        //// return str(boost::format("LIST_%1%") % index);
+        return ret;
     }
     return "null";
 }
@@ -1662,7 +1700,7 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
 
         // ast_list_traverse(this->list_parameter::value->ast_symbol_value_list);
         // option_parameter_value::glance(out, this->ast_option_parameter_value(), option);
-        this->ast_option_parameter_value()->glance(out, option);
+        std::string ret = this->ast_option_parameter_value()->glance(out, option);
 
         index = ast_table_OPT_index(this);
         if (index < 0) {
@@ -1688,7 +1726,8 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
         // 
         // fprintf(out, "OPT_%d ", index);
         // return std::string("OPT_") + index;
-        return str(boost::format("OPT_%1%") % index);
+        //// return str(boost::format("OPT_%1%") % index);
+        return ret;
     }
     return "null";
 }
@@ -1700,7 +1739,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
         int index;
 
         // star_parameter_value::glance(out, this->ast_star_parameter_value, option);
-        this->ast_star_parameter_value()->glance(out, option);
+        std::string ret = this->ast_star_parameter_value()->glance(out, option);
 
         index = ast_table_STAR_index(this);
         if (index < 0) {
@@ -1716,7 +1755,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             fprintf(out_lyc_y_star, "    | ");
             
             // ast_list_traverse(out_lyc_y_star, this->ast_star_parameter_value->ast_symbol_value_list, option);
-            this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
+            this->ast_star_parameter_value()->action(out_lyc_y_star, option);
 
             fprintf(out_lyc_y_star, "\n");
 
@@ -1730,7 +1769,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
 
             // list_parameter_value::glance(this->list_parameter::value);
             // ast_list_traverse(out_lyc_y_star, this->ast_star_parameter_value->ast_symbol_value_list, option);
-            this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
+            this->ast_star_parameter_value()->action(out_lyc_y_star, option);
 
             fprintf(out_lyc_y_star, "\n");
             fprintf(out_lyc_y_star, "    ;\n");
@@ -1738,7 +1777,8 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
 
         // 
         // fprintf(out, "STAR_%d ", index);
-        return str(boost::format("STAR_%1%") % index);
+        //// return str(boost::format("STAR_%1%") % index);
+        return ret;
     }
     return "null";
 }
@@ -1768,7 +1808,8 @@ std::string star_parameter_value::glance(FILE *out, act_opt option) {
     if (out_lyc) {
         // fprintf(stderr, "/* STAR(%d) */\n", this->ast_symbol_value_list->count);
         // ast_list_traverse(out, this->ast_symbol_value_list, option);
-        return this->ast_symbol_value_list()->glance(out, option);
+        // return this->ast_symbol_value_list()->glance(out, option);
+        return this->ast_list_parameter()->glance(out, option);
     }
     return "null";
 }

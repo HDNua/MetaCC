@@ -337,6 +337,11 @@ namespace ast {
             : symbol_value_element(AST_MCC_SYMBOL), _value(value)
         {
         }
+        mcc_symbol(const std::string &value) 
+            : symbol_value_element(AST_MCC_SYMBOL), _value(value)
+        {
+            
+        }
         ~mcc_symbol();
         
         string &value() { return _value; }
@@ -485,17 +490,31 @@ namespace ast {
 
     // 
     class star_parameter_value: public object {
-        class list                          *_symbol_value_list;
+        // class list                          *_symbol_value_list;
+        // class list_parameter_value          *_list_parameter_value;
+        class list_parameter                *_list_parameter;
 
     public:
-        star_parameter_value(list *_symbol_value_list)
-            : object(AST_STAR_PARAMETER_VALUE), _symbol_value_list(_symbol_value_list)
+        // star_parameter_value(list *_symbol_value_list)
+        //     : object(AST_STAR_PARAMETER_VALUE), _symbol_value_list(_symbol_value_list)
+        // {
+        // }
+        // star_parameter_value(list_parameter_value *_list_parameter_value)
+        //     : object(AST_STAR_PARAMETER_VALUE), _list_parameter_value(_list_parameter_value)
+        // {
+        // }
+        star_parameter_value(list_parameter *_list_parameter)
+            : object(AST_STAR_PARAMETER_VALUE), _list_parameter(_list_parameter)
         {
         }
         ~star_parameter_value();
 
-        list *ast_symbol_value_list() { return _symbol_value_list; }
-        const list *ast_symbol_value_list() const { return _symbol_value_list; }
+        // list *ast_symbol_value_list() { return _symbol_value_list; }
+        // const list *ast_symbol_value_list() const { return _symbol_value_list; }
+        // list_parameter_value *ast_list_parameter_value() { return _list_parameter_value; }
+        // const list_parameter_value *ast_list_parameter_value() const { return _list_parameter_value; }
+        list_parameter *ast_list_parameter() { return _list_parameter; }
+        const list_parameter *ast_list_parameter() const { return _list_parameter; }
 
         void describe(FILE *out);
         std::string glance(FILE *out, act_opt option);
