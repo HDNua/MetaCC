@@ -66,6 +66,7 @@ namespace ast {
         void describe(FILE *out) {
             ;
         }
+        virtual void glance(FILE *out, act_opt option = ACTOPT_NONE) = 0;
         virtual void action(FILE *out, act_opt option = ACTOPT_NONE) = 0;
         virtual int compare(const object *p2) const {
             return this == p2;
@@ -97,6 +98,7 @@ namespace ast {
         void set_next(list_node *value) { _next = value; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list_node *p2) const;
         static int compare(const list_node *p1, const list_node *p2) {
@@ -124,6 +126,7 @@ namespace ast {
         int count() const { return _count; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list *p2) const;
         static int compare(const list *p1, const list *p2) {
@@ -159,6 +162,7 @@ namespace ast {
         const list *ast_symbol_value_list() const { return _symbol_value_list; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const symbol_definition *p2) const;
         static int compare(const symbol_definition *p1, const symbol_definition *p2) {
@@ -185,6 +189,7 @@ namespace ast {
         const key_attributes *ast_key_attributes() const { return _key_attributes; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const symbol_key *p2) const;
         static int compare(const symbol_key *p1, const symbol_key *p2) {
@@ -208,6 +213,7 @@ namespace ast {
         const string &attributes() const { return _attributes; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const key_attributes *p2) const;
         static int compare(const key_attributes *p1, const key_attributes *p2) {
@@ -231,6 +237,7 @@ namespace ast {
         const list *ast_symbol_value_element_list() const { return _symbol_value_element_list; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const symbol_value *p2) const;
         static int compare(const symbol_value *p1, const symbol_value *p2) {
@@ -253,6 +260,7 @@ namespace ast {
         ast_type elem_type() const { return _elem_type; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const symbol_value_element *p2) const {
             return this != p2;
@@ -282,6 +290,7 @@ namespace ast {
         const string &value() const { return _value; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const mcc_string *p2) const;
         static int compare(const mcc_string *p1, const mcc_string *p2) {
@@ -319,6 +328,7 @@ namespace ast {
         const string &value() const { return _value; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const mcc_symbol *p2) const;
         static int compare(const mcc_symbol *p1, const mcc_symbol *p2) {
@@ -340,14 +350,6 @@ namespace ast {
         {
             _list_parameter_delim = new mcc_string(list_parameter_delim);
         }
-        /*
-        list_parameter(list_parameter_value *_list_parameter_value, mcc_string *_list_parameter_delim)
-            : symbol_value_element(AST_LIST_PARAMETER),
-            _list_parameter_value(_list_parameter_value),
-            _list_parameter_delim(_list_parameter_delim)
-        {
-        }
-        */
 
         list_parameter_value *ast_list_parameter_value() { return _list_parameter_value; }
         const list_parameter_value *ast_list_parameter_value() const { return _list_parameter_value; }
@@ -355,6 +357,7 @@ namespace ast {
         const mcc_string *list_parameter_delim() const { return _list_parameter_delim; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list_parameter *p2) const;
         static int compare(const list_parameter *p1, const list_parameter *p2) {
@@ -378,6 +381,7 @@ namespace ast {
         const option_parameter_value *ast_option_parameter_value() const { return _option_parameter_value; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const option_parameter *p2) const;
         static int compare(const option_parameter *p1, const option_parameter *p2) {
@@ -401,6 +405,7 @@ namespace ast {
         const star_parameter_value *ast_star_parameter_value() const { return _star_parameter_value; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const star_parameter *p2) const;
         static int compare(const star_parameter *p1, const star_parameter *p2) {
@@ -424,6 +429,7 @@ namespace ast {
         const list *ast_symbol_value_list() const { return _symbol_value_list; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list_parameter_value *p2) const;
         static int compare(const list_parameter_value *p1, const list_parameter_value *p2) {
@@ -447,6 +453,7 @@ namespace ast {
         const list *ast_symbol_value_list() const { return _symbol_value_list; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const option_parameter_value *p2) const;
         static int compare(const option_parameter_value *p1, const option_parameter_value *p2) {
@@ -470,6 +477,7 @@ namespace ast {
         const list *ast_symbol_value_list() const { return _symbol_value_list; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const star_parameter_value *p2) const;
         static int compare(const star_parameter_value *p1, const star_parameter_value *p2) {
@@ -497,6 +505,7 @@ namespace ast {
         const string &token_value() const { return _token_value; }
 
         void describe(FILE *out);
+        void glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const token_definition *p2) const;
         static int compare(const token_definition *p1, const token_definition *p2) {
