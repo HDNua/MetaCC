@@ -1534,6 +1534,8 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
 
         // 
         if (symbol_list_list.size() == 1) {
+            std::vector<std::string> &symbols = symbol_list_list[0];
+
             // 
             int index = ast_table_LIST_index(this);
             if (index < 0) {
@@ -1544,16 +1546,25 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc_y_list, "LIST_%d\n", index);
                 fprintf(out_lyc_y_list, "    : ");
-                ast_symbol_value_list->action(out, option);
+
+                // ast_symbol_value_list->action(out, option);
+                for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
+                    fprintf(out_lyc_y_list, "%s ", it->c_str());
+                }
+
                 fprintf(out_lyc_y_list, "\n");
                 fprintf(out_lyc_y_list, "    | LIST_%d ", index);
 
                 std::string delim = list_parameter_delim()->glance(out, option);
                 int delim_index = string_tokens_key_index(delim.c_str());
                 fprintf(out_lyc_y_list, "%s ", delim.c_str());
-                fprintf(out_lyc_y_list, "/""* %s *""/ ", string_token_values.list[delim_index]);
+                // fprintf(out_lyc_y_list, "/""* %s *""/ ", string_token_values.list[delim_index]);
 
-                ast_symbol_value_list->action(out, option);
+                // ast_symbol_value_list->action(out, option);
+                for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
+                    fprintf(out_lyc_y_list, "%s ", it->c_str());
+                }
+ 
                 fprintf(out_lyc_y_list, "\n");
                 fprintf(out_lyc_y_list, "    ;\n");
             }
@@ -1616,6 +1627,8 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
 
         // 
         if (symbol_list_list.size() == 1) {
+            std::vector<std::string> &symbols = symbol_list_list[0];
+
             // 
             int index = ast_table_OPT_index(this);
             if (index < 0) {
@@ -1627,7 +1640,12 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                 fprintf(out_lyc_y_option, "OPT_%d\n", index);
                 fprintf(out_lyc_y_option, "    : /""* empty *""/\n");
                 fprintf(out_lyc_y_option, "    | ");
-                ast_symbol_value_list->action(out, option);
+                
+                // ast_symbol_value_list->action(out, option);
+                for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
+                    fprintf(out_lyc_y_option, "%s ", it->c_str());
+                }
+
                 fprintf(out_lyc_y_option, "\n");
                 fprintf(out_lyc_y_option, "    ;\n");
             }
@@ -1691,6 +1709,8 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
 
         // 
         if (symbol_list_list.size() == 1) {
+            std::vector<std::string> &symbols = symbol_list_list[0];
+
             // 
             int index = ast_table_STAR_index(this);
             if (index < 0) {
@@ -1701,10 +1721,20 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc_y_star, "STAR_%d\n", index);
                 fprintf(out_lyc_y_star, "    : ");
-                ast_symbol_value_list->action(out, option);
+
+                // ast_symbol_value_list->action(out, option);
+                for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
+                    fprintf(out_lyc_y_star, "%s ", it->c_str());
+                }
                 fprintf(out_lyc_y_star, "\n");
-                fprintf(out_lyc_y_star, "    | LIST_%d ", index);
-                ast_symbol_value_list->action(out, option);
+
+                // fprintf(out_lyc_y_star, "    | LIST_%d ", index);
+                // ast_symbol_value_list->action(out, option);
+                fprintf(out_lyc_y_star, "    | LIST_X_%d ", index);
+                for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
+                    fprintf(out_lyc_y_star, "%s ", it->c_str());
+                }
+
                 fprintf(out_lyc_y_star, "\n");
                 fprintf(out_lyc_y_star, "    ;\n");
             }
