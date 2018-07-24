@@ -9,6 +9,8 @@
 .././ast.h
 string
 -
+vector
+-
 cstdio
 -
 cstring
@@ -30,6 +32,8 @@ boost/format.hpp
 
 /home/handy/Dropbox/work/yacc/metacc/latest/ast.h
 string
+-
+vector
 -
 cstdio
 -

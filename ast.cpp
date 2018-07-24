@@ -115,6 +115,7 @@ int symbols_add(const char *symbol_name) {
 }
 
 //------------------------------------------------------------------------------
+//
 struct table string_token_keys;
 struct table string_token_values;
 // 
@@ -164,17 +165,18 @@ void tokens_add(const char *token_name) {
 void ast_table_init(struct ast_table *table) {
     table->count = 0;
 }
-int ast_table_index(struct ast_table *table, void *elem, int cmp(const void *, const void *)) {
+int ast_table_index(struct ast_table *table, symbol_value_element *elem) {
     int i, len;
-    void **list = table->list;
+    symbol_value_element **list = table->list;
     for (i=0, len=table->count; i<len; ++i) {
-        if (cmp(list[i], elem) == 0) {
+        // if (list[i]->compare(elem) == 0) {
+        if (elem->compare(list[i]) == 0) {
             return i;
         }
     }
     return -1;
 }
-void ast_table_add(struct ast_table *table, void *elem) {
+void ast_table_add(struct ast_table *table, symbol_value_element *elem) {
     table->list[table->count++] = elem;
 }
 //------------------------------------------------------------------------------
@@ -192,7 +194,37 @@ void ast_table_LIST_init() {
 // 
 int ast_table_LIST_index(list_parameter *elem) {
     // return ast_table_index(&table_LIST_values, elem, (int(*)(const void *, const void *))list_parameter::compare);
-    return -1;
+    return ast_table_index(&table_LIST_values, elem);
+}
+// 
+int ast_table_LIST_index(const std::vector<std::string> &sve_list) {
+    list *ast_symbol_value_element_list = new list(AST_MCC_SYMBOL);
+    for (std::vector<std::string>::const_iterator it = sve_list.begin(); it != sve_list.end(); ++it) {
+        ast_symbol_value_element_list->append(new mcc_symbol(*it), AST_MCC_SYMBOL);
+    }
+
+    // 
+    symbol_value *ast_symbol_value = new symbol_value(ast_symbol_value_element_list);
+
+    // 
+    list *ast_symbol_value_list = new list(AST_SYMBOL_VALUE);
+    ast_symbol_value_list->append(ast_symbol_value, AST_SYMBOL_VALUE);
+
+    // 
+    list_parameter_value *ast_list_param_value = new list_parameter_value(ast_symbol_value_list);
+
+    // 
+    list_parameter *ast_list_parameter = new list_parameter(ast_list_param_value, "");
+    int index = ast_table_index(&table_LIST_values, ast_list_parameter);
+    if (index < 0) {
+        // 
+        std::string key_name = ast_list_parameter->glance(out_lyc_y_star, ACTOPT_NONE);
+
+        index = table_LIST_keys.count;
+        ast_table_LIST_add(key_name.c_str(), ast_list_parameter);
+    }
+    delete ast_list_parameter;
+    return index;
 }
 // 
 void ast_table_LIST_add(const char *key, list_parameter *elem) {
@@ -207,7 +239,7 @@ void ast_table_OPT_init() {
 // 
 int ast_table_OPT_index(option_parameter *elem) {
     // return ast_table_index(&table_OPT_values, elem, (int(*)(const void *, const void *))ast_option_parameter_compare);
-    return -1;
+    return ast_table_index(&table_OPT_values, elem);
 }
 // 
 void ast_table_OPT_add(const char *key, option_parameter *elem) {
@@ -222,7 +254,7 @@ void ast_table_STAR_init() {
 // 
 int ast_table_STAR_index(star_parameter *elem) {
     // return ast_table_index(&table_STAR_values, elem, (int(*)(const void *, const void *))ast_star_parameter_compare);
-    return -1;
+    return ast_table_index(&table_STAR_values, elem);
 }
 // 
 void ast_table_STAR_add(const char *key, star_parameter *elem) {
@@ -1533,46 +1565,45 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
         }
 
         // 
-        if (symbol_list_list.size() == 1) {
-            std::vector<std::string> &symbols = symbol_list_list[0];
+        int index = ast_table_LIST_index(this);
+        if (index < 0) {
+            index = table_LIST_keys.count;
+            sprintf(key_name, "LIST_%d", index);
+            ast_table_LIST_add(key_name, this);
+        }
+        bool first = true;
+        fprintf(out_lyc_y_list, "LIST_%d\n", index);
+        for (std::vector< std::vector<std::string> >::iterator it1 = symbol_list_list.begin(); 
+                it1 != symbol_list_list.end();
+                ++it1) {
+            std::vector<std::string> &symbols = *it1; // symbol_list_list[0];
 
             // 
-            int index = ast_table_LIST_index(this);
-            if (index < 0) {
-                index = table_LIST_keys.count;
-                sprintf(key_name, "LIST_%d", index);
-                ast_table_LIST_add(key_name, this);
+            fprintf(out_lyc_y_list, "    %c ", (first) ? (first=false, ':') : ('|'));
 
-                // 
-                fprintf(out_lyc_y_list, "LIST_%d\n", index);
-                fprintf(out_lyc_y_list, "    : ");
-
-                // ast_symbol_value_list->action(out, option);
-                for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
-                    fprintf(out_lyc_y_list, "%s ", it->c_str());
-                }
-
-                fprintf(out_lyc_y_list, "\n");
-                fprintf(out_lyc_y_list, "    | LIST_%d ", index);
-
-                std::string delim = list_parameter_delim()->glance(out, option);
-                int delim_index = string_tokens_key_index(delim.c_str());
-                fprintf(out_lyc_y_list, "%s ", delim.c_str());
-                // fprintf(out_lyc_y_list, "/""* %s *""/ ", string_token_values.list[delim_index]);
-
-                // ast_symbol_value_list->action(out, option);
-                for (std::vector<std::string>::iterator it = symbols.begin(); it != symbols.end(); ++it) {
-                    fprintf(out_lyc_y_list, "%s ", it->c_str());
-                }
- 
-                fprintf(out_lyc_y_list, "\n");
-                fprintf(out_lyc_y_list, "    ;\n");
+            // ast_symbol_value_list->action(out, option);
+            for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
+                fprintf(out_lyc_y_list, "%s ", it2->c_str());
             }
+
+            fprintf(out_lyc_y_list, "\n");
+            fprintf(out_lyc_y_list, "    | LIST_%d ", index);
+
+            std::string delim = list_parameter_delim()->glance(out, option);
+            //  int delim_index = string_tokens_key_index(delim.c_str());
+            fprintf(out_lyc_y_list, "%s ", delim.c_str());
+            // fprintf(out_lyc_y_list, "/""* %s *""/ ", string_token_values.list[delim_index]);
+
+            // ast_symbol_value_list->action(out, option);
+            for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
+                fprintf(out_lyc_y_list, "%s ", it2->c_str());
+            }
+
+            fprintf(out_lyc_y_list, "\n");
         }
-        else {
-            fprintf(stderr, "list_parameter >> LIST cannot contain VBAR('|') \n");
-            // exit(1);
-        }
+        fprintf(out_lyc_y_list, "    ;\n");
+
+        return std::string(key_name);
     }
     return "null";
 }
@@ -1612,7 +1643,7 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                         // elem2 = new_elem;
                         break;
                     default:
-                        fprintf(stderr, "list_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
+                        fprintf(stderr, "option_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
                         // exit(1);
                         break;
                 }
@@ -1624,8 +1655,43 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
             // 
             symbol_list_list.push_back(symbol_list);
         }
-
         // 
+        int index = ast_table_OPT_index(this);
+        if (index < 0) {
+            index = table_OPT_keys.count;
+            sprintf(key_name, "OPT_%d", index);
+            ast_table_OPT_add(key_name, this);
+        }
+        bool first = true;
+        fprintf(out_lyc_y_option, "OPT_%d\n", index);
+        for (std::vector< std::vector<std::string> >::iterator it1 = symbol_list_list.begin(); 
+                it1 != symbol_list_list.end();
+                ++it1) {
+            std::vector<std::string> &symbols = *it1; // symbol_list_list[0];
+
+            // 
+            fprintf(out_lyc_y_option, "    %c ", (first) ? (first=false, ':') : ('|'));
+
+            // ast_symbol_value_list->action(out, option);
+            for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
+                fprintf(out_lyc_y_option, "%s ", it2->c_str());
+            }
+
+            fprintf(out_lyc_y_option, "\n");
+            fprintf(out_lyc_y_option, "    | OPT_%d ", index);
+
+            // ast_symbol_value_list->action(out, option);
+            for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
+                fprintf(out_lyc_y_option, "%s ", it2->c_str());
+            }
+
+            fprintf(out_lyc_y_option, "\n");
+        }
+        fprintf(out_lyc_y_option, "    ;\n");
+
+        return std::string(key_name);
+
+        /* 
         if (symbol_list_list.size() == 1) {
             std::vector<std::string> &symbols = symbol_list_list[0];
 
@@ -1654,6 +1720,7 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
             fprintf(stderr, "list_parameter >> LIST cannot contain VBAR('|') \n");
             // exit(1);
         }
+        */
     }
     return "null";
 }
@@ -1694,7 +1761,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                         // elem2 = new_elem;
                         break;
                     default:
-                        fprintf(stderr, "list_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
+                        fprintf(stderr, "star_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
                         // exit(1);
                         break;
                 }
@@ -1706,8 +1773,43 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             // 
             symbol_list_list.push_back(symbol_list);
         }
-
         // 
+        int index = ast_table_STAR_index(this);
+        if (index < 0) {
+            index = table_STAR_keys.count;
+            sprintf(key_name, "STAR_%d", index);
+            ast_table_STAR_add(key_name, this);
+        }
+        bool first = true;
+        fprintf(out_lyc_y_star, "STAR_%d\n", index);
+        for (std::vector< std::vector<std::string> >::iterator it1 = symbol_list_list.begin(); 
+                it1 != symbol_list_list.end();
+                ++it1) {
+            std::vector<std::string> &symbols = *it1; // symbol_list_list[0];
+
+            // 
+            fprintf(out_lyc_y_star, "    %c ", (first) ? (first=false, ':') : ('|'));
+
+            // ast_symbol_value_list->action(out, option);
+            for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
+                fprintf(out_lyc_y_star, "%s ", it2->c_str());
+            }
+
+            fprintf(out_lyc_y_star, "\n");
+            fprintf(out_lyc_y_star, "    | LIST_%d ", ast_table_LIST_index(symbols));
+
+            // ast_symbol_value_list->action(out, option);
+            for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
+                fprintf(out_lyc_y_star, "%s ", it2->c_str());
+            }
+
+            fprintf(out_lyc_y_star, "\n");
+        }
+        fprintf(out_lyc_y_star, "    ;\n");
+
+        return std::string(key_name);
+
+        /*
         if (symbol_list_list.size() == 1) {
             std::vector<std::string> &symbols = symbol_list_list[0];
 
@@ -1743,6 +1845,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             fprintf(stderr, "list_parameter >> LIST cannot contain VBAR('|') \n");
             // exit(1);
         }
+        */
     }
     return "null";
 }

@@ -5,6 +5,7 @@
 // #include <string.h>
 
 #include <string>
+#include <vector>
 
 #include <cstdio>
 #include <cstring>
@@ -108,6 +109,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list_node *p2) const;
+        virtual int compare(const object *p2) const {
+            return compare(dynamic_cast<const list_node *>(p2));
+        }
         static int compare(const list_node *p1, const list_node *p2) {
             return p1->compare(p2);
         }
@@ -137,6 +141,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const list *>(p2));
+        }
         static int compare(const list *p1, const list *p2) {
             return p1->compare(p2);
         }
@@ -174,6 +181,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const symbol_definition *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const symbol_definition *>(p2));
+        }
         static int compare(const symbol_definition *p1, const symbol_definition *p2) {
             return p1->compare(p2);
         }
@@ -202,6 +212,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const symbol_key *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const symbol_key *>(p2));
+        }
         static int compare(const symbol_key *p1, const symbol_key *p2) {
             return p1->compare(p2);
         }
@@ -227,6 +240,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const key_attributes *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const key_attributes *>(p2));
+        }
         static int compare(const key_attributes *p1, const key_attributes *p2) {
             return p1->compare(p2);
         }
@@ -252,6 +268,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const symbol_value *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const symbol_value *>(p2));
+        }
         static int compare(const symbol_value *p1, const symbol_value *p2) {
             return p1->compare(p2);
         }
@@ -275,8 +294,9 @@ namespace ast {
         void describe(FILE *out);
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
-        int compare(const symbol_value_element *p2) const {
-            return this != p2;
+        virtual int compare(const symbol_value_element *p2) const = 0;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const symbol_value_element *>(p2));
         }
         static int compare(const symbol_value_element *p1, const symbol_value_element *p2) {
             return p1->compare(p2);
@@ -306,10 +326,21 @@ namespace ast {
         void describe(FILE *out);
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
-        int compare(const mcc_string *p2) const;
+
+
+        int compare(const mcc_string *p2) const {
+            return _value.compare(p2->value());
+        }
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const mcc_string *>(p2));
+        }
         static int compare(const mcc_string *p1, const mcc_string *p2) {
             return p1->compare(p2);
         }
+        virtual int compare(const symbol_value_element *p2) const {
+            return compare(dynamic_cast<const mcc_string *>(p2));
+        }
+
 
         int compare(const std::string &value) const {
             return _value == value;
@@ -350,10 +381,19 @@ namespace ast {
         void describe(FILE *out);
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
-        int compare(const mcc_symbol *p2) const;
+        int compare(const mcc_symbol *p2) const {
+            return _value.compare(p2->value());
+        }
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const mcc_symbol *>(p2));
+        }
         static int compare(const mcc_symbol *p1, const mcc_symbol *p2) {
             return p1->compare(p2);
         }
+        virtual int compare(const symbol_value_element *p2) const {
+            return compare(dynamic_cast<const mcc_symbol *>(p2));
+        }
+
     };
 
 
@@ -381,9 +421,16 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list_parameter *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const list_parameter *>(p2));
+        }
         static int compare(const list_parameter *p1, const list_parameter *p2) {
             return p1->compare(p2);
         }
+        virtual int compare(const symbol_value_element *p2) const {
+            return compare(dynamic_cast<const list_parameter *>(p2));
+        }
+
     };
 
 
@@ -406,9 +453,16 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const option_parameter *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const option_parameter *>(p2));
+        }
         static int compare(const option_parameter *p1, const option_parameter *p2) {
             return p1->compare(p2);
         }
+        virtual int compare(const symbol_value_element *p2) const {
+            return compare(dynamic_cast<const option_parameter *>(p2));
+        }
+
     };
 
 
@@ -431,9 +485,16 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const star_parameter *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const star_parameter *>(p2));
+        }
         static int compare(const star_parameter *p1, const star_parameter *p2) {
             return p1->compare(p2);
         }
+        virtual int compare(const symbol_value_element *p2) const {
+            return compare(dynamic_cast<const star_parameter *>(p2));
+        }
+
     };
 
 
@@ -456,6 +517,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const list_parameter_value *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const list_parameter_value *>(p2));
+        }
         static int compare(const list_parameter_value *p1, const list_parameter_value *p2) {
             return p1->compare(p2);
         }
@@ -481,6 +545,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const option_parameter_value *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const option_parameter_value *>(p2));
+        }
         static int compare(const option_parameter_value *p1, const option_parameter_value *p2) {
             return p1->compare(p2);
         }
@@ -490,29 +557,15 @@ namespace ast {
 
     // 
     class star_parameter_value: public object {
-        // class list                          *_symbol_value_list;
-        // class list_parameter_value          *_list_parameter_value;
         class list_parameter                *_list_parameter;
 
     public:
-        // star_parameter_value(list *_symbol_value_list)
-        //     : object(AST_STAR_PARAMETER_VALUE), _symbol_value_list(_symbol_value_list)
-        // {
-        // }
-        // star_parameter_value(list_parameter_value *_list_parameter_value)
-        //     : object(AST_STAR_PARAMETER_VALUE), _list_parameter_value(_list_parameter_value)
-        // {
-        // }
         star_parameter_value(list_parameter *_list_parameter)
             : object(AST_STAR_PARAMETER_VALUE), _list_parameter(_list_parameter)
         {
         }
         ~star_parameter_value();
 
-        // list *ast_symbol_value_list() { return _symbol_value_list; }
-        // const list *ast_symbol_value_list() const { return _symbol_value_list; }
-        // list_parameter_value *ast_list_parameter_value() { return _list_parameter_value; }
-        // const list_parameter_value *ast_list_parameter_value() const { return _list_parameter_value; }
         list_parameter *ast_list_parameter() { return _list_parameter; }
         const list_parameter *ast_list_parameter() const { return _list_parameter; }
 
@@ -520,6 +573,9 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const star_parameter_value *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const star_parameter_value *>(p2));
+        }
         static int compare(const star_parameter_value *p1, const star_parameter_value *p2) {
             return p1->compare(p2);
         }
@@ -549,9 +605,16 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         void action(FILE *out, act_opt option);
         int compare(const token_definition *p2) const;
+        virtual int compare(const object *p2) const { 
+            return compare(dynamic_cast<const token_definition *>(p2));
+        }
         static int compare(const token_definition *p1, const token_definition *p2) {
             return p1->compare(p2);
         }
+        virtual int compare(const symbol_value_element *p2) const {
+            return compare(dynamic_cast<const token_definition*>(p2));
+        }
+
     };
 }
 
@@ -590,10 +653,63 @@ struct table {
     int count;
 };
 struct ast_table {
-    void *list[1024];
+    ast::symbol_value_element *list[1024];
     int count;
 };
+// 
+void table_init(struct table *table);
+// 
+int table_index(struct table *table, const char *key);
+// 
+void table_add(struct table *table, const char *key);
 
+// 
+void symbols_init();
+// 
+int symbols_index(const char *symbol_name);
+// 
+int symbols_add(const char *symbol_name);
+
+// 
+void string_tokens_init();
+// 
+int string_tokens_key_index(const char *key);
+// 
+int string_tokens_value_index(const char *value);
+// 
+int string_tokens_add(const char *key, const char *value);
+
+// 
+void tokens_init();
+// 
+int tokens_index(const char *symbol_name);
+// 
+void tokens_add(const char *token_name);
+
+void ast_table_init(struct ast_table *table);
+int ast_table_index(struct ast_table *table, ast::symbol_value_element *elem);
+void ast_table_add(struct ast_table *table, ast::symbol_value_element *elem);
+
+// 
+void ast_table_LIST_init();
+// 
+int ast_table_LIST_index(ast::list_parameter *elem);
+// 
+int ast_table_LIST_index(const std::vector<std::string> &sve_list);
+// 
+void ast_table_LIST_add(const char *key, ast::list_parameter *elem);
+// 
+void ast_table_OPT_init();
+// 
+int ast_table_OPT_index(ast::option_parameter *elem);
+// 
+void ast_table_OPT_add(const char *key, ast::option_parameter *elem);
+// 
+void ast_table_STAR_init();
+// 
+int ast_table_STAR_index(ast::star_parameter *elem);
+// 
+void ast_table_STAR_add(const char *key, ast::star_parameter *elem);
 
 
 
