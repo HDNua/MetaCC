@@ -166,14 +166,42 @@ void ast_table_init(struct ast_table *table) {
     table->count = 0;
 }
 int ast_table_index(struct ast_table *table, symbol_value_element *elem) {
+    /*
     int i, len;
     symbol_value_element **list = table->list;
     for (i=0, len=table->count; i<len; ++i) {
+        int ret = 0;
+        / *
         // if (list[i]->compare(elem) == 0) {
         if (elem->compare(list[i]) == 0) {
             return i;
         }
+        * /
+
+        // 
+        switch (elem->elem_type()) {
+            case AST_LIST_PARAMETER:
+                ret = dynamic_cast<list_parameter *>(elem)->compare(
+                        dynamic_cast<list_parameter *>(list[i]));
+                break;
+            case AST_OPTION_PARAMETER:
+                ret = dynamic_cast<option_parameter *>(elem)->compare(
+                        dynamic_cast<option_parameter *>(list[i]));
+                break;
+            case AST_STAR_PARAMETER:
+                ret = dynamic_cast<star_parameter *>(elem)->compare(
+                        dynamic_cast<star_parameter *>(list[i]));
+                break;
+            default:
+                fprintf(stderr, "weird parameter [%s] \n", ast_str(elem->elem_type()));
+                break;
+        }
+
+        // 
+        if (ret == 0)
+            return i;
     }
+    */
     return -1;
 }
 void ast_table_add(struct ast_table *table, symbol_value_element *elem) {

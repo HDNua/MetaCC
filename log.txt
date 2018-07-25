@@ -1,3 +1,15 @@
+MetaCC - Meta Compiler Compiler v0.3.1.0 (IMPORTANT)
+----
+
+- 왜 되냐
+> gvim으로 열었더니 됨...
+
+! 리스트 요소가 전체가 안 나오는 문제만 해결하세요.
+
+end.
+
+
+
 MetaCC - Meta Compiler Compiler v0.3.0.8
 ----
 
