@@ -197,10 +197,12 @@ void symbol_definition::action(FILE *out, act_opt option) {
                         case AST_LIST_PARAMETER:
                         case AST_OPTION_PARAMETER:
                         case AST_STAR_PARAMETER:
-                            new_elem = new mcc_symbol(ast_elem->glance(out, option));
+                            // new_elem = new mcc_symbol(ast_elem->glance(out, option));
                             // delete ast_elem;
-                            node2->set_ast_elem(new_elem);
-                            new_elem->action(out, option);
+                            // node2->set_ast_elem(new_elem);
+                            // new_elem->action(out, option);
+                            ast_elem->glance(out, option);
+                            ast_elem->action(out, option);
                             break;
 
                         default:
@@ -258,10 +260,11 @@ void symbol_value::action(FILE *out, act_opt option) {
         // 
         switch (elem->elem_type()) {
             case AST_MCC_STRING:
-                ret = new mcc_symbol(elem->glance(out, option));
+                // ret = new mcc_symbol(elem->glance(out, option));
                 // delete elem;
-                node->set_ast_elem(ret);
-                ret->action(out, option);
+                // node->set_ast_elem(ret);
+                // ret->action(out, option);
+                elem->action(out, option);
                 break;
 
             case AST_MCC_SYMBOL:
@@ -269,24 +272,27 @@ void symbol_value::action(FILE *out, act_opt option) {
                 break;
 
             case AST_LIST_PARAMETER:
-                ret = new mcc_symbol(elem->glance(out, option));
+                // ret = new mcc_symbol(elem->glance(out, option));
                 // delete elem;
-                node->set_ast_elem(ret);
-                ret->action(out, option);
+                // node->set_ast_elem(ret);
+                // ret->action(out, option);
+                elem->action(out, option);
                 break;
 
             case AST_OPTION_PARAMETER:
-                ret = new mcc_symbol(elem->glance(out, option));
+                // ret = new mcc_symbol(elem->glance(out, option));
                 // delete elem;
-                node->set_ast_elem(ret);
-                ret->action(out, option);
+                // node->set_ast_elem(ret);
+                // ret->action(out, option);
+                elem->action(out, option);
                 break;
 
             case AST_STAR_PARAMETER:
-                ret = new mcc_symbol(elem->glance(out, option));
+                // ret = new mcc_symbol(elem->glance(out, option));
                 // delete elem;
-                node->set_ast_elem(ret);
-                ret->action(out, option);
+                // node->set_ast_elem(ret);
+                // ret->action(out, option);
+                elem->action(out, option);
                 break;
 
             case AST_TOKEN_DEFINITION:
@@ -301,7 +307,6 @@ void symbol_value::action(FILE *out, act_opt option) {
 
     // describe_end();
 }
-// 
 void symbol_value_element::action(FILE *out, act_opt option) {
     // 
     if (out_lyc) {

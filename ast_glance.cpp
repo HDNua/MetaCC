@@ -256,9 +256,9 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                     case AST_LIST_PARAMETER:
                     case AST_OPTION_PARAMETER:
                     case AST_STAR_PARAMETER:
-                        new_elem = new mcc_symbol(symbol2);
+                        // new_elem = new mcc_symbol(symbol2);
                         // delete elem2;
-                        node2->set_ast_elem(new_elem);
+                        // node2->set_ast_elem(new_elem);
                         // elem2 = new_elem;
                         break;
                     default:
@@ -340,9 +340,9 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                     case AST_LIST_PARAMETER:
                     case AST_OPTION_PARAMETER:
                     case AST_STAR_PARAMETER:
-                        new_elem = new mcc_symbol(symbol2);
+                        // new_elem = new mcc_symbol(symbol2);
                         // delete elem2;
-                        node2->set_ast_elem(new_elem);
+                        // node2->set_ast_elem(new_elem);
                         // elem2 = new_elem;
                         break;
                     default:
@@ -434,9 +434,9 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                     case AST_LIST_PARAMETER:
                     case AST_OPTION_PARAMETER:
                     case AST_STAR_PARAMETER:
-                        new_elem = new mcc_symbol(symbol2);
+                        // new_elem = new mcc_symbol(symbol2);
                         // delete elem2;
-                        node2->set_ast_elem(new_elem);
+                        // node2->set_ast_elem(new_elem);
                         // elem2 = new_elem;
                         break;
                     default:
