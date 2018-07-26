@@ -55,6 +55,12 @@ namespace ast {
 
 
 
+    // 
+    const char *ast_str(ast_type type);
+
+
+    
+    // 
     class mcc_string;
 
 

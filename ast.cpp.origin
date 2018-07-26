@@ -261,16 +261,28 @@ int ast_table_LIST_index(const std::vector<std::string> &sve_list) {
 
     // 
     list_parameter *ast_list_parameter = new list_parameter(ast_list_param_value, "");
+
+    // 
+    std::string key_name = ast_list_parameter->glance(out_lyc_y_list, ACTOPT_NONE);
     int index = ast_table_index(&table_LIST_values, ast_list_parameter);
     if (index < 0) {
-        // 
-        std::string key_name = ast_list_parameter->glance(out_lyc_y_star, ACTOPT_NONE);
+        fprintf(stderr, "cannot find defined LIST [%d] \n", index);
+        exit(1);
 
-        index = table_LIST_keys.count;
-        ast_table_LIST_add(key_name.c_str(), ast_list_parameter);
+        // 
+        // std::string key_name = ast_list_parameter->glance(out_lyc_y_star, ACTOPT_NONE);
+        // std::string key_name = ast_list_parameter->glance(out_lyc_y_list, ACTOPT_NONE);
+
+        if (0) { 
+            index = table_LIST_keys.count;
+            ast_table_LIST_add(key_name.c_str(), ast_list_parameter);
+        }
+        else {
+            sscanf(key_name.c_str()+5, "%d", &index);
+        }
     }
     else {
-        delete ast_list_parameter;
+        // delete ast_list_parameter;
     }
     return index;
 }

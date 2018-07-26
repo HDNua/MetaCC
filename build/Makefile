@@ -134,32 +134,113 @@ metacc/fast:
 	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/build
 .PHONY : metacc/fast
 
-ast.o: ast.cpp.o
+ast_action.o: ast_action.cpp.o
 
-.PHONY : ast.o
+.PHONY : ast_action.o
 
 # target to build an object file
-ast.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast.cpp.o
-.PHONY : ast.cpp.o
+ast_action.cpp.o:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_action.cpp.o
+.PHONY : ast_action.cpp.o
 
-ast.i: ast.cpp.i
+ast_action.i: ast_action.cpp.i
 
-.PHONY : ast.i
+.PHONY : ast_action.i
 
 # target to preprocess a source file
-ast.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast.cpp.i
-.PHONY : ast.cpp.i
+ast_action.cpp.i:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_action.cpp.i
+.PHONY : ast_action.cpp.i
 
-ast.s: ast.cpp.s
+ast_action.s: ast_action.cpp.s
 
-.PHONY : ast.s
+.PHONY : ast_action.s
 
 # target to generate assembly for a file
-ast.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast.cpp.s
-.PHONY : ast.cpp.s
+ast_action.cpp.s:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_action.cpp.s
+.PHONY : ast_action.cpp.s
+
+ast_common.o: ast_common.cpp.o
+
+.PHONY : ast_common.o
+
+# target to build an object file
+ast_common.cpp.o:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_common.cpp.o
+.PHONY : ast_common.cpp.o
+
+ast_common.i: ast_common.cpp.i
+
+.PHONY : ast_common.i
+
+# target to preprocess a source file
+ast_common.cpp.i:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_common.cpp.i
+.PHONY : ast_common.cpp.i
+
+ast_common.s: ast_common.cpp.s
+
+.PHONY : ast_common.s
+
+# target to generate assembly for a file
+ast_common.cpp.s:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_common.cpp.s
+.PHONY : ast_common.cpp.s
+
+ast_describe.o: ast_describe.cpp.o
+
+.PHONY : ast_describe.o
+
+# target to build an object file
+ast_describe.cpp.o:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_describe.cpp.o
+.PHONY : ast_describe.cpp.o
+
+ast_describe.i: ast_describe.cpp.i
+
+.PHONY : ast_describe.i
+
+# target to preprocess a source file
+ast_describe.cpp.i:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_describe.cpp.i
+.PHONY : ast_describe.cpp.i
+
+ast_describe.s: ast_describe.cpp.s
+
+.PHONY : ast_describe.s
+
+# target to generate assembly for a file
+ast_describe.cpp.s:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_describe.cpp.s
+.PHONY : ast_describe.cpp.s
+
+ast_glance.o: ast_glance.cpp.o
+
+.PHONY : ast_glance.o
+
+# target to build an object file
+ast_glance.cpp.o:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_glance.cpp.o
+.PHONY : ast_glance.cpp.o
+
+ast_glance.i: ast_glance.cpp.i
+
+.PHONY : ast_glance.i
+
+# target to preprocess a source file
+ast_glance.cpp.i:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_glance.cpp.i
+.PHONY : ast_glance.cpp.i
+
+ast_glance.s: ast_glance.cpp.s
+
+.PHONY : ast_glance.s
+
+# target to generate assembly for a file
+ast_glance.cpp.s:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_glance.cpp.s
+.PHONY : ast_glance.cpp.s
 
 main.o: main.cpp.o
 
@@ -252,9 +333,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... metacc"
-	@echo "... ast.o"
-	@echo "... ast.i"
-	@echo "... ast.s"
+	@echo "... ast_action.o"
+	@echo "... ast_action.i"
+	@echo "... ast_action.s"
+	@echo "... ast_common.o"
+	@echo "... ast_common.i"
+	@echo "... ast_common.s"
+	@echo "... ast_describe.o"
+	@echo "... ast_describe.i"
+	@echo "... ast_describe.s"
+	@echo "... ast_glance.o"
+	@echo "... ast_glance.i"
+	@echo "... ast_glance.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

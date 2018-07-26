@@ -92,33 +92,105 @@ CMakeFiles/metacc.dir/main.cpp.o.provides: CMakeFiles/metacc.dir/main.cpp.o.requ
 CMakeFiles/metacc.dir/main.cpp.o.provides.build: CMakeFiles/metacc.dir/main.cpp.o
 
 
-CMakeFiles/metacc.dir/ast.cpp.o: CMakeFiles/metacc.dir/flags.make
-CMakeFiles/metacc.dir/ast.cpp.o: ../ast.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/metacc.dir/ast.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/metacc.dir/ast.cpp.o -c /home/handy/Dropbox/work/yacc/metacc/latest/ast.cpp
+CMakeFiles/metacc.dir/ast_common.cpp.o: CMakeFiles/metacc.dir/flags.make
+CMakeFiles/metacc.dir/ast_common.cpp.o: ../ast_common.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/metacc.dir/ast_common.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/metacc.dir/ast_common.cpp.o -c /home/handy/Dropbox/work/yacc/metacc/latest/ast_common.cpp
 
-CMakeFiles/metacc.dir/ast.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/metacc.dir/ast.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/handy/Dropbox/work/yacc/metacc/latest/ast.cpp > CMakeFiles/metacc.dir/ast.cpp.i
+CMakeFiles/metacc.dir/ast_common.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/metacc.dir/ast_common.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/handy/Dropbox/work/yacc/metacc/latest/ast_common.cpp > CMakeFiles/metacc.dir/ast_common.cpp.i
 
-CMakeFiles/metacc.dir/ast.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/metacc.dir/ast.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/handy/Dropbox/work/yacc/metacc/latest/ast.cpp -o CMakeFiles/metacc.dir/ast.cpp.s
+CMakeFiles/metacc.dir/ast_common.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/metacc.dir/ast_common.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/handy/Dropbox/work/yacc/metacc/latest/ast_common.cpp -o CMakeFiles/metacc.dir/ast_common.cpp.s
 
-CMakeFiles/metacc.dir/ast.cpp.o.requires:
+CMakeFiles/metacc.dir/ast_common.cpp.o.requires:
 
-.PHONY : CMakeFiles/metacc.dir/ast.cpp.o.requires
+.PHONY : CMakeFiles/metacc.dir/ast_common.cpp.o.requires
 
-CMakeFiles/metacc.dir/ast.cpp.o.provides: CMakeFiles/metacc.dir/ast.cpp.o.requires
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast.cpp.o.provides.build
-.PHONY : CMakeFiles/metacc.dir/ast.cpp.o.provides
+CMakeFiles/metacc.dir/ast_common.cpp.o.provides: CMakeFiles/metacc.dir/ast_common.cpp.o.requires
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_common.cpp.o.provides.build
+.PHONY : CMakeFiles/metacc.dir/ast_common.cpp.o.provides
 
-CMakeFiles/metacc.dir/ast.cpp.o.provides.build: CMakeFiles/metacc.dir/ast.cpp.o
+CMakeFiles/metacc.dir/ast_common.cpp.o.provides.build: CMakeFiles/metacc.dir/ast_common.cpp.o
+
+
+CMakeFiles/metacc.dir/ast_describe.cpp.o: CMakeFiles/metacc.dir/flags.make
+CMakeFiles/metacc.dir/ast_describe.cpp.o: ../ast_describe.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/metacc.dir/ast_describe.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/metacc.dir/ast_describe.cpp.o -c /home/handy/Dropbox/work/yacc/metacc/latest/ast_describe.cpp
+
+CMakeFiles/metacc.dir/ast_describe.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/metacc.dir/ast_describe.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/handy/Dropbox/work/yacc/metacc/latest/ast_describe.cpp > CMakeFiles/metacc.dir/ast_describe.cpp.i
+
+CMakeFiles/metacc.dir/ast_describe.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/metacc.dir/ast_describe.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/handy/Dropbox/work/yacc/metacc/latest/ast_describe.cpp -o CMakeFiles/metacc.dir/ast_describe.cpp.s
+
+CMakeFiles/metacc.dir/ast_describe.cpp.o.requires:
+
+.PHONY : CMakeFiles/metacc.dir/ast_describe.cpp.o.requires
+
+CMakeFiles/metacc.dir/ast_describe.cpp.o.provides: CMakeFiles/metacc.dir/ast_describe.cpp.o.requires
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_describe.cpp.o.provides.build
+.PHONY : CMakeFiles/metacc.dir/ast_describe.cpp.o.provides
+
+CMakeFiles/metacc.dir/ast_describe.cpp.o.provides.build: CMakeFiles/metacc.dir/ast_describe.cpp.o
+
+
+CMakeFiles/metacc.dir/ast_glance.cpp.o: CMakeFiles/metacc.dir/flags.make
+CMakeFiles/metacc.dir/ast_glance.cpp.o: ../ast_glance.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/metacc.dir/ast_glance.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/metacc.dir/ast_glance.cpp.o -c /home/handy/Dropbox/work/yacc/metacc/latest/ast_glance.cpp
+
+CMakeFiles/metacc.dir/ast_glance.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/metacc.dir/ast_glance.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/handy/Dropbox/work/yacc/metacc/latest/ast_glance.cpp > CMakeFiles/metacc.dir/ast_glance.cpp.i
+
+CMakeFiles/metacc.dir/ast_glance.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/metacc.dir/ast_glance.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/handy/Dropbox/work/yacc/metacc/latest/ast_glance.cpp -o CMakeFiles/metacc.dir/ast_glance.cpp.s
+
+CMakeFiles/metacc.dir/ast_glance.cpp.o.requires:
+
+.PHONY : CMakeFiles/metacc.dir/ast_glance.cpp.o.requires
+
+CMakeFiles/metacc.dir/ast_glance.cpp.o.provides: CMakeFiles/metacc.dir/ast_glance.cpp.o.requires
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_glance.cpp.o.provides.build
+.PHONY : CMakeFiles/metacc.dir/ast_glance.cpp.o.provides
+
+CMakeFiles/metacc.dir/ast_glance.cpp.o.provides.build: CMakeFiles/metacc.dir/ast_glance.cpp.o
+
+
+CMakeFiles/metacc.dir/ast_action.cpp.o: CMakeFiles/metacc.dir/flags.make
+CMakeFiles/metacc.dir/ast_action.cpp.o: ../ast_action.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/metacc.dir/ast_action.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/metacc.dir/ast_action.cpp.o -c /home/handy/Dropbox/work/yacc/metacc/latest/ast_action.cpp
+
+CMakeFiles/metacc.dir/ast_action.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/metacc.dir/ast_action.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/handy/Dropbox/work/yacc/metacc/latest/ast_action.cpp > CMakeFiles/metacc.dir/ast_action.cpp.i
+
+CMakeFiles/metacc.dir/ast_action.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/metacc.dir/ast_action.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/handy/Dropbox/work/yacc/metacc/latest/ast_action.cpp -o CMakeFiles/metacc.dir/ast_action.cpp.s
+
+CMakeFiles/metacc.dir/ast_action.cpp.o.requires:
+
+.PHONY : CMakeFiles/metacc.dir/ast_action.cpp.o.requires
+
+CMakeFiles/metacc.dir/ast_action.cpp.o.provides: CMakeFiles/metacc.dir/ast_action.cpp.o.requires
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_action.cpp.o.provides.build
+.PHONY : CMakeFiles/metacc.dir/ast_action.cpp.o.provides
+
+CMakeFiles/metacc.dir/ast_action.cpp.o.provides.build: CMakeFiles/metacc.dir/ast_action.cpp.o
 
 
 CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: CMakeFiles/metacc.dir/flags.make
 CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: sv_lexer.yy.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/metacc.dir/sv_lexer.yy.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/metacc.dir/sv_lexer.yy.cc.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/metacc.dir/sv_lexer.yy.cc.o -c /home/handy/Dropbox/work/yacc/metacc/latest/build/sv_lexer.yy.cc
 
 CMakeFiles/metacc.dir/sv_lexer.yy.cc.i: cmake_force
@@ -142,7 +214,7 @@ CMakeFiles/metacc.dir/sv_lexer.yy.cc.o.provides.build: CMakeFiles/metacc.dir/sv_
 
 CMakeFiles/metacc.dir/sv_parser.tab.cc.o: CMakeFiles/metacc.dir/flags.make
 CMakeFiles/metacc.dir/sv_parser.tab.cc.o: sv_parser.tab.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/metacc.dir/sv_parser.tab.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/metacc.dir/sv_parser.tab.cc.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/metacc.dir/sv_parser.tab.cc.o -c /home/handy/Dropbox/work/yacc/metacc/latest/build/sv_parser.tab.cc
 
 CMakeFiles/metacc.dir/sv_parser.tab.cc.i: cmake_force
@@ -167,7 +239,10 @@ CMakeFiles/metacc.dir/sv_parser.tab.cc.o.provides.build: CMakeFiles/metacc.dir/s
 # Object files for target metacc
 metacc_OBJECTS = \
 "CMakeFiles/metacc.dir/main.cpp.o" \
-"CMakeFiles/metacc.dir/ast.cpp.o" \
+"CMakeFiles/metacc.dir/ast_common.cpp.o" \
+"CMakeFiles/metacc.dir/ast_describe.cpp.o" \
+"CMakeFiles/metacc.dir/ast_glance.cpp.o" \
+"CMakeFiles/metacc.dir/ast_action.cpp.o" \
 "CMakeFiles/metacc.dir/sv_lexer.yy.cc.o" \
 "CMakeFiles/metacc.dir/sv_parser.tab.cc.o"
 
@@ -175,12 +250,15 @@ metacc_OBJECTS = \
 metacc_EXTERNAL_OBJECTS =
 
 metacc: CMakeFiles/metacc.dir/main.cpp.o
-metacc: CMakeFiles/metacc.dir/ast.cpp.o
+metacc: CMakeFiles/metacc.dir/ast_common.cpp.o
+metacc: CMakeFiles/metacc.dir/ast_describe.cpp.o
+metacc: CMakeFiles/metacc.dir/ast_glance.cpp.o
+metacc: CMakeFiles/metacc.dir/ast_action.cpp.o
 metacc: CMakeFiles/metacc.dir/sv_lexer.yy.cc.o
 metacc: CMakeFiles/metacc.dir/sv_parser.tab.cc.o
 metacc: CMakeFiles/metacc.dir/build.make
 metacc: CMakeFiles/metacc.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable metacc"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/handy/Dropbox/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable metacc"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/metacc.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -189,7 +267,10 @@ CMakeFiles/metacc.dir/build: metacc
 .PHONY : CMakeFiles/metacc.dir/build
 
 CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/main.cpp.o.requires
-CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/ast.cpp.o.requires
+CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/ast_common.cpp.o.requires
+CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/ast_describe.cpp.o.requires
+CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/ast_glance.cpp.o.requires
+CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/ast_action.cpp.o.requires
 CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/sv_lexer.yy.cc.o.requires
 CMakeFiles/metacc.dir/requires: CMakeFiles/metacc.dir/sv_parser.tab.cc.o.requires
 
