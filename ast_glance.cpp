@@ -504,14 +504,13 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             // 
             bool first = true;
             fprintf(out_lyc_y_star, "STAR_%d\n", index);
+            // fprintf(out_lyc_y_star, "    %c ", (first) ? (first=false, ':') : ('|'));
+            fprintf(out_lyc_y_star, "    : /""* empty *""/\n");
             for (std::vector< std::vector<ast::object *> >::iterator it1 
                     = object_list_list.begin(); 
                     it1 != object_list_list.end();
                     ++it1) {
                 std::vector<ast::object *> &objects = *it1;
-                fprintf(out_lyc_y_star, "    %c ", (first) ? (first=false, ':') : ('|'));
-                fprintf(out_lyc_y_star, " /""* empty *""/");
-                fprintf(out_lyc_y_star, "\n");
                 fprintf(out_lyc_y_star, "    | LIST_%d ", ast_table_LIST_index(objects));
                 fprintf(out_lyc_y_star, "\n");
             }

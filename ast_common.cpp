@@ -726,7 +726,14 @@ int list_parameter::compare(const list_parameter *p2) const {
         else if (list_parameter_value::compare(this->ast_list_parameter_value(), p2->ast_list_parameter_value())) {
             return 1;
         }
-        else if (this->list_parameter_delim() != p2->list_parameter_delim()) {
+        // else if (this->list_parameter_delim() != p2->list_parameter_delim()) {
+        // !!!!! IMPORTANT !!!!!
+        // error occurred because list_parameter_delim() returns a pointer of mcc_string
+        //  but I misunderstood that the method returns the reference of it.
+        //  This resulted a pointer-pointer comparison instead of mcc_string comparison
+        //  and always failed because newly allocated class object's address can never be
+        //  same with previously defined entity.
+        else if (*this->list_parameter_delim() != *p2->list_parameter_delim()) {
             return 1;
         }
     }

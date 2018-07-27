@@ -172,7 +172,8 @@ void symbol_definition::action(FILE *out, act_opt option) {
 
             // fprintf(out_lyc, "    %c", (value_list_flag ? '|' : (value_list_flag=1, ':')));
             for (node = ast_list->first(); node; node = node->next()) {
-                symbol_value *ast_symbol_value = dynamic_cast<symbol_value *>(node->ast_elem());
+                symbol_value *ast_symbol_value 
+                    = dynamic_cast<symbol_value *>(node->ast_elem());
                 list *ast_elem_list = ast_symbol_value->ast_symbol_value_element_list();
                 list_node *node2;
 

@@ -326,56 +326,99 @@ namespace ast {
         string                              _value;
 
     public:
+        // 
         mcc_string(const char *value)
             : symbol_value_element(AST_MCC_STRING), _value(value)
         {
         }
+        // 
         mcc_string(const std::string &value)
             : symbol_value_element(AST_MCC_STRING), _value(value)
         {
         }
+        // 
         ~mcc_string();
 
+
+        // 
         string &value() { return _value; }
+        // 
         const string &value() const { return _value; }
 
+
+        // 
         void describe(FILE *out);
+        // 
         std::string glance(FILE *out, act_opt option);
+        // 
         void action(FILE *out, act_opt option);
 
 
-        int compare(const mcc_string *p2) const {
-            return _value.compare(p2->value());
+        // 
+        int compare(const mcc_string &p2) const {
+            return _value.compare(p2.value());
         }
+        // 
         virtual int compare(const object *p2) const { 
             // return compare(dynamic_cast<const mcc_string *>(p2));
             // const mcc_string *child = (const mcc_string *)p2;
             const mcc_string *child = dynamic_cast<const mcc_string *>(p2);
-            return compare(child);
+            return compare(*child);
         }
+        // 
         static int compare(const mcc_string *p1, const mcc_string *p2) {
-            return p1->compare(p2);
+            return p1->compare(*p2);
         }
+        // 
         virtual int compare(const symbol_value_element *p2) const {
             // return compare(dynamic_cast<const mcc_string *>(p2));
             // const mcc_string *child = (const mcc_string *)p2;
             const mcc_string *child = dynamic_cast<const mcc_string *>(p2);
-            return compare(child);
+            return compare(*child);
         }
 
 
+        // 
         int compare(const std::string &value) const {
+            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
             return _value == value;
         }
+        // 
         int compare(const char *value) const {
+            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value);
             return _value == value;
         }
 
+        // 
+        bool operator ==(const mcc_string &value) const {
+            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.value().c_str());
+            return _value == value.value();
+        }
+        // 
         bool operator ==(const std::string &value) const {
+            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
             return _value == value;
         }
+        // 
         bool operator ==(const char *value) const {
+            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value);
             return _value == value;
+        }
+
+        // 
+        bool operator !=(const mcc_string &value) const {
+            fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value.value().c_str());
+            return _value != value.value();
+        }
+        // 
+        bool operator !=(const std::string &value) const {
+            fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
+            return _value != value;
+        }
+        // 
+        bool operator !=(const char *value) const {
+            fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value);
+            return _value != value;
         }
     };
 
