@@ -115,6 +115,7 @@ std::string symbol_definition::glance(FILE *out, act_opt option) {
 
     // 
     if (ast_key_attr) {
+        // 
     }
 
     //======================================================================================
@@ -143,7 +144,8 @@ std::string symbol_definition::glance(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc, "    %c ", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
                 for (node2 = ast_elem_list->first(); node2; node2 = node2->next()) {
-                    symbol_value_element *ast_elem = dynamic_cast<symbol_value_element *>(node2->ast_elem());
+                    symbol_value_element *ast_elem 
+                        = dynamic_cast<symbol_value_element *>(node2->ast_elem());
                     if (ast_elem != nullptr) {
                         mcc_symbol *new_elem = new mcc_symbol(ast_elem->glance(out, option));
                         // delete ast_elem;
@@ -234,18 +236,21 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
 
         list_parameter_value *ast_list_parameter_value = this->ast_list_parameter_value();
         list *ast_symbol_value_list = ast_list_parameter_value->ast_symbol_value_list();
-        mcc_symbol *new_elem = nullptr;
+        // mcc_symbol *new_elem = nullptr;
 
-        std::vector< std::vector<std::string> > symbol_list_list;
+        // std::vector< std::vector<std::string> > symbol_list_list;
+        std::vector< std::vector<ast::object *> > object_list_list;
         for (list_node *node1=ast_symbol_value_list->first(); node1; node1=node1->next()) {
             symbol_value *elem1 = dynamic_cast<symbol_value *>(node1->ast_elem());
             std::string symbol1 = elem1->glance(out, option);
 
             // 
             list *ast_elem_list = elem1->ast_symbol_value_element_list();
-            std::vector< std::string> symbol_list;
+            // std::vector< std::string> symbol_list;
+            std::vector<ast::object *> object_list;
             for (list_node *node2=ast_elem_list->first(); node2; node2=node2->next()) {
-                symbol_value_element *elem2 = dynamic_cast<symbol_value_element *>(node2->ast_elem());
+                symbol_value_element *elem2 
+                    = dynamic_cast<symbol_value_element *>(node2->ast_elem());
                 std::string symbol2 = elem2->glance(out, option);
 
                 switch (elem2->elem_type()) {
@@ -268,11 +273,13 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 }
 
                 // 
-                symbol_list.push_back(symbol2);
+                // symbol_list.push_back(symbol2);
+                object_list.push_back(elem2);
             }
 
             // 
-            symbol_list_list.push_back(symbol_list);
+            // symbol_list_list.push_back(symbol_list);
+            object_list_list.push_back(object_list);
         }
 
         // 
@@ -286,21 +293,44 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
             // 
             bool first = true;
             fprintf(out_lyc_y_list, "LIST_%d\n", index);
-            for (std::vector< std::vector<std::string> >::iterator it1 = symbol_list_list.begin(); 
-                    it1 != symbol_list_list.end();
+            for (std::vector< std::vector<ast::object *> >::iterator it1 
+                    = object_list_list.begin(); 
+                    it1 != object_list_list.end();
                     ++it1) {
-                std::vector<std::string> &symbols = *it1;
+                std::vector<ast::object *> &objects = *it1;
                 fprintf(out_lyc_y_list, "    %c ", (first) ? (first=false, ':') : ('|'));
-                for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
-                    fprintf(out_lyc_y_list, "%s ", it2->c_str());
+
+                for (std::vector<ast::object *>::iterator it2 = objects.begin(); 
+                        it2 != objects.end(); 
+                        ++it2) {
+                    //
+                    // fprintf(out_lyc_y_list, "%s ", it2->c_str());
+                    std::string symbol = (*it2)->glance(stdout, ACTOPT_NONE);
+                    fprintf(out_lyc_y_list, "%s ", symbol.c_str());
                 }
+
                 fprintf(out_lyc_y_list, "\n");
                 fprintf(out_lyc_y_list, "    | LIST_%d ", index);
                 std::string delim = list_parameter_delim()->glance(out, option);
                 fprintf(out_lyc_y_list, "%s ", delim.c_str());
-                for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
+
+                /*
+                for (std::vector<std::string>::iterator it2 = symbols.begin(); 
+                        it2 != symbols.end(); ++it2) {
                     fprintf(out_lyc_y_list, "%s ", it2->c_str());
                 }
+                */
+
+                for (std::vector<ast::object *>::iterator it2 = objects.begin(); 
+                        it2 != objects.end(); 
+                        ++it2) {
+                    //
+                    // fprintf(out_lyc_y_list, "%s ", it2->c_str());
+                    std::string symbol = (*it2)->glance(stdout, ACTOPT_NONE);
+                    fprintf(out_lyc_y_list, "%s ", symbol.c_str());
+                }
+
+                // 
                 fprintf(out_lyc_y_list, "\n");
             }
             fprintf(out_lyc_y_list, "    ;\n");
@@ -318,18 +348,19 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
 
         option_parameter_value *ast_option_parameter_value = this->ast_option_parameter_value();
         list *ast_symbol_value_list = ast_option_parameter_value->ast_symbol_value_list();
-        mcc_symbol *new_elem = nullptr;
+        // mcc_symbol *new_elem = nullptr;
 
-        std::vector< std::vector<std::string> > symbol_list_list;
+        std::vector< std::vector<ast::object *> > object_list_list;
         for (list_node *node1=ast_symbol_value_list->first(); node1; node1=node1->next()) {
             symbol_value *elem1 = dynamic_cast<symbol_value *>(node1->ast_elem());
             std::string symbol1 = elem1->glance(out, option);
 
             // 
             list *ast_elem_list = elem1->ast_symbol_value_element_list();
-            std::vector< std::string> symbol_list;
+            std::vector<ast::object *> object_list;
             for (list_node *node2=ast_elem_list->first(); node2; node2=node2->next()) {
-                symbol_value_element *elem2 = dynamic_cast<symbol_value_element *>(node2->ast_elem());
+                symbol_value_element *elem2 
+                    = dynamic_cast<symbol_value_element *>(node2->ast_elem());
                 std::string symbol2 = elem2->glance(out, option);
 
                 switch (elem2->elem_type()) {
@@ -352,11 +383,13 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                 }
 
                 // 
-                symbol_list.push_back(symbol2);
+                // symbol_list.push_back(symbol2);
+                object_list.push_back(elem2);
             }
 
             // 
-            symbol_list_list.push_back(symbol_list);
+            // symbol_list_list.push_back(symbol_list);
+            object_list_list.push_back(object_list);
         }
         // 
         int index = ast_table_OPT_index(this);
@@ -370,21 +403,24 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
             fprintf(out_lyc_y_option, "OPT_%d\n", index);
             // fprintf(out_lyc_y_option, "    %c ", (first) ? (first=false, ':') : ('|'));
             fprintf(out_lyc_y_option, "    : /""* empty *""/\n");
-            for (std::vector< std::vector<std::string> >::iterator it1 = symbol_list_list.begin(); 
-                    it1 != symbol_list_list.end();
+            for (std::vector< std::vector<ast::object *> >::iterator it1 
+                    = object_list_list.begin(); 
+                    it1 != object_list_list.end();
                     ++it1) {
-                std::vector<std::string> &symbols = *it1;
+                std::vector<ast::object *> &objects = *it1;
                 fprintf(out_lyc_y_option, "    | ");
-                for (std::vector<std::string>::iterator it2 = symbols.begin(); it2 != symbols.end(); ++it2) {
-                    const char *symbol = it2->c_str();
-                    fprintf(out_lyc_y_option, "%s ", symbol);
+                for (std::vector<ast::object *>::iterator it2 = objects.begin(); 
+                        it2 != objects.end(); 
+                        ++it2) {
+                    std::string symbol = (*it2)->glance(stdout, ACTOPT_NONE);
+                    fprintf(out_lyc_y_option, "%s ", symbol.c_str());
 
                     // 
                     switch (symbol[0]) {
                         case 'T': // TOKEN in string_tokens
                             {
                                 int token_index;
-                                sscanf(it2->c_str()+6, "%d", &token_index); 
+                                sscanf(symbol.c_str()+6, "%d", &token_index); 
                                 // fprintf(stderr, "TOKEN_%d: %s \n", token_index, string_token_values.list[token_index]);
                                 fprintf(out_lyc_y_option, "/""* %s *""/ ", string_token_values.list[token_index]);
 
@@ -410,20 +446,23 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
         char key_name[256] = "";
         star_parameter_value *ast_star_parameter_value = this->ast_star_parameter_value();
         list_parameter *ast_list_parameter = ast_star_parameter_value->ast_list_parameter();
-        list_parameter_value *ast_list_parameter_value = ast_list_parameter->ast_list_parameter_value();
+        list_parameter_value *ast_list_parameter_value 
+            = ast_list_parameter->ast_list_parameter_value();
         list *ast_symbol_value_list = ast_list_parameter_value->ast_symbol_value_list();
-        mcc_symbol *new_elem = nullptr;
+        // mcc_symbol *new_elem = nullptr;
 
-        std::vector< std::vector<std::string> > symbol_list_list;
+        // std::vector< std::vector<std::string> > symbol_list_list;
+        std::vector< std::vector<ast::object *> > object_list_list;
         for (list_node *node1=ast_symbol_value_list->first(); node1; node1=node1->next()) {
             symbol_value *elem1 = dynamic_cast<symbol_value *>(node1->ast_elem());
             std::string symbol1 = elem1->glance(out, option);
 
             // 
             list *ast_elem_list = elem1->ast_symbol_value_element_list();
-            std::vector< std::string> symbol_list;
+            std::vector<ast::object *> object_list;
             for (list_node *node2=ast_elem_list->first(); node2; node2=node2->next()) {
-                symbol_value_element *elem2 = dynamic_cast<symbol_value_element *>(node2->ast_elem());
+                symbol_value_element *elem2 
+                    = dynamic_cast<symbol_value_element *>(node2->ast_elem());
                 std::string symbol2 = elem2->glance(out, option);
 
                 switch (elem2->elem_type()) {
@@ -446,11 +485,13 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                 }
 
                 // 
-                symbol_list.push_back(symbol2);
+                // symbol_list.push_back(symbol2);
+                object_list.push_back(elem2);
             }
 
             // 
-            symbol_list_list.push_back(symbol_list);
+            // symbol_list_list.push_back(symbol_list);
+            object_list_list.push_back(object_list);
         }
         // 
         int index = ast_table_STAR_index(this);
@@ -463,14 +504,15 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             // 
             bool first = true;
             fprintf(out_lyc_y_star, "STAR_%d\n", index);
-            for (std::vector< std::vector<std::string> >::iterator it1 = symbol_list_list.begin(); 
-                    it1 != symbol_list_list.end();
+            for (std::vector< std::vector<ast::object *> >::iterator it1 
+                    = object_list_list.begin(); 
+                    it1 != object_list_list.end();
                     ++it1) {
-                std::vector<std::string> &symbols = *it1;
+                std::vector<ast::object *> &objects = *it1;
                 fprintf(out_lyc_y_star, "    %c ", (first) ? (first=false, ':') : ('|'));
                 fprintf(out_lyc_y_star, " /""* empty *""/");
                 fprintf(out_lyc_y_star, "\n");
-                fprintf(out_lyc_y_star, "    | LIST_%d ", ast_table_LIST_index(symbols));
+                fprintf(out_lyc_y_star, "    | LIST_%d ", ast_table_LIST_index(objects));
                 fprintf(out_lyc_y_star, "\n");
             }
             fprintf(out_lyc_y_star, "    ;\n");

@@ -287,6 +287,41 @@ int ast_table_LIST_index(const std::vector<std::string> &sve_list) {
     return index;
 }
 // 
+int ast_table_LIST_index(const std::vector<ast::object *> &obj_list) {
+    list *ast_symbol_value_element_list = new list(AST_SYMBOL_VALUE_ELEMENT);
+    for (std::vector<ast::object *>::const_iterator it = obj_list.begin(); 
+            it != obj_list.end(); 
+            ++it) {
+        ast_symbol_value_element_list->append(*it, AST_SYMBOL_VALUE_ELEMENT);
+    }
+
+    // 
+    symbol_value *ast_symbol_value = new symbol_value(ast_symbol_value_element_list);
+
+    // 
+    list *ast_symbol_value_list = new list(AST_SYMBOL_VALUE);
+    ast_symbol_value_list->append(ast_symbol_value, AST_SYMBOL_VALUE);
+
+    // 
+    list_parameter_value *ast_list_param_value 
+        = new list_parameter_value(ast_symbol_value_list);
+
+    // 
+    list_parameter *ast_list_parameter = new list_parameter(ast_list_param_value, "");
+
+    // 
+    std::string key_name = ast_list_parameter->glance(out_lyc_y_list, ACTOPT_NONE);
+    int index = ast_table_index(&table_LIST_values, ast_list_parameter);
+    if (index < 0) {
+        fprintf(stderr, "cannot find defined LIST [%d] \n", index);
+        exit(1);
+    }
+    else {
+        // delete ast_list_parameter;
+    }
+    return index;   
+}
+// 
 void ast_table_LIST_add(const char *key, list_parameter *elem) {
     table_add(&table_LIST_keys, key);
     ast_table_add(&table_LIST_values, elem);

@@ -1,3 +1,11 @@
+MetaCC - Meta Compiler Compiler v0.3.2.2
+----
+
+- 요소 자체로 변환 완료.
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.3.2.1
 ----
 

@@ -747,8 +747,11 @@ int tokens_index(const char *symbol_name);
 // 
 void tokens_add(const char *token_name);
 
+// 
 void ast_table_init(struct ast_table *table);
+// 
 int ast_table_index(struct ast_table *table, ast::symbol_value_element *elem);
+// 
 void ast_table_add(struct ast_table *table, ast::symbol_value_element *elem);
 
 // 
@@ -757,6 +760,8 @@ void ast_table_LIST_init();
 int ast_table_LIST_index(ast::list_parameter *elem);
 // 
 int ast_table_LIST_index(const std::vector<std::string> &sve_list);
+// 
+int ast_table_LIST_index(const std::vector<ast::object *> &obj_list);
 // 
 void ast_table_LIST_add(const char *key, ast::list_parameter *elem);
 // 

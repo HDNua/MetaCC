@@ -20,4 +20,6 @@ CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: .././ast.h
 CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: sv_lexer.yy.cc
 CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: sv_parser.h
 
+CMakeFiles/metacc.dir/sv_parser.tab.cc.o: .././ast.h
+CMakeFiles/metacc.dir/sv_parser.tab.cc.o: sv_parser.tab.cc
 

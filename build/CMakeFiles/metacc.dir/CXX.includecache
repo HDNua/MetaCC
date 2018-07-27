@@ -16,7 +16,7 @@ cstdio
 cstring
 -
 
-/home/handy/Dropbox/work/yacc/metacc/latest/ast.h
+/home/handy/work/yacc/metacc/latest/ast.h
 string
 -
 vector
@@ -26,9 +26,9 @@ cstdio
 cstring
 -
 
-/home/handy/Dropbox/work/yacc/metacc/latest/ast_action.cpp
+/home/handy/work/yacc/metacc/latest/ast_action.cpp
 ast.h
-/home/handy/Dropbox/work/yacc/metacc/latest/ast.h
+/home/handy/work/yacc/metacc/latest/ast.h
 cstdio
 -
 cstdlib
@@ -40,9 +40,9 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/work/yacc/metacc/latest/ast_common.cpp
+/home/handy/work/yacc/metacc/latest/ast_common.cpp
 ast.h
-/home/handy/Dropbox/work/yacc/metacc/latest/ast.h
+/home/handy/work/yacc/metacc/latest/ast.h
 cstdio
 -
 cstdlib
@@ -54,9 +54,9 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/work/yacc/metacc/latest/ast_describe.cpp
+/home/handy/work/yacc/metacc/latest/ast_describe.cpp
 ast.h
-/home/handy/Dropbox/work/yacc/metacc/latest/ast.h
+/home/handy/work/yacc/metacc/latest/ast.h
 cstdio
 -
 cstdlib
@@ -68,9 +68,9 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/work/yacc/metacc/latest/ast_glance.cpp
+/home/handy/work/yacc/metacc/latest/ast_glance.cpp
 ast.h
-/home/handy/Dropbox/work/yacc/metacc/latest/ast.h
+/home/handy/work/yacc/metacc/latest/ast.h
 cstdio
 -
 cstdlib
@@ -82,35 +82,53 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/work/yacc/metacc/latest/build/sv_lexer.yy.cc
+/home/handy/work/yacc/metacc/latest/build/sv_lexer.yy.cc
 stdio.h
+-
+string.h
 -
 errno.h
 -
 stdlib.h
 -
-unistd.h
--
-io.h
--
-stdlib.h
+inttypes.h
 -
 ast.h
-/home/handy/Dropbox/work/yacc/metacc/latest/build/ast.h
+/home/handy/work/yacc/metacc/latest/build/ast.h
 stdio.h
 -
 string.h
 -
 sv_parser.h
-/home/handy/Dropbox/work/yacc/metacc/latest/build/sv_parser.h
-stdlib.h
--
+/home/handy/work/yacc/metacc/latest/build/sv_parser.h
 unistd.h
 -
 
-/home/handy/Dropbox/work/yacc/metacc/latest/build/sv_parser.h
+/home/handy/work/yacc/metacc/latest/build/sv_parser.h
 
-/home/handy/Dropbox/work/yacc/metacc/latest/main.cpp
+/home/handy/work/yacc/metacc/latest/build/sv_parser.tab.cc
+cstdio
+-
+cstdlib
+-
+ast.h
+/home/handy/work/yacc/metacc/latest/build/ast.h
+stddef.h
+-
+libintl.h
+-
+alloca.h
+-
+malloc.h
+-
+stdlib.h
+-
+stdlib.h
+-
+stdio.h
+-
+
+/home/handy/work/yacc/metacc/latest/main.cpp
 stdio.h
 -
 stdlib.h
@@ -118,7 +136,7 @@ stdlib.h
 string.h
 -
 ast.h
-/home/handy/Dropbox/work/yacc/metacc/latest/ast.h
+/home/handy/work/yacc/metacc/latest/ast.h
 unistd.h
 -
 sys/stat.h

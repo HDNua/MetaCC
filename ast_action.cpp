@@ -179,8 +179,9 @@ void symbol_definition::action(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc, "    %c ", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
                 for (node2 = ast_elem_list->first(); node2; node2 = node2->next()) {
-                    symbol_value_element *ast_elem = dynamic_cast<symbol_value_element *>(node2->ast_elem());
-                    mcc_symbol *new_elem = nullptr;
+                    symbol_value_element *ast_elem 
+                        = dynamic_cast<symbol_value_element *>(node2->ast_elem());
+                    // mcc_symbol *new_elem = nullptr;
 
                     if (ast_elem == nullptr) {
                         fprintf(out_lyc, "/""* empty *""/ ");
@@ -255,7 +256,7 @@ void symbol_value::action(FILE *out, act_opt option) {
     list *ast_symbol_value_element_list = this->ast_symbol_value_element_list();
     for (list_node *node=ast_symbol_value_element_list->first(); node; node=node->next()) {
         symbol_value_element *elem = dynamic_cast<symbol_value_element *>(node->ast_elem());
-        mcc_symbol *ret;
+        // mcc_symbol *ret;
         
         // 
         switch (elem->elem_type()) {
