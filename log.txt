@@ -1,3 +1,24 @@
+MetaCC - Meta Compiler Compiler v0.3.3.0 (IMPORTANT)
+----
+
+- 리스트 중복 문제 해결함!
+
+* !!!!! IMPORTANT !!!!!
+  문자열 클래스 비교 시에 포인터끼리 값을 비교하는 참사 발생..!
+  ast_common.cpp -> 729
+> 다음은 이전에 정의된 비교 코드이다.
+  if (this->list_parameter_delim() != p2->list_parameter_delim()) { ... }
+  얼핏 봐서는 전혀 문제 없고, Java나 C#에서도 전혀 문제 없을 것 같은 이 코드가
+  여기서 매우 심각한 문제를 일으켰는데, 바로 list_parameter_delim()의 정의가 다음과 같았던 것!
+  mcc_string *list_parameter_delim() { return _list_parameter_delim; }
+  따라서 위 조건문에서 문자열끼리의 비교가 아닌 포인터 비교를 수행하고,
+  포인터 값이 서로 같을 리가 없기 때문에 항상 FAIL이 발생했던 것이다.
+>> 매우 중요한 내용이므로 기록 후 커밋까지 수행한다.
+  
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.3.2.2
 ----
 
