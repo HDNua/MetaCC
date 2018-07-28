@@ -12,7 +12,9 @@
 //
 const char *LYC_Y                   = "out/parser.y";
 const char *LYC_Y_SYNTAX            = "out/parser.y.syntax";
+const char *LYC_Y_UNION             = "out/parser.y.union";
 const char *LYC_Y_TOKEN             = "out/parser.y.token";
+const char *LYC_Y_TYPE              = "out/parser.y.type";
 const char *LYC_Y_LIST              = "out/parser.y.list";
 const char *LYC_Y_OPT               = "out/parser.y.opt";
 const char *LYC_Y_STAR              = "out/parser.y.star";
@@ -24,6 +26,8 @@ const char *LYC_AST_H_DECLARATION   = "out/parser_ast.h.declaration";
 const char *LYC_AST_C               = "out/parser_ast.c";
 const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.c.templates";
 
+
+
 //==============================================================================
 // 
 void paste_file(FILE *fout, FILE *fin) {
@@ -33,6 +37,7 @@ void paste_file(FILE *fout, FILE *fin) {
         memset(buf, 0, sizeof(buf));
     }
 }
+// 
 void paste_s2f(FILE *out, const char *srcname) {
     FILE *fin = fopen(srcname, "rt");
     if (fin == NULL) {
@@ -44,6 +49,8 @@ void paste_s2f(FILE *out, const char *srcname) {
     fflush(out);
     fclose(fin);
 }
+
+
 
 //==============================================================================
 // 
@@ -67,7 +74,9 @@ int metacc_init(int argc, const char *argv[]) {
     else if (strcmp(argv[1], "lyc") == 0) {
         extern FILE *out_lyc;
         extern FILE *out_lyc_y;
+        extern FILE *out_lyc_y_union;
         extern FILE *out_lyc_y_token;
+        extern FILE *out_lyc_y_type;
         extern FILE *out_lyc_y_list;
         extern FILE *out_lyc_y_option;
         extern FILE *out_lyc_y_star;
@@ -82,7 +91,9 @@ int metacc_init(int argc, const char *argv[]) {
         // 
         out_lyc                             = fopen(LYC_Y_SYNTAX,           "wt");
         out_lyc_y                           = fopen(LYC_Y,                  "wt");
+        out_lyc_y_union                     = fopen(LYC_Y_UNION,            "wt");
         out_lyc_y_token                     = fopen(LYC_Y_TOKEN,            "wt");      
+        out_lyc_y_type                      = fopen(LYC_Y_TYPE,             "wt");
         out_lyc_y_list                      = fopen(LYC_Y_LIST,             "wt");      
         out_lyc_y_option                    = fopen(LYC_Y_OPT,              "wt");      
         out_lyc_y_star                      = fopen(LYC_Y_STAR,             "wt");      
@@ -107,7 +118,6 @@ int metacc_init(int argc, const char *argv[]) {
 
     return 0;
 }
-
 // 
 int metacc_main(int argc, const char *argv[]) {
     extern int yyparse(void);
@@ -195,6 +205,7 @@ int metacc_main(int argc, const char *argv[]) {
         fclose(out_jj);
         fclose(out_java);
     }
+    // 
     else if (out_lyc) {
         extern class ast::list *symbol_definition_list;
         FILE *out;
@@ -203,6 +214,30 @@ int metacc_main(int argc, const char *argv[]) {
         {
             out = out_lyc;
             fprintf(out, "\n");
+        }
+        // 
+        {
+            out = out_lyc_y_union;
+
+            // 
+            fprintf(out, "%%union {\n");
+            fprintf(out, "    char token_str[MAX_TOKEN_LEN];\n");
+        }
+        // 
+        {
+            /*
+            char fmt[ast::MAX_TOKEN_LEN] = "";
+            extern struct table tokens;
+            out = out_lyc_y_type;
+
+            // 
+            for (int i=0, len=tokens.count; i < len; ++i) {
+                sprintf(fmt, "");
+                fprintf(out, "%%type <ast_%s> \n");
+            }
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            */
         }
         // 
         {
@@ -241,8 +276,6 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
-
-            // 
         }
         // 
         {
@@ -341,7 +374,6 @@ int metacc_main(int argc, const char *argv[]) {
         }
 
         // 
-        /// ast_list_traverse(out_lyc, symbol_definition_list, ACTOPT_NONE);    
         symbol_definition_list->action(out_lyc, ast::ACTOPT_NONE);
 
         // 
@@ -364,6 +396,57 @@ int metacc_main(int argc, const char *argv[]) {
             // 
             fclose(out_lyc);
             out_lyc = NULL;
+        }
+        // 
+        {
+            char fmt[ast::MAX_TOKEN_LEN] = "";
+            extern struct table symbols;
+            out = out_lyc_y_union;
+
+            for (int i=0, len=symbols.count; i<len; ++i) {
+                const char *symbol_name = symbols.list[i];
+
+                // 
+                sprintf(fmt, "    struct ast_%%-%ds *ast_%%s;\n", ::longest_symbol_length);
+                fprintf(out_lyc_y_union, fmt, symbol_name, symbol_name);
+            }
+
+            // 
+            fprintf(out, "}\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+
+            // 
+            fprintf(stdout, "longest symbol length: %d\n", ::longest_symbol_length);
+
+            // 
+            fclose(out_lyc_y_union);
+            out_lyc_y_union = NULL;
+        }
+        // 
+        {
+            char fmt[ast::MAX_TOKEN_LEN] = "";
+            char type_left[ast::MAX_TOKEN_LEN] = "";
+            extern struct table symbols;
+            out = out_lyc_y_type;
+
+            // 
+            for (int i=0, len=symbols.count; i < len; ++i) {
+                const char *symbol_name = symbols.list[i];
+
+                // 
+                sprintf(fmt, "%%%%type %%-%ds %%s\n", ::longest_symbol_length+8);
+                sprintf(type_left, "<ast_%-s>", symbol_name);
+                fprintf(out, fmt, type_left, symbol_name);
+            }
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+
+            // 
+            fclose(out_lyc_y_type);
+            out_lyc_y_type = NULL;
         }
         // 
         {
@@ -500,7 +583,13 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "%%}\n");
 
         // 
+        paste_s2f(out_lyc_y, LYC_Y_UNION);
+
+        // 
         paste_s2f(out_lyc_y, LYC_Y_TOKEN);
+
+        // 
+        paste_s2f(out_lyc_y, LYC_Y_TYPE);
 
         // 
         fprintf(out_lyc_y, "\n");
@@ -551,6 +640,3 @@ int metacc_main(int argc, const char *argv[]) {
     
     return 0;
 }
-
-
-

@@ -1,4 +1,5 @@
 #include "ast.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -6,15 +7,19 @@
 
 #include <boost/format.hpp>
 
+
+
+
 #ifndef nullptr
 #define nullptr NULL
 #endif
 
+//==============================================================================
 // 
 using namespace ast;
 
 // 
-const int MAX_TOKEN_LEN = 2048;
+// const int MAX_TOKEN_LEN = 2048;
 
 
 //==============================================================================
@@ -24,7 +29,9 @@ FILE *out_java;
 //------------------------------------------------------------------------------
 FILE *out_lyc;
 FILE *out_lyc_y;
+FILE *out_lyc_y_union;
 FILE *out_lyc_y_token;
+FILE *out_lyc_y_type;
 FILE *out_lyc_y_list;
 FILE *out_lyc_y_option;
 FILE *out_lyc_y_star;
@@ -79,6 +86,7 @@ int table_index(struct table *table, const char *key) {
     int i, len;
     const char **list = (const char **)table->list;
 
+    // 
     for (i=0, len=table->count; i < len; ++i) {
         if (strcmp(list[i], key) == 0) {
             return i;
@@ -94,6 +102,8 @@ void table_add(struct table *table, const char *key) {
 
 //------------------------------------------------------------------------------
 // 
+int longest_symbol_length = 0;
+// 
 struct table symbols;
 // 
 void symbols_init() {
@@ -107,6 +117,14 @@ int symbols_index(const char *symbol_name) {
 int symbols_add(const char *symbol_name) {
     if (symbols_index(symbol_name) < 0) {
         table_add(&symbols, symbol_name);
+        
+        // 
+        int symbol_length = (int)strlen(symbol_name);
+        if (::longest_symbol_length < symbol_length) {
+//            printf("longest symbol length has been updated from [%d] to [%d] \n",
+//                    ::longest_symbol_length, symbol_length);
+            ::longest_symbol_length = symbol_length;
+        }
         return 0;
     }
     else {

@@ -164,6 +164,25 @@ void symbol_definition::action(FILE *out, act_opt option) {
         fprintf(out_lyc_ast_c_templates, "\n");
         fprintf(out_lyc_ast_c_templates, "\n");
 
+        symbols_add(symbol_name);
+
+        /*
+        {
+            // extern int longest_symbol_length;
+            char fmt[MAX_TOKEN_LEN] = "";
+            char type_left[MAX_TOKEN_LEN] = "";
+
+            // 
+            sprintf(fmt, "struct ast_%%%ds *ast_%%s", ::longest_symbol_length);
+            fprintf(out_lyc_y_union, fmt, symbol_name, symbol_name);
+
+            // 
+            sprintf(fmt, "%%%%type %%%ds %%s\n", ::longest_symbol_length);
+            sprintf(type_left, "<ast_%s>", symbol_name);
+            fprintf(out_lyc_y_type, fmt, type_left, symbol_name);
+        }
+        */
+
         // gather syntax list.
         {
             list *ast_list = ast_symbol_value_list;
@@ -374,7 +393,8 @@ void mcc_string::action(FILE *out, act_opt option) {
 // 
 void mcc_symbol::action(FILE *out, act_opt option) {
     // 
-    fprintf(out, "%s /""* MCC_SYMBOL *""/", this->value().c_str());
+    // fprintf(out, "%s /""* MCC_SYMBOL *""/ ", this->value().c_str());
+    fprintf(out, "%s ", this->value().c_str());
 }
 
 // 

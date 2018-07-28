@@ -1,5 +1,6 @@
 %{
-#define MAX_TOKEN_LEN 2048
+// #define MAX_TOKEN_LEN 2048
+const int MAX_TOKEN_LEN = 2048;
 
 #include "ast.h"
 #include <stdio.h>

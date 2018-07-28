@@ -502,7 +502,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             ast_table_STAR_add(key_name, this);
 
             // 
-            bool first = true;
+            // bool first = true;
             fprintf(out_lyc_y_star, "STAR_%d\n", index);
             // fprintf(out_lyc_y_star, "    %c ", (first) ? (first=false, ':') : ('|'));
             fprintf(out_lyc_y_star, "    : /""* empty *""/\n");

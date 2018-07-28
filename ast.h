@@ -16,6 +16,9 @@ namespace ast {
     using std::string;
 
     // 
+    const int MAX_TOKEN_LEN = 2048;
+
+    // 
     typedef enum ast_type {
         AST_UNTYPED,                    // 0
         AST_LIST,                       // 1
@@ -70,19 +73,27 @@ namespace ast {
         ast_type _type;
 
     public:
+        // 
         object(ast_type type): _type(type) { }
+        // 
         virtual ~object();
 
+        // 
         ast_type type() const { return _type; }
 
+        // 
         void describe(FILE *out) {
             ;
         }
+        // 
         virtual std::string glance(FILE *out, act_opt option) = 0;
+        // 
         virtual void action(FILE *out, act_opt option = ACTOPT_NONE) = 0;
+        // 
         virtual int compare(const object *p2) const {
             return this == p2;
         }
+        // 
         static int compare(const object *p1, const object *p2) {
             return p1->compare(p2);
         }
@@ -380,44 +391,44 @@ namespace ast {
 
         // 
         int compare(const std::string &value) const {
-            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
+            // fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
             return _value == value;
         }
         // 
         int compare(const char *value) const {
-            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value);
+            // fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value);
             return _value == value;
         }
 
         // 
         bool operator ==(const mcc_string &value) const {
-            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.value().c_str());
+            // fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.value().c_str());
             return _value == value.value();
         }
         // 
         bool operator ==(const std::string &value) const {
-            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
+            // fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
             return _value == value;
         }
         // 
         bool operator ==(const char *value) const {
-            fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value);
+            // fprintf(stderr, "cmp [%s] vs [%s] \n", _value.c_str(), value);
             return _value == value;
         }
 
         // 
         bool operator !=(const mcc_string &value) const {
-            fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value.value().c_str());
+            // fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value.value().c_str());
             return _value != value.value();
         }
         // 
         bool operator !=(const std::string &value) const {
-            fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
+            // fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value.c_str());
             return _value != value;
         }
         // 
         bool operator !=(const char *value) const {
-            fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value);
+            // fprintf(stderr, "!cmp [%s] vs [%s] \n", _value.c_str(), value);
             return _value != value;
         }
     };
@@ -687,34 +698,43 @@ namespace ast {
         string                              _token_value;
 
     public:
+        // 
         token_definition(const char *token_key, const char *token_value)
             : symbol_value_element(AST_TOKEN_DEFINITION),
             _token_key(token_key), _token_value(token_value)
         {
         }
+        // 
         ~token_definition();
 
+        // 
         string &token_key() { return _token_key; }
+        // 
         const string &token_key() const { return _token_key; }
+        // 
         string &token_value() { return _token_value; }
+        // 
         const string &token_value() const { return _token_value; }
 
+        // 
         void describe(FILE *out);
+        // 
         std::string glance(FILE *out, act_opt option);
+        // 
         void action(FILE *out, act_opt option);
+        // 
         int compare(const token_definition *p2) const;
+        // 
         virtual int compare(const object *p2) const { 
-            // return compare(dynamic_cast<const token_definition *>(p2));
-            // const token_definition *child = (const token_definition *)p2;
             const token_definition *child = dynamic_cast<const token_definition *>(p2);
             return compare(child);
         }
+        // 
         static int compare(const token_definition *p1, const token_definition *p2) {
             return p1->compare(p2);
         }
+        // 
         virtual int compare(const symbol_value_element *p2) const {
-            // return compare(dynamic_cast<const token_definition*>(p2));
-            // const token_definition *child = (const token_definition *)p2;
             const token_definition *child = dynamic_cast<const token_definition *>(p2);
             return compare(child);
         }
@@ -731,7 +751,9 @@ extern FILE *out_java;
 //------------------------------------------------------------------------------
 extern FILE *out_lyc;
 extern FILE *out_lyc_y;
+extern FILE *out_lyc_y_union;
 extern FILE *out_lyc_y_token;
+extern FILE *out_lyc_y_type;
 extern FILE *out_lyc_y_list;
 extern FILE *out_lyc_y_option;
 extern FILE *out_lyc_y_star;
@@ -745,8 +767,6 @@ extern FILE *out_lyc_ast_c_templates;
 
 //------------------------------------------------------------------------------
 extern FILE *out_lycpp;
-
-
 
 
 
@@ -767,6 +787,8 @@ int table_index(struct table *table, const char *key);
 // 
 void table_add(struct table *table, const char *key);
 
+// 
+extern int longest_symbol_length;
 // 
 void symbols_init();
 // 

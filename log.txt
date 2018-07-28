@@ -1,3 +1,12 @@
+MetaCC - Meta Compiler Compiler v0.3.3.1 (COMPLETE)
+----
+
+- 실행 가능한 최초의 MetaCC 구현 완료.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.3.3.0 (IMPORTANT)
 ----
 
