@@ -1,0 +1,6 @@
+%type <ast_line_list>   line_list
+%type <ast_line>        line
+%type <ast_expr>        expr
+%type <ast_term>        term
+%type <ast_primary>     primary
+%type <token_str> INTEGER

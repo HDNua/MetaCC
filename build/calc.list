@@ -1,8 +1,9 @@
 # vim: expandtab ts=4 sw=4
 
 line_list
-    : line
-    | line_list line
+    : LIST( line, "" )
+    // : line
+    // | line_list line
     ;
 
 line

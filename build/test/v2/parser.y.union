@@ -1,0 +1,11 @@
+%union {
+    char token_str[MAX_TOKEN_LEN];
+    struct ast_line_list *ast_line_list;
+    struct ast_line      *ast_line;
+    struct ast_expr      *ast_expr;
+    struct ast_term      *ast_term;
+    struct ast_primary   *ast_primary;
+}
+
+
+

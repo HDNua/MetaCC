@@ -1,0 +1,70 @@
+
+line_list 
+    : LIST_0 
+    {
+        struct ast_line_list *ret = new (struct ast_line_list);
+        $$ = ret;
+    }
+    ;
+
+line 
+    : expr TOKEN_0 /* ; */ 
+    {
+        struct ast_line *ret = new (struct ast_line);
+        $$ = ret;
+    }
+    ;
+
+expr 
+    : expr TOKEN_1 /* + */ term 
+    {
+        struct ast_expr *ret = new (struct ast_expr);
+        $$ = ret;
+    }
+    | expr TOKEN_2 /* - */ term 
+    {
+        struct ast_expr *ret = new (struct ast_expr);
+        $$ = ret;
+    }
+    | term 
+    {
+        struct ast_expr *ret = new (struct ast_expr);
+        $$ = ret;
+    }
+    ;
+
+term 
+    : term TOKEN_3 /* * */ primary 
+    {
+        struct ast_term *ret = new (struct ast_term);
+        $$ = ret;
+    }
+    | term TOKEN_4 /* / */ primary 
+    {
+        struct ast_term *ret = new (struct ast_term);
+        $$ = ret;
+    }
+    | primary 
+    {
+        struct ast_term *ret = new (struct ast_term);
+        $$ = ret;
+    }
+    ;
+
+primary 
+    : INTEGER 
+    {
+        struct ast_primary *ret = new (struct ast_primary);
+        $$ = ret;
+    }
+    | TOKEN_5 /* ( */ expr TOKEN_6 /* ) */ 
+    {
+        struct ast_primary *ret = new (struct ast_primary);
+        $$ = ret;
+    }
+    ;
+
+LIST_0
+    : line 
+    | LIST_0  line 
+    ;

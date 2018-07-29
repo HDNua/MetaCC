@@ -1,0 +1,55 @@
+// 
+struct ast_line_list {
+    ast_type                        type;
+};
+// 
+void ast_line_list_describe(FILE *out, struct ast_line_list *this);
+// 
+void ast_line_list_action(FILE *out, struct ast_line_list *this);
+
+
+
+// 
+struct ast_line {
+    ast_type                        type;
+};
+// 
+void ast_line_describe(FILE *out, struct ast_line *this);
+// 
+void ast_line_action(FILE *out, struct ast_line *this);
+
+
+
+// 
+struct ast_expr {
+    ast_type                        type;
+};
+// 
+void ast_expr_describe(FILE *out, struct ast_expr *this);
+// 
+void ast_expr_action(FILE *out, struct ast_expr *this);
+
+
+
+// 
+struct ast_term {
+    ast_type                        type;
+};
+// 
+void ast_term_describe(FILE *out, struct ast_term *this);
+// 
+void ast_term_action(FILE *out, struct ast_term *this);
+
+
+
+// 
+struct ast_primary {
+    ast_type                        type;
+};
+// 
+void ast_primary_describe(FILE *out, struct ast_primary *this);
+// 
+void ast_primary_action(FILE *out, struct ast_primary *this);
+
+
+

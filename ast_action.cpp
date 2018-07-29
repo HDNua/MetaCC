@@ -407,42 +407,54 @@ void mcc_symbol::action(FILE *out, act_opt option) {
 void list_parameter::action(FILE *out, act_opt option) {
     // 
     if (out_lyc) {
-        std::string ret = this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
+        // std::string ret = this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
+        this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
         int index = ast_table_LIST_index(this);
         if (index < 0) {
-            fprintf(stderr, "list_parameter_action >> cannot find definition of LIST[%s] \n", ret.c_str());
-            // exit(1);
+            fprintf(stderr, 
+                    "list_parameter_action >> cannot find definition of LIST[%d] \n", 
+                    index);
+            exit(1);
         }
         // 
-        fprintf(out, "%s ", ret.c_str());
+        // fprintf(out, "%s ", ret.c_str());
+        fprintf(out, "LIST_%d ", index);
     }
 }
 // 
 void option_parameter::action(FILE *out, act_opt option) {
     //
     if (out_lyc) {
-        std::string ret = this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
+        // std::string ret = this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
+        this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
         int index = ast_table_OPT_index(this);
         if (index < 0) {
-            fprintf(stderr, "option_parameter_action >> cannot find definition of OPTION[%s] \n", ret.c_str());
-            // exit(1);
+            fprintf(stderr, 
+                    "option_parameter_action >> cannot find definition of OPTION[%d] \n", 
+                    index);
+            exit(1);
         }
         // 
-        fprintf(out, "%s ", ret.c_str());
+        // fprintf(out, "%s ", ret.c_str());
+        fprintf(out, "OPT_%d ", index);
     }
 }
 // 
 void star_parameter::action(FILE *out, act_opt option) {
     // 
     if (out_lyc) {
-        std::string ret = this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
+        // std::string ret = this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
+        this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
         int index = ast_table_STAR_index(this);
         if (index < 0) {
-            fprintf(stderr, "star_parameter_action >> cannot find definition of STAR[%s] \n", ret.c_str());
-            // exit(1);
+            fprintf(stderr, 
+                    "star_parameter_action >> cannot find definition of STAR[%d] \n", 
+                    index);
+            exit(1);
         }
         // 
-        fprintf(out, "%s ", ret.c_str());
+        // fprintf(out, "%s ", ret.c_str());
+        fprintf(out, "STAR_%d ", index);
     }
 }
 // 

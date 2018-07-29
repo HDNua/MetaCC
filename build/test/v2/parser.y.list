@@ -1,0 +1,4 @@
+LIST_0
+    : line 
+    | LIST_0  line 
+    ;

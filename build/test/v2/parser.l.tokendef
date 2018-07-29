@@ -1,0 +1,8 @@
+";" return TOKEN_0;
+"+" return TOKEN_1;
+"-" return TOKEN_2;
+"*" return TOKEN_3;
+"/" return TOKEN_4;
+"(" return TOKEN_5;
+")" return TOKEN_6;
+"INTEGER" return INTEGER;
