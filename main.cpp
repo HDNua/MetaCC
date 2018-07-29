@@ -122,8 +122,10 @@ int metacc_init(int argc, const char *argv[]) {
 int metacc_main(int argc, const char *argv[]) {
     extern int yyparse(void);
     extern FILE *yyin;
+    extern struct table symbols;
 
-    const char *start_symbol = "expr";
+    // need to update after traverse.
+    const char *start_symbol = "expression"; // symbols.list[0];
 
     yyin = stdin;
     if (yyparse()) {
@@ -222,6 +224,8 @@ int metacc_main(int argc, const char *argv[]) {
             // 
             fprintf(out, "%%union {\n");
             fprintf(out, "    char token_str[MAX_TOKEN_LEN];\n");
+            fprintf(out, "    struct ast_list *ast_list;\n");
+            fprintf(out, "    \n");
         }
         // 
         {
@@ -429,6 +433,9 @@ int metacc_main(int argc, const char *argv[]) {
             char fmt[ast::MAX_TOKEN_LEN] = "";
             char type_left[ast::MAX_TOKEN_LEN] = "";
             extern struct table symbols;
+            extern struct table table_LIST_keys;
+            extern struct table table_OPT_keys;
+            extern struct table table_STAR_keys;
             out = out_lyc_y_type;
 
             // 
@@ -440,6 +447,18 @@ int metacc_main(int argc, const char *argv[]) {
                 sprintf(type_left, "<ast_%-s>", symbol_name);
                 fprintf(out, fmt, type_left, symbol_name);
             }
+
+            // 
+            for (int i=0, len=table_LIST_keys.count; i<len; ++i) {
+                fprintf(out, "%%type <ast_list> %s\n", table_LIST_keys.list[i]);
+            }
+            for (int i=0, len=table_OPT_keys.count; i<len; ++i) {
+                fprintf(out, "%%type <ast_list> %s\n", table_OPT_keys.list[i]);
+            }
+            for (int i=0, len=table_STAR_keys.count; i<len; ++i) {
+                fprintf(out, "%%type <ast_list> %s\n", table_STAR_keys.list[i]);
+            }
+
             // fprintf(out, "\n");
             // fprintf(out, "\n");
             // fprintf(out, "\n");
@@ -573,9 +592,14 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "#include <stdlib.h>\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "#include \"parser_ast.h\"\n");
-        fprintf(out_lyc_y, "#define YYDEBUG 1\n");
         fprintf(out_lyc_y, "#define MAX_TOKEN_LEN 2048\n");
         fprintf(out_lyc_y, "#define new(TYPE) (TYPE *)malloc(sizeof(TYPE))\n");
+        fprintf(out_lyc_y, "\n");
+        fprintf(out_lyc_y, "\n");
+        fprintf(out_lyc_y, "\n");
+        fprintf(out_lyc_y, "#ifdef YYDEBUG\n");
+        fprintf(out_lyc_y, "int yydebug = 1;\n");
+        fprintf(out_lyc_y, "#endif\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
@@ -604,7 +628,7 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "start\n");
-        fprintf(out_lyc_y, "    : %s\n", start_symbol);
+        fprintf(out_lyc_y, "    : %s\n", symbols.list[0]);
         fprintf(out_lyc_y, "    ;\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");

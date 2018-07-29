@@ -300,38 +300,45 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 std::vector<ast::object *> &objects = *it1;
                 fprintf(out_lyc_y_list, "    %c ", (first) ? (first=false, ':') : ('|'));
 
+                // 
                 for (std::vector<ast::object *>::iterator it2 = objects.begin(); 
                         it2 != objects.end(); 
                         ++it2) {
                     //
-                    // fprintf(out_lyc_y_list, "%s ", it2->c_str());
-                    std::string symbol = (*it2)->glance(stdout, ACTOPT_NONE);
-                    fprintf(out_lyc_y_list, "%s ", symbol.c_str());
-                }
-
-                fprintf(out_lyc_y_list, "\n");
-                fprintf(out_lyc_y_list, "    | LIST_%d ", index);
-                std::string delim = list_parameter_delim()->glance(out, option);
-                fprintf(out_lyc_y_list, "%s ", delim.c_str());
-
-                /*
-                for (std::vector<std::string>::iterator it2 = symbols.begin(); 
-                        it2 != symbols.end(); ++it2) {
-                    fprintf(out_lyc_y_list, "%s ", it2->c_str());
-                }
-                */
-
-                for (std::vector<ast::object *>::iterator it2 = objects.begin(); 
-                        it2 != objects.end(); 
-                        ++it2) {
-                    //
-                    // fprintf(out_lyc_y_list, "%s ", it2->c_str());
                     std::string symbol = (*it2)->glance(stdout, ACTOPT_NONE);
                     fprintf(out_lyc_y_list, "%s ", symbol.c_str());
                 }
 
                 // 
                 fprintf(out_lyc_y_list, "\n");
+                fprintf(out_lyc_y_list, "    {\n");
+                fprintf(out_lyc_y_list, "        struct ast_list *list = ast_list_new(AST_UNTYPED);\n");
+                fprintf(out_lyc_y_list, "        ast_list_append(list, $1, AST_UNTYPED);\n");
+                fprintf(out_lyc_y_list, "        $$ = list;\n");
+                fprintf(out_lyc_y_list, "    }\n");
+                // fprintf(out_lyc_y_list, "\n");
+                // fprintf(out_lyc_y_list, "\n");
+
+                // 
+                fprintf(out_lyc_y_list, "    | LIST_%d ", index);
+                std::string delim = list_parameter_delim()->glance(out, option);
+                fprintf(out_lyc_y_list, "%s ", delim.c_str());
+
+                // 
+                for (std::vector<ast::object *>::iterator it2 = objects.begin(); 
+                        it2 != objects.end(); 
+                        ++it2) {
+                    //
+                    std::string symbol = (*it2)->glance(stdout, ACTOPT_NONE);
+                    fprintf(out_lyc_y_list, "%s ", symbol.c_str());
+                }
+
+                // 
+                fprintf(out_lyc_y_list, "\n");
+                fprintf(out_lyc_y_list, "    {\n");
+                fprintf(out_lyc_y_list, "        ast_list_append($1, $2, AST_UNTYPED);\n");
+                fprintf(out_lyc_y_list, "        $$ = $1;\n");
+                fprintf(out_lyc_y_list, "    }\n");
             }
             fprintf(out_lyc_y_list, "    ;\n");
         }
@@ -403,6 +410,9 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
             fprintf(out_lyc_y_option, "OPT_%d\n", index);
             // fprintf(out_lyc_y_option, "    %c ", (first) ? (first=false, ':') : ('|'));
             fprintf(out_lyc_y_option, "    : /""* empty *""/\n");
+            fprintf(out_lyc_y_option, "    {\n");
+            fprintf(out_lyc_y_option, "        $$ = NULL;\n");
+            fprintf(out_lyc_y_option, "    }\n");
             for (std::vector< std::vector<ast::object *> >::iterator it1 
                     = object_list_list.begin(); 
                     it1 != object_list_list.end();
@@ -421,9 +431,8 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                             {
                                 int token_index;
                                 sscanf(symbol.c_str()+6, "%d", &token_index); 
-                                // fprintf(stderr, "TOKEN_%d: %s \n", token_index, string_token_values.list[token_index]);
-                                fprintf(out_lyc_y_option, "/""* %s *""/ ", string_token_values.list[token_index]);
-
+                                fprintf(out_lyc_y_option, "/""* %s *""/ ", 
+                                        string_token_values.list[token_index]);
                             }
                             break;
                         default:
@@ -431,6 +440,11 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                     }
                 }
                 fprintf(out_lyc_y_option, "\n");
+                fprintf(out_lyc_y_option, "    {\n");
+                fprintf(out_lyc_y_option, "        struct ast_list *list = ast_list_new(ast_UNTYPED);\n");
+                fprintf(out_lyc_y_option, "        ast_list_append(list, $1, AST_UNTYPED);\n");
+                fprintf(out_lyc_y_option, "        $$ = list;\n");
+                fprintf(out_lyc_y_option, "    }\n");
             }
             fprintf(out_lyc_y_option, "    ;\n");
         }
@@ -506,12 +520,18 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             fprintf(out_lyc_y_star, "STAR_%d\n", index);
             // fprintf(out_lyc_y_star, "    %c ", (first) ? (first=false, ':') : ('|'));
             fprintf(out_lyc_y_star, "    : /""* empty *""/\n");
+            fprintf(out_lyc_y_star, "    {\n");
+            fprintf(out_lyc_y_star, "        $$ = NULL;\n");
+            fprintf(out_lyc_y_star, "    }\n");
             for (std::vector< std::vector<ast::object *> >::iterator it1 
                     = object_list_list.begin(); 
                     it1 != object_list_list.end();
                     ++it1) {
                 std::vector<ast::object *> &objects = *it1;
-                fprintf(out_lyc_y_star, "    | LIST_%d ", ast_table_LIST_index(objects));
+                fprintf(out_lyc_y_star, "    | LIST_%d \n", ast_table_LIST_index(objects));
+                fprintf(out_lyc_y_star, "    {\n");
+                fprintf(out_lyc_y_star, "        $$ = $1\n");
+                fprintf(out_lyc_y_star, "    }\n");
                 fprintf(out_lyc_y_star, "\n");
             }
             fprintf(out_lyc_y_star, "    ;\n");
