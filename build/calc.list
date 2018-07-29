@@ -24,5 +24,7 @@ term
 
 primary
     : TOKEN( "INTEGER" )
+    | TOKEN( "STRING" )
+    | TOKEN( "IDENTIFIER" )
     | "(" expr ")"
     ;

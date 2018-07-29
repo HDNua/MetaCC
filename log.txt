@@ -1,3 +1,13 @@
+MetaCC - Meta Compiler Compiler v0.4.1.1 (IMPORTANT)
+----
+
+- 계산기 예제 성공!
+
+- after 코드를 삽입하여, 새롭게 정의해야 하는 토큰에 대해 처리하는 방법을 마련함.
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.4.1.0 (COMPLETE)
 ----
 

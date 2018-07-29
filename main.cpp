@@ -26,6 +26,15 @@ const char *LYC_AST_H_DECLARATION   = "out/parser_ast.h.declaration";
 const char *LYC_AST_C               = "out/parser_ast.c";
 const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.c.templates";
 
+// 
+const char *LYC_L_INIT_AFTER        = "after/after_init.l";
+const char *LYC_L_PERCENTS_AFTER    = "after/after_percents.l";
+const char *LYC_L_TOKENDEF_AFTER    = "after/after_tokendef.l";
+const char *LYC_Y_UNION_AFTER       = "after/after_union.y";
+const char *LYC_Y_TOKEN_AFTER       = "after/after_token.y";
+const char *LYC_Y_TYPE_AFTER        = "after/after_type.y";
+const int HEAD_IGNORE_COUNT         = 10;
+
 
 
 //==============================================================================
@@ -49,6 +58,24 @@ void paste_s2f(FILE *out, const char *srcname) {
     fflush(out);
     fclose(fin);
 }
+// 
+void paste_s2f_slice(FILE *out, const char *srcname, int head_ignore) {
+    static char buf[ast::MAX_TOKEN_LEN];
+    FILE *fin = fopen(srcname, "rt");
+    if (fin == NULL) {
+        fprintf(stderr, "cannot open file named [%s]; no such file or directory. \n", srcname);
+        exit(1);
+    }
+    fflush(out);
+
+    // 
+    while (head_ignore--) {
+        fgets(buf, sizeof(buf), fin);
+    }
+    paste_file(out, fin);
+    fflush(out);
+    fclose(fin);
+}
 
 
 
@@ -60,7 +87,7 @@ int metacc_init(int argc, const char *argv[]) {
 
     // 
     if (argc < 2) {
-        fprintf(stderr, "usage: %s [ javacc | lyc | lycpp ] \n", argv[0]);
+        fprintf(stderr, "usage: %s [ lyc ] \n", argv[0]);
         return 1;
     }
     else if (strcmp(argv[1], "javacc") == 0) {
@@ -271,15 +298,16 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "}\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
+            fprintf(out, "char *dst;\n");
+            fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "%%}\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
-            fprintf(out, "%%%%\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
+
+            // 
+            paste_s2f_slice(out, LYC_L_INIT_AFTER, HEAD_IGNORE_COUNT);
         }
         // 
         {
@@ -425,6 +453,10 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(stdout, "longest symbol length: %d\n", ::longest_symbol_length);
 
             // 
+            {
+                // 
+                paste_s2f_slice(out_lyc_y_union, LYC_Y_UNION_AFTER, HEAD_IGNORE_COUNT);
+            }
             fclose(out_lyc_y_union);
             out_lyc_y_union = NULL;
         }
@@ -483,12 +515,17 @@ int metacc_main(int argc, const char *argv[]) {
             // define extended tokens list.
             for (i=0, len=tokens.count; i < len; ++i) {
                 fprintf(out, "%%token %-12s /* %s */\n", tokens.list[i], tokens.list[i]);
-                fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", tokens.list[i], tokens.list[i]);
+                // fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", tokens.list[i], tokens.list[i]);
 
                 fprintf(out_lyc_y_type, "%%type <token_str> %s\n", tokens.list[i]);
             }
 
             //
+            {
+                paste_s2f_slice(out_lyc_l_tokendef, LYC_L_TOKENDEF_AFTER, HEAD_IGNORE_COUNT);
+                paste_s2f_slice(out_lyc_y_token, LYC_Y_TOKEN_AFTER, HEAD_IGNORE_COUNT);
+                paste_s2f_slice(out_lyc_y_type, LYC_Y_TYPE_AFTER, HEAD_IGNORE_COUNT);
+            }
             fclose(out_lyc_l_tokendef);
             fclose(out_lyc_y_token);
             fclose(out_lyc_y_type);
@@ -499,6 +536,12 @@ int metacc_main(int argc, const char *argv[]) {
         // 
         {
             out = out_lyc_l;
+            fprintf(out, "%%%%\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+
+            // 
+            paste_s2f_slice(out, LYC_L_PERCENTS_AFTER, HEAD_IGNORE_COUNT);
 
             // 
             paste_s2f(out, LYC_L_TOKENDEF);
