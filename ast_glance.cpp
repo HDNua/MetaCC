@@ -441,7 +441,7 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                 }
                 fprintf(out_lyc_y_option, "\n");
                 fprintf(out_lyc_y_option, "    {\n");
-                fprintf(out_lyc_y_option, "        struct ast_list *list = ast_list_new(ast_UNTYPED);\n");
+                fprintf(out_lyc_y_option, "        struct ast_list *list = ast_list_new(AST_UNTYPED);\n");
                 fprintf(out_lyc_y_option, "        ast_list_append(list, $1, AST_UNTYPED);\n");
                 fprintf(out_lyc_y_option, "        $$ = list;\n");
                 fprintf(out_lyc_y_option, "    }\n");
@@ -530,7 +530,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                 std::vector<ast::object *> &objects = *it1;
                 fprintf(out_lyc_y_star, "    | LIST_%d \n", ast_table_LIST_index(objects));
                 fprintf(out_lyc_y_star, "    {\n");
-                fprintf(out_lyc_y_star, "        $$ = $1\n");
+                fprintf(out_lyc_y_star, "        $$ = $1;\n");
                 fprintf(out_lyc_y_star, "    }\n");
                 fprintf(out_lyc_y_star, "\n");
             }

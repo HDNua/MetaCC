@@ -33,6 +33,7 @@ const char *LYC_L_TOKENDEF_AFTER    = "after/after_tokendef.l";
 const char *LYC_Y_UNION_AFTER       = "after/after_union.y";
 const char *LYC_Y_TOKEN_AFTER       = "after/after_token.y";
 const char *LYC_Y_TYPE_AFTER        = "after/after_type.y";
+const char *LYC_Y_PERCENTS_AFTER    = "after/after_percents.y";
 const int HEAD_IGNORE_COUNT         = 10;
 
 
@@ -149,7 +150,7 @@ int metacc_init(int argc, const char *argv[]) {
 int metacc_main(int argc, const char *argv[]) {
     extern int yyparse(void);
     extern FILE *yyin;
-    extern struct table symbols;
+    // extern struct table symbols;
 
     // need to update after traverse.
     const char *start_symbol = "expression"; // symbols.list[0];
@@ -468,6 +469,7 @@ int metacc_main(int argc, const char *argv[]) {
             extern struct table table_LIST_keys;
             extern struct table table_OPT_keys;
             extern struct table table_STAR_keys;
+            extern struct table string_token_keys;
             out = out_lyc_y_type;
 
             // 
@@ -489,6 +491,9 @@ int metacc_main(int argc, const char *argv[]) {
             }
             for (int i=0, len=table_STAR_keys.count; i<len; ++i) {
                 fprintf(out, "%%type <ast_list> %s\n", table_STAR_keys.list[i]);
+            }
+            for (int i=0, len=string_token_keys.count; i<len; ++i) {
+                fprintf(out, "%%type <token_str> %s\n", string_token_keys.list[i]);
             }
 
             // fprintf(out, "\n");
@@ -515,16 +520,18 @@ int metacc_main(int argc, const char *argv[]) {
             // define extended tokens list.
             for (i=0, len=tokens.count; i < len; ++i) {
                 fprintf(out, "%%token %-12s /* %s */\n", tokens.list[i], tokens.list[i]);
-                // fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", tokens.list[i], tokens.list[i]);
-
                 fprintf(out_lyc_y_type, "%%type <token_str> %s\n", tokens.list[i]);
             }
 
             //
             {
                 paste_s2f_slice(out_lyc_l_tokendef, LYC_L_TOKENDEF_AFTER, HEAD_IGNORE_COUNT);
+
+                // 
                 paste_s2f_slice(out_lyc_y_token, LYC_Y_TOKEN_AFTER, HEAD_IGNORE_COUNT);
                 paste_s2f_slice(out_lyc_y_type, LYC_Y_TYPE_AFTER, HEAD_IGNORE_COUNT);
+
+                // 
             }
             fclose(out_lyc_l_tokendef);
             fclose(out_lyc_y_token);
@@ -647,6 +654,8 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "struct ast_list *start_list;\n");
+        fprintf(out_lyc_y, "struct ast_library_text *start_library_text;\n");
+        fprintf(out_lyc_y, "struct ast_source_text *start_source_text;\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
@@ -670,9 +679,14 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
+        
+        /*
         fprintf(out_lyc_y, "start\n");
         fprintf(out_lyc_y, "    : %s\n", symbols.list[0]);
         fprintf(out_lyc_y, "    ;\n");
+        */
+        paste_s2f_slice(out_lyc_y, LYC_Y_PERCENTS_AFTER, HEAD_IGNORE_COUNT);
+
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
@@ -690,7 +704,7 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "yyerror(char const *str)\n");
         fprintf(out_lyc_y, "{\n");
         fprintf(out_lyc_y, "    extern char *yytext;\n");
-        fprintf(out_lyc_y, "    fprintf(stderr, \"%%5d: %%s: syntax error\", line_count, yytext);\n");
+        fprintf(out_lyc_y, "    fprintf(stderr, \"%%5d: %%s: syntax error\\n\", line_count, yytext);\n");
         fprintf(out_lyc_y, "    return 0;\n");
         fprintf(out_lyc_y, "}\n");
         fprintf(out_lyc_y, "\n");

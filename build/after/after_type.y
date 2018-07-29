@@ -7,5 +7,6 @@
 
 
 
-%type <token_str> STRING
+%type <token_str> SV_STRING
+%type <token_str> SV_INTEGER
 

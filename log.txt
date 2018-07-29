@@ -1,3 +1,49 @@
+MetaCC - Meta Compiler Compiler v0.4.2.0 (IMPORTANT)
+----
+
+- 최초의 SystemVerilog 코드 파싱 성공!
+
+
+! key_attributes를 쓸 때가 드디어 왔다.
+> module_keyword의 경우 다음과 같이 정의된다.
+  module_keyword
+      : "module"
+      | "macromodule"
+      ;
+  이를 보면 module_keyword는 굳이 AST 형식의 개체로 정의될 필요 없이 바로 token_str 필드를 거쳐 C String으로 반환되는 것이 훨씬 나음.
+  다른 identifier 들에 대해서도 마찬가지다. 불필요한 중간 단계가 줄어 성능도 오르고 표현도 간결해진다.
+  
+  이 개선은 다음과 같이 이루어지는 것으로 하자.
+  module_keyword TYPE( "token_str" )
+      : "module"
+      | "macromodule"
+      ;
+  이 속성에 의해 .y 파일의 심볼 토큰 형식은 다음과 같이 바뀐다.
+  %type <token_str> module_keyword
+  .y 파일의 심볼 이벤트 액션은 다음과 같이 바뀐다.
+  module_keyword
+      : "module"
+      {
+          $$ = $1;
+      }
+      | "macromodule"
+      {
+          $$ = $1;
+      }
+      ;
+  심볼 정의에 대한 추상 트리가 더 이상 필요하지 않으므로 struct ast_module_keyword는 삭제된다.
+  이전과 달리 new (module_keyword); 구문으로 새 module_keyword를 할당하지 않고 바로 문자열의 주소를 반환할 수 있다.
+
+
+! 최소한 토큰에 한해서는 TOKEN_0과 같은 간접적인 이름 대선 직접적인 이름이 필요하다.
+  더 이상 심볼 순회 시에 간접 참조를 사용하지 않는 것도 있고, 그렇다 하더라도
+  마지막 토큰 순회 시에 문자열을 대체하는 것으로 해결 볼 수 있지 않나 함.
+
+
+end.
+
+
+
 MetaCC - Meta Compiler Compiler v0.4.1.1 (IMPORTANT)
 ----
 

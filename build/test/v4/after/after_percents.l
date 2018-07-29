@@ -32,7 +32,7 @@
 <IN_STRING>"\"" {
 	*dst = '\0';
 	BEGIN(INITIAL);
-	return SV_STRING;
+	return STRING;
 }
 
 "/*" {

@@ -60,9 +60,9 @@ module_declaration
         "endmodule" OPTION( ":" module_identifier )
     | module_ansi_header OPTION( timeunits_declaration ) STAR( non_port_module_item )
         "endmodule" OPTION( ":" module_identifier )
-    | STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifier "(" ".*" ")" ";"
-        OPTION( timeunits_declaration ) STAR( module_item ) 
-        "endmodule" OPTION( ":" module_identifier )
+#    | STAR( attribute_instance ) module_keyword OPTION( lifetime ) module_identifier "(" ".*" ")" ";"
+#        OPTION( timeunits_declaration ) STAR( module_item ) 
+#        "endmodule" OPTION( ":" module_identifier )
     | "extern" module_nonansi_header
     | "extern" module_ansi_header
     ;
