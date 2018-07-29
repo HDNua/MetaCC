@@ -123,7 +123,7 @@ int metacc_main(int argc, const char *argv[]) {
     extern int yyparse(void);
     extern FILE *yyin;
 
-    const char *start_symbol = "expression";
+    const char *start_symbol = "expr";
 
     yyin = stdin;
     if (yyparse()) {
@@ -440,13 +440,13 @@ int metacc_main(int argc, const char *argv[]) {
                 sprintf(type_left, "<ast_%-s>", symbol_name);
                 fprintf(out, fmt, type_left, symbol_name);
             }
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
+            // fprintf(out, "\n");
+            // fprintf(out, "\n");
+            // fprintf(out, "\n");
 
             // 
-            fclose(out_lyc_y_type);
-            out_lyc_y_type = NULL;
+            //// fclose(out_lyc_y_type);
+            //// out_lyc_y_type = NULL;
         }
         // 
         {
@@ -465,18 +465,23 @@ int metacc_main(int argc, const char *argv[]) {
             for (i=0, len=tokens.count; i < len; ++i) {
                 fprintf(out, "%%token %-12s /* %s */\n", tokens.list[i], tokens.list[i]);
                 fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", tokens.list[i], tokens.list[i]);
+
+                fprintf(out_lyc_y_type, "%%type <token_str> %s\n", tokens.list[i]);
             }
 
             //
+            fclose(out_lyc_l_tokendef);
             fclose(out_lyc_y_token);
+            fclose(out_lyc_y_type);
+            out_lyc_l_tokendef = NULL;
             out_lyc_y_token = NULL;
+            out_lyc_y_type = NULL;
         }
         // 
         {
             out = out_lyc_l;
 
             // 
-            fclose(out_lyc_l_tokendef);
             paste_s2f(out, LYC_L_TOKENDEF);
 
             // 
@@ -570,6 +575,7 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "#include \"parser_ast.h\"\n");
         fprintf(out_lyc_y, "#define YYDEBUG 1\n");
         fprintf(out_lyc_y, "#define MAX_TOKEN_LEN 2048\n");
+        fprintf(out_lyc_y, "#define new(TYPE) (TYPE *)malloc(sizeof(TYPE))\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
@@ -598,7 +604,7 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "start\n");
-        fprintf(out_lyc_y, "    : source_text\n");
+        fprintf(out_lyc_y, "    : %s\n", start_symbol);
         fprintf(out_lyc_y, "    ;\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");

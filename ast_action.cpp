@@ -232,7 +232,13 @@ void symbol_definition::action(FILE *out, act_opt option) {
                             exit(1);
                     }
                 }
-                fprintf(out_lyc, "\n    {\n        $$ = 0;\n    }\n");
+                fprintf(out_lyc, "\n    {\n");
+                // fprintf(out_lyc, "        $$ = 0;\n");
+                if (islower(symbol_name[0])) {
+                    fprintf(out_lyc, "        struct ast_%s *ret = new (struct ast_%s);\n", symbol_name, symbol_name);
+                    fprintf(out_lyc, "        $$ = ret;\n");
+                }
+                fprintf(out_lyc, "    }\n");
             }
         }
 
