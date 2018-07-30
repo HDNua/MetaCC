@@ -1,3 +1,28 @@
+MetaCC - Meta Compiler Compiler v0.4.2.1
+----
+
+- 심볼 리스트 수정.
+> 빠진 정의 추가.
+> 불필요한 정의 삭제.
+
+- bison 버전 업데이트.
+> 이전에 사용하던 bison++가 버전이 낮아 Too many gotos 오류가 발생함.
+  최신 버전의 bison(not bison++)를 설치했더니 C++에서도 오류 없이 잘 컴파일 됨.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+! key_attributes를 쓸 때가 드디어 왔다.
+  이 개선은 다음과 같이 이루어지는 것으로 하자.
+  module_keyword TYPE( "token_str" )
+      : "module"
+      | "macromodule"
+      ;
+! 최소한 토큰에 한해서는 TOKEN_0과 같은 간접적인 이름 대선 직접적인 이름이 필요하다.
+
+
+end.
+
+
+
 MetaCC - Meta Compiler Compiler v0.4.2.0 (IMPORTANT)
 ----
 

@@ -283,6 +283,8 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "#define MAX_TOKEN_LEN 2048\n");
             fprintf(out, "\n");
             fprintf(out, "#include <stdio.h>\n");
+            fprintf(out, "#include <stdlib.h>\n");
+            fprintf(out, "#include <string.h>\n");
             fprintf(out, "#include \"y.tab.h\"\n");
             fprintf(out, "\n");
             fprintf(out, "\n");

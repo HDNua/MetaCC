@@ -6,8 +6,8 @@
 %x IN_COMMENT
 %x IN_LINECOMMENT
 %x IN_STRING
-
 %%
+
 [ \t\r] {
 
 }

@@ -85,13 +85,15 @@ boost/format.hpp
 /home/handy/work/yacc/metacc/latest/build/sv_lexer.yy.cc
 stdio.h
 -
-string.h
--
 errno.h
 -
 stdlib.h
 -
-inttypes.h
+unistd.h
+-
+io.h
+-
+stdlib.h
 -
 ast.h
 /home/handy/work/yacc/metacc/latest/build/ast.h
@@ -101,6 +103,8 @@ string.h
 -
 sv_parser.h
 /home/handy/work/yacc/metacc/latest/build/sv_parser.h
+stdlib.h
+-
 unistd.h
 -
 

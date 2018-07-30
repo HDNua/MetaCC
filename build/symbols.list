@@ -27,7 +27,7 @@ library_description
     ;
 library_declaration
     : "library" library_identifier LIST( file_path_spec, "," )
-        OPTION( "-incdir" LIST( file_path_spec, "," ) )
+        OPTION( "-incdir" LIST( file_path_spec, "," ) ) ";"
     ;
 include_statement
     : "include" file_path_spec ";"
@@ -122,22 +122,22 @@ class_declaration
 interface_class_type
     : ps_class_identifier OPTION( parameter_value_assignment )
     ;
-interface_class_declaration
-    : "interface" "class" class_identifier OPTION( parameter_port_list )
-        OPTION( "extends" LIST( interface_class_type, "," ) ) ";"
-        STAR( interface_class_item )
-        "endclass" OPTION( ":" class_identifier )
-    ;
-interface_class_item
-    : type_declaration
-    | STAR( attribute_instance ) interface_class_method
-    | local_parameter_declaration ";"
-    | parameter_declaration ";"
-    | ";"
-    ;
-interface_class_method
-    : "pure" "virtual" method_prototype ";"
-    ;
+### interface_class_declaration
+###     : "interface" "class" class_identifier OPTION( parameter_port_list )
+###         OPTION( "extends" LIST( interface_class_type, "," ) ) ";"
+###         STAR( interface_class_item )
+###         "endclass" OPTION( ":" class_identifier )
+###     ;
+### interface_class_item
+###     : type_declaration
+###     | STAR( attribute_instance ) interface_class_method
+###     | local_parameter_declaration ";"
+###     | parameter_declaration ";"
+###     | ";"
+###     ;
+### interface_class_method
+###     : "pure" "virtual" method_prototype ";"
+###     ;
 package_declaration
     : STAR( attribute_instance ) "package" OPTION( lifetime ) package_identifier ";"
         OPTION( timeunits_declaration ) STAR( STAR( attribute_instance ) package_item )
@@ -836,7 +836,7 @@ net_decl_assignment
     : net_identifier STAR( unpacked_dimension ) OPTION( "=" expression )
     ;
 param_assignment
-    : parameter_identifier STAR( unpacked_dimension ) OPTION( "=" expression )
+    : parameter_identifier STAR( unpacked_dimension ) OPTION( "=" constant_param_expression )
     ;
 specparam_assignment
     : specparam_identifier "=" constant_mintypmax_expression
@@ -1104,7 +1104,38 @@ property_spec
     ;
 property_expr
     : sequence_expr
-    # WORKING
+    | "strong" "(" sequence_expr ")"
+    | "weak" "(" sequence_expr ")"
+    | "(" property_expr ")"
+    | "not" property_expr
+    | property_expr "or" property_expr
+    | property_expr "and" property_expr
+    | sequence_expr "|->" property_expr
+    | sequence_expr "|=>" property_expr
+    | "if" "(" expression_or_dist ")" property_expr OPTION( "else" property_expr )
+    | "case" "(" expression_or_dist ")" LIST( property_case_item, "" ) "endcase"
+    | sequence_expr "#-#" property_expr
+    | sequence_expr "#=#" property_expr
+    | "nexttime" property_expr
+    | "nexttime" "[" constant_expression "]" property_expr
+    | "s_nexttime" property_expr
+    | "s_nexttime" "[" constant_expression "]" property_expr
+    | "always" property_expr
+    | "always" "[" cycle_delay_const_range_expression "]" property_expr
+    | "s_always" "[" constant_range "]" property_expr
+    | "s_eventually" "[" cycle_delay_const_range_expression "]" property_expr
+    | property_expr "until" property_expr 
+    | property_expr "s_until" property_expr 
+    | property_expr "until_with" property_expr 
+    | property_expr "s_until_with" property_expr 
+    | property_expr "implies" property_expr 
+    | property_expr "iff" property_expr 
+    | "accept_on" "(" expression_or_dist ")" property_expr
+    | "reject_on" "(" expression_or_dist ")" property_expr
+    | "sync_accept_on" "(" expression_or_dist ")" property_expr
+    | "sync_reject_on" "(" expression_or_dist ")" property_expr
+    | property_instance
+    | clocking_event property_expr
     ;
 property_case_item
     : LIST( expression_or_dist, "," ) ":" property_expr OPTION( ";" )
@@ -1133,7 +1164,17 @@ sequence_formal_type
     ;
 sequence_expr
     : LIST( cycle_delay_range sequence_expr, "" )
-    # WORKING
+    | sequence_expr LIST( cycle_delay_range sequence_expr, "" )
+    | expression_or_dist OPTION( boolean_abbrev )
+    | sequence_instance 
+    | "(" sequence_expr STAR( "," sequence_match_item ) ")" OPTION( sequence_abbrev )
+    | sequence_expr "and" sequence_expr
+    | sequence_expr "intersect" sequence_expr
+    | sequence_expr "or" sequence_expr
+    | "first_match" "(" sequence_expr STAR( "," sequence_match_item ) ")"
+    | expression_or_dist "throughout" sequence_expr
+    | sequence_expr "within" sequence_expr
+    | clocking_event sequence_expr
     ;
 cycle_delay_range
     : "##" constant_primary
@@ -1245,8 +1286,8 @@ coverage_event
     ;
 block_event_expression
     # block_event_expression "or" block_event_expression
-    # : LIST( block_event_expression, "or" )
-    : "begin" hierarchical_btf_identifier
+    : LIST( block_event_expression, "or" )
+    | "begin" hierarchical_btf_identifier
     | "end" hierarchical_btf_identifier
     ;
 hierarchical_btf_identifier
@@ -1265,7 +1306,17 @@ bins_or_empty
     ;
 bins_or_options
     : coverage_option
-    # WORKING
+    | OPTION( "wildcard" ) bins_keyword bin_identifier OPTION( "[" OPTION( covergroup_expression ) "]" ) 
+        "=" "{" covergroup_range_list "}" OPTION( "with" "(" with_covergroup_expression ")" ) OPTION( "iff" "(" expression ")" )
+    | OPTION( "wildcard" ) bins_keyword bin_identifier OPTION( "[" OPTION( covergroup_expression ) "]" ) 
+        "=" cover_point_identifier OPTION( "with" "(" with_covergroup_expression ")" ) OPTION( "iff" "(" expression ")" )
+    | OPTION( "wildcard" ) bins_keyword bin_identifier OPTION( "[" OPTION( covergroup_expression ) "]" ) 
+        "=" set_covergroup_expression OPTION( "iff" "(" expression ")" )
+    | OPTION( "wildcard" ) bins_keyword bin_identifier OPTION( "[" "]" ) 
+        "=" trans_list OPTION( "iff" "(" expression ")" )
+    | bins_keyword bin_identifier OPTION( "[" OPTION( covergroup_expression ) "]" ) "=" "default" 
+        OPTION( "iff" "(" expression ")" )
+    | bins_keyword bin_identifier "=" "default" "sequence" OPTION( "iff" "(" expression ")" )
     ;
 bins_keyword
     : "bins" | "illegal_bins" | "ignore_bins"
@@ -2589,7 +2640,8 @@ slice_size
     | constant_expression
     ;
 stream_concatenation
-    : "{" expression OPTION( "with" "[" array_range_expression "]" stream_concatenation ) "}"
+    : "{" LIST( stream_expression, "," ) "}"
+    # : "{" expression OPTION( "with" "[" array_range_expression "]" stream_concatenation ) "}"
     ;
 stream_expression
     : expression OPTION( "with" "[" array_range_expression "]" )
@@ -3010,23 +3062,23 @@ attr_name
     ;
 
 # 9.2) Comments
-comment SKIP
-    : NULL
-    ;
-one_line_comment SKIP
-    : NULL
-    ;
-block_comment SKIP
-    : NULL
-    ;
-comment_text SKIP
-    : NULL
-    ;
+### comment SKIP
+###     : NULL
+###     ;
+### one_line_comment SKIP
+###     : NULL
+###     ;
+### block_comment SKIP
+###     : NULL
+###     ;
+### comment_text SKIP
+###     : NULL
+###     ;
 
 # 9.3) Identifiers
-array_identifier
-    : identifier
-    ;
+### array_identifier
+###    : identifier
+###    ;
 block_identifier
     : identifier
     ;
@@ -3063,9 +3115,9 @@ constraint_identifier
 covergroup_identifier
     : identifier
     ;
-covergroup_variable_identifier
-    : identifier
-    ;
+### covergroup_variable_identifier
+###     : variable_identifier
+###     ;
 cover_point_identifier
     : identifier
     ;
@@ -3079,11 +3131,11 @@ enum_identifier
     : identifier
     ;
 escaped_identifier
-    : TOKEN( "IDENTIFIER" )
+    : TOKEN( "SV_ESCAPED_IDENTIFIER" )
     ;
-formal_identifier
-    : identifier
-    ;
+### formal_identifier
+###     : identifier
+###     ;
 formal_port_identifier
     : identifier
     ;
@@ -3198,37 +3250,42 @@ property_identifier
     : identifier
     ;
 ps_class_identifier
-    : identifier
+    : OPTION( package_scope ) class_identifier
     ;
 ps_covergroup_identifier
-    : identifier
+    : OPTION( package_scope ) covergroup_identifier
     ;
 ps_checker_identifier
-    : identifier
+    : OPTION( package_scope ) checker_identifier
     ;
 ps_identifier
-    : identifier
+    : OPTION( package_scope ) identifier
     ;
 ps_or_hierarchical_array_identifier
-    : identifier
+    : OPTION( implicit_class_handle "." | class_scope | package_scope ) hierarchical_array_identifier
     ;
 ps_or_hierarchical_net_identifier
-    : identifier
+    : OPTION( package_scope ) net_identifier
+    | hierarchical_net_identifier
     ;
 ps_or_hierarchical_property_identifier
-    : identifier
+    : OPTION( package_scope ) property_identifier
+    | hierarchical_property_identifier
     ;
 ps_or_hierarchical_sequence_identifier
-    : identifier
+    : OPTION( package_scope ) sequence_identifier
+    | hierarchical_sequence_identifier
     ;
 ps_or_hierarchical_tf_identifier
-    : identifier
+    : OPTION( package_scope ) tf_identifier
+    | hierarchical_tf_identifier
     ;
 ps_parameter_identifier
-    : identifier
+    : OPTION( package_scope | class_scope ) parameter_identifier
+    | STAR( generate_block_identifier OPTION( "[" constant_expression "]" ) "." ) parameter_identifier
     ;
 ps_type_identifier
-    : identifier
+    : OPTION( "local::" | package_scope ) type_identifier
     ;
 sequence_identifier
     : identifier
@@ -3237,7 +3294,7 @@ signal_identifier
     : identifier
     ;
 simple_identifier
-    : TOKEN( "IDENTIFIER" )
+    : TOKEN( "SV_IDENTIFIER" )
     ;
 specparam_identifier
     : identifier
@@ -3268,9 +3325,9 @@ variable_identifier
     ;
 
 # 9.4) White space
-white_space SKIP
-    : NULL
-    ;
+### white_space SKIP
+###     : NULL
+###     ;
 
 # ADDITIONAL DEFINITION
 file_path_spec
