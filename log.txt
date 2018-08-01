@@ -1,3 +1,22 @@
+MetaCC - Meta Compiler Compiler v0.4.2.3
+----
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+! key_attributes를 쓸 때가 드디어 왔다.
+  이 개선은 다음과 같이 이루어지는 것으로 하자.
+  module_keyword TYPE( "token_str" )
+      : "module"
+      | "macromodule"
+      ;
+! 최소한 토큰에 한해서는 TOKEN_0과 같은 간접적인 이름 대선 직접적인 이름이 필요하다.
+
+
+- temporary commit.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.4.2.2
 ----
 
