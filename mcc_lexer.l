@@ -1,3 +1,4 @@
+%option nounput
 %{
 // #define MAX_TOKEN_LEN 2048
 const int MAX_TOKEN_LEN = 2048;
@@ -6,7 +7,8 @@ const int MAX_TOKEN_LEN = 2048;
 #include <stdio.h>
 #include <string.h>
 // #include "y.tab.h"
-#include "sv_parser.h"
+// #include "sv_parser.h"
+#include "mcc_parser.tab.hh"
 
 
 #ifdef YYDEBUG
@@ -20,15 +22,12 @@ extern "C" int yywrap(void)
 	return 1;
 }
 
-
+// 
 char mcc_string_buf[MAX_TOKEN_LEN];
+// 
 char *mcc_string_ptr;
 
 %}
-
-
-
-
 %x COMMENT
 %x LINECOMMENT
 %x STRING

@@ -7,26 +7,26 @@ cmake_minimum_required(VERSION 3.1)
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 
-BISON_TARGET(mcc_parser
-    mcc_parser.yy
-    ${CMAKE_CURRENT_BINARY_DIR}/mcc_parser.tab.cc)
+BISON_TARGET(parser
+    parser.yy
+    ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cc)
 
-FLEX_TARGET(mcc_lexer
-    mcc_lexer.l
-    ${CMAKE_CURRENT_BINARY_DIR}/mcc_lexer.yy.cc)
+FLEX_TARGET(lexer
+    lexer.l
+    ${CMAKE_CURRENT_BINARY_DIR}/lexer.yy.cc)
 
-add_executable(metacc
+add_executable(calc
     main.cpp
     ast_common.cpp
 	ast_describe.cpp
 	ast_glance.cpp
 	ast_action.cpp
 
-    ${FLEX_mcc_lexer_OUTPUTS}
-    ${BISON_mcc_parser_OUTPUTS}
+    ${FLEX_lexer_OUTPUTS}
+    ${BISON_parser_OUTPUTS}
     )
 
-target_include_directories(metacc
+target_include_directories(out
     PRIVATE
     .
     ${CMAKE_CURRENT_BINARY_DIR})

@@ -1,3 +1,38 @@
+MetaCC - Meta Compiler Compiler v0.5.0.0
+----
+
+- lyc를 lycpp로 변경하는 프로젝트 시작.
+
+- out 폴더에 대해 CMakeLists.txt 작성 시작.
+
+- 파서 이름이 sv_parser였던 것을 mcc_parser로 변경.
+> 변경하면서 일어난 문제 해결.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+
+end.
+
+
+MetaCC - Meta Compiler Compiler v0.4.2.3
+----
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+! key_attributes를 쓸 때가 드디어 왔다.
+  이 개선은 다음과 같이 이루어지는 것으로 하자.
+  module_keyword TYPE( "token_str" )
+      : "module"
+      | "macromodule"
+      ;
+! 최소한 토큰에 한해서는 TOKEN_0과 같은 간접적인 이름 대선 직접적인 이름이 필요하다.
+
+
+- temporary commit.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.4.2.2
 ----
 

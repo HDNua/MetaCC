@@ -1,8 +1,8 @@
 # CMake generated Testfile for 
-# Source directory: /home/handy/work/yacc/metacc/latest
-# Build directory: /home/handy/work/yacc/metacc/latest/build
+# Source directory: /home/handy/Dropbox/linux/work/yacc/metacc/latest
+# Build directory: /home/handy/Dropbox/linux/work/yacc/metacc/latest/build
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
-add_test(basic "/home/handy/work/yacc/metacc/latest/test/test0.pl")
-set_tests_properties(basic PROPERTIES  WORKING_DIRECTORY "/home/handy/work/yacc/metacc/latest/build")
+add_test(basic "/home/handy/Dropbox/linux/work/yacc/metacc/latest/test/test0.pl")
+set_tests_properties(basic PROPERTIES  WORKING_DIRECTORY "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build")

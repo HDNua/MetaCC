@@ -140,48 +140,34 @@ void symbol_definition::action(FILE *out, act_opt option) {
 
         // 
         fprintf(out_lyc_ast_h_declaration, "// \n");
-        fprintf(out_lyc_ast_h_declaration, "struct ast_%s {\n", symbol_name);
+        fprintf(out_lyc_ast_h_declaration, "class %s {\n", symbol_name);
         fprintf(out_lyc_ast_h_declaration, "    %-31s %s;\n", "ast_type", "type");
+        fprintf(out_lyc_ast_h_declaration, "    \n");
+        fprintf(out_lyc_ast_h_declaration, "public: \n");
+        fprintf(out_lyc_ast_h_declaration, "    // \n");
+        fprintf(out_lyc_ast_h_declaration, "    void describe(FILE *out);\n");
+        fprintf(out_lyc_ast_h_declaration, "    // \n");
+        fprintf(out_lyc_ast_h_declaration, "    void action(FILE *out);\n");
         fprintf(out_lyc_ast_h_declaration, "};\n");
-        fprintf(out_lyc_ast_h_declaration, "// \n");
-        fprintf(out_lyc_ast_h_declaration, "void ast_%s_describe(FILE *out, struct ast_%s *this);\n", symbol_name, symbol_name);
-        fprintf(out_lyc_ast_h_declaration, "// \n");
-        fprintf(out_lyc_ast_h_declaration, "void ast_%s_action(FILE *out, struct ast_%s *this);\n", symbol_name, symbol_name);
         fprintf(out_lyc_ast_h_declaration, "\n");
         fprintf(out_lyc_ast_h_declaration, "\n");
         fprintf(out_lyc_ast_h_declaration, "\n");
 
         // 
         fprintf(out_lyc_ast_c_templates, "// \n");
-        fprintf(out_lyc_ast_c_templates, "void ast_%s_describe(FILE *out, struct ast_%s *this) {\n", symbol_name, symbol_name);
+        fprintf(out_lyc_ast_c_templates, "void ast::%s::describe(FILE *out) {\n", symbol_name);
         fprintf(out_lyc_ast_c_templates, "    \n");
         fprintf(out_lyc_ast_c_templates, "}\n");
         fprintf(out_lyc_ast_c_templates, "// \n");
-        fprintf(out_lyc_ast_c_templates, "void ast_%s_action(FILE *out, struct ast_%s *this) {\n", symbol_name, symbol_name);
+        fprintf(out_lyc_ast_c_templates, "void ast::%s::action(FILE *out) {\n", symbol_name);
         fprintf(out_lyc_ast_c_templates, "    \n");
         fprintf(out_lyc_ast_c_templates, "}\n");
         fprintf(out_lyc_ast_c_templates, "\n");
         fprintf(out_lyc_ast_c_templates, "\n");
         fprintf(out_lyc_ast_c_templates, "\n");
 
+        // 
         symbols_add(symbol_name);
-
-        /*
-        {
-            // extern int longest_symbol_length;
-            char fmt[MAX_TOKEN_LEN] = "";
-            char type_left[MAX_TOKEN_LEN] = "";
-
-            // 
-            sprintf(fmt, "struct ast_%%%ds *ast_%%s", ::longest_symbol_length);
-            fprintf(out_lyc_y_union, fmt, symbol_name, symbol_name);
-
-            // 
-            sprintf(fmt, "%%%%type %%%ds %%s\n", ::longest_symbol_length);
-            sprintf(type_left, "<ast_%s>", symbol_name);
-            fprintf(out_lyc_y_type, fmt, type_left, symbol_name);
-        }
-        */
 
         // gather syntax list.
         {
@@ -218,10 +204,6 @@ void symbol_definition::action(FILE *out, act_opt option) {
                         case AST_LIST_PARAMETER:
                         case AST_OPTION_PARAMETER:
                         case AST_STAR_PARAMETER:
-                            // new_elem = new mcc_symbol(ast_elem->glance(out, option));
-                            // delete ast_elem;
-                            // node2->set_ast_elem(new_elem);
-                            // new_elem->action(out, option);
                             ast_elem->glance(out, option);
                             ast_elem->action(out, option);
                             break;
@@ -233,9 +215,8 @@ void symbol_definition::action(FILE *out, act_opt option) {
                     }
                 }
                 fprintf(out_lyc, "\n    {\n");
-                // fprintf(out_lyc, "        $$ = 0;\n");
                 if (islower(symbol_name[0])) {
-                    fprintf(out_lyc, "        struct ast_%s *ret = new (struct ast_%s);\n", symbol_name, symbol_name);
+                    fprintf(out_lyc, "        ast::%s *ret = new ast::%s;\n", symbol_name, symbol_name);
                     fprintf(out_lyc, "        $$ = ret;\n");
                 }
                 fprintf(out_lyc, "    }\n");

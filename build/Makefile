@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/handy/work/yacc/metacc/latest
+CMAKE_SOURCE_DIR = /home/handy/Dropbox/linux/work/yacc/metacc/latest
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/handy/work/yacc/metacc/latest/build
+CMAKE_BINARY_DIR = /home/handy/Dropbox/linux/work/yacc/metacc/latest/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -91,9 +91,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/handy/work/yacc/metacc/latest/build/CMakeFiles /home/handy/work/yacc/metacc/latest/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/handy/Dropbox/linux/work/yacc/metacc/latest/build/CMakeFiles /home/handy/Dropbox/linux/work/yacc/metacc/latest/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/handy/work/yacc/metacc/latest/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/handy/Dropbox/linux/work/yacc/metacc/latest/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -269,59 +269,59 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-sv_lexer.yy.o: sv_lexer.yy.cc.o
+mcc_lexer.yy.o: mcc_lexer.yy.cc.o
 
-.PHONY : sv_lexer.yy.o
-
-# target to build an object file
-sv_lexer.yy.cc.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/sv_lexer.yy.cc.o
-.PHONY : sv_lexer.yy.cc.o
-
-sv_lexer.yy.i: sv_lexer.yy.cc.i
-
-.PHONY : sv_lexer.yy.i
-
-# target to preprocess a source file
-sv_lexer.yy.cc.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/sv_lexer.yy.cc.i
-.PHONY : sv_lexer.yy.cc.i
-
-sv_lexer.yy.s: sv_lexer.yy.cc.s
-
-.PHONY : sv_lexer.yy.s
-
-# target to generate assembly for a file
-sv_lexer.yy.cc.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/sv_lexer.yy.cc.s
-.PHONY : sv_lexer.yy.cc.s
-
-sv_parser.tab.o: sv_parser.tab.cc.o
-
-.PHONY : sv_parser.tab.o
+.PHONY : mcc_lexer.yy.o
 
 # target to build an object file
-sv_parser.tab.cc.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/sv_parser.tab.cc.o
-.PHONY : sv_parser.tab.cc.o
+mcc_lexer.yy.cc.o:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/mcc_lexer.yy.cc.o
+.PHONY : mcc_lexer.yy.cc.o
 
-sv_parser.tab.i: sv_parser.tab.cc.i
+mcc_lexer.yy.i: mcc_lexer.yy.cc.i
 
-.PHONY : sv_parser.tab.i
+.PHONY : mcc_lexer.yy.i
 
 # target to preprocess a source file
-sv_parser.tab.cc.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/sv_parser.tab.cc.i
-.PHONY : sv_parser.tab.cc.i
+mcc_lexer.yy.cc.i:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/mcc_lexer.yy.cc.i
+.PHONY : mcc_lexer.yy.cc.i
 
-sv_parser.tab.s: sv_parser.tab.cc.s
+mcc_lexer.yy.s: mcc_lexer.yy.cc.s
 
-.PHONY : sv_parser.tab.s
+.PHONY : mcc_lexer.yy.s
 
 # target to generate assembly for a file
-sv_parser.tab.cc.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/sv_parser.tab.cc.s
-.PHONY : sv_parser.tab.cc.s
+mcc_lexer.yy.cc.s:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/mcc_lexer.yy.cc.s
+.PHONY : mcc_lexer.yy.cc.s
+
+mcc_parser.tab.o: mcc_parser.tab.cc.o
+
+.PHONY : mcc_parser.tab.o
+
+# target to build an object file
+mcc_parser.tab.cc.o:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/mcc_parser.tab.cc.o
+.PHONY : mcc_parser.tab.cc.o
+
+mcc_parser.tab.i: mcc_parser.tab.cc.i
+
+.PHONY : mcc_parser.tab.i
+
+# target to preprocess a source file
+mcc_parser.tab.cc.i:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/mcc_parser.tab.cc.i
+.PHONY : mcc_parser.tab.cc.i
+
+mcc_parser.tab.s: mcc_parser.tab.cc.s
+
+.PHONY : mcc_parser.tab.s
+
+# target to generate assembly for a file
+mcc_parser.tab.cc.s:
+	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/mcc_parser.tab.cc.s
+.PHONY : mcc_parser.tab.cc.s
 
 # Help Target
 help:
@@ -348,12 +348,12 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... sv_lexer.yy.o"
-	@echo "... sv_lexer.yy.i"
-	@echo "... sv_lexer.yy.s"
-	@echo "... sv_parser.tab.o"
-	@echo "... sv_parser.tab.i"
-	@echo "... sv_parser.tab.s"
+	@echo "... mcc_lexer.yy.o"
+	@echo "... mcc_lexer.yy.i"
+	@echo "... mcc_lexer.yy.s"
+	@echo "... mcc_parser.tab.o"
+	@echo "... mcc_parser.tab.i"
+	@echo "... mcc_parser.tab.s"
 .PHONY : help
 
 

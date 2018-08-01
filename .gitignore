@@ -1,6 +1,7 @@
 *~
 *.swp
 *.swo
+*.swn
 out
 lex.yy.c
 y.tab.c

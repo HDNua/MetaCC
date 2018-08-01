@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wall -Wno-deprecated-register -g   -std=gnu++14
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/handy/work/yacc/metacc/latest/. -I/home/handy/work/yacc/metacc/latest/build 
+CXX_INCLUDES = -I/home/handy/Dropbox/linux/work/yacc/metacc/latest/. -I/home/handy/Dropbox/linux/work/yacc/metacc/latest/build 
 

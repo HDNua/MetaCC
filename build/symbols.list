@@ -2673,7 +2673,7 @@ subroutine_call
     : tf_call
     | system_tf_call
     | method_call
-    | OPTION( "std::" randomize_call ) 
+    | OPTION( "std::" ) randomize_call
     ;
 function_subroutine_call
     : subroutine_call

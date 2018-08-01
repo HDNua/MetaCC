@@ -10,21 +10,21 @@
 
 //==============================================================================
 //
-const char *LYC_Y                   = "out/parser.y";
-const char *LYC_Y_SYNTAX            = "out/parser.y.syntax";
-const char *LYC_Y_UNION             = "out/parser.y.union";
-const char *LYC_Y_TOKEN             = "out/parser.y.token";
-const char *LYC_Y_TYPE              = "out/parser.y.type";
-const char *LYC_Y_LIST              = "out/parser.y.list";
-const char *LYC_Y_OPT               = "out/parser.y.opt";
-const char *LYC_Y_STAR              = "out/parser.y.star";
+const char *LYC_Y                   = "out/parser.yy";
+const char *LYC_Y_SYNTAX            = "out/parser.yy.syntax";
+const char *LYC_Y_UNION             = "out/parser.yy.union";
+const char *LYC_Y_TOKEN             = "out/parser.yy.token";
+const char *LYC_Y_TYPE              = "out/parser.yy.type";
+const char *LYC_Y_LIST              = "out/parser.yy.list";
+const char *LYC_Y_OPT               = "out/parser.yy.opt";
+const char *LYC_Y_STAR              = "out/parser.yy.star";
 const char *LYC_L                   = "out/parser.l";
 const char *LYC_L_TOKENDEF          = "out/parser.l.tokendef";
 const char *LYC_AST_H               = "out/parser_ast.h";
 const char *LYC_AST_H_TYPEDEF       = "out/parser_ast.h.typedef";
 const char *LYC_AST_H_DECLARATION   = "out/parser_ast.h.declaration";
-const char *LYC_AST_C               = "out/parser_ast.c";
-const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.c.templates";
+const char *LYC_AST_C               = "out/parser_ast.cpp";
+const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.cpp.templates";
 
 // 
 const char *LYC_L_INIT_AFTER        = "after/after_init.l";
@@ -252,7 +252,7 @@ int metacc_main(int argc, const char *argv[]) {
             // 
             fprintf(out, "%%union {\n");
             fprintf(out, "    char token_str[MAX_TOKEN_LEN];\n");
-            fprintf(out, "    struct ast_list *ast_list;\n");
+            fprintf(out, "    ast::list *ast_list;\n");
             fprintf(out, "    \n");
         }
         // 
@@ -280,12 +280,12 @@ int metacc_main(int argc, const char *argv[]) {
         {
             out = out_lyc_l;
             fprintf(out, "%%{\n");
-            fprintf(out, "#define MAX_TOKEN_LEN 2048\n");
+            fprintf(out, "const int MAX_TOKEN_LEN = 2048;\n");
             fprintf(out, "\n");
-            fprintf(out, "#include <stdio.h>\n");
-            fprintf(out, "#include <stdlib.h>\n");
-            fprintf(out, "#include <string.h>\n");
-            fprintf(out, "#include \"y.tab.h\"\n");
+            fprintf(out, "#include <cstdio>\n");
+            fprintf(out, "#include <cstdlib>\n");
+            fprintf(out, "#include <cstring>\n");
+            fprintf(out, "#include \"parser.tab.hh\"\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "#ifdef YYDEBUG\n");
@@ -318,8 +318,11 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "#ifndef __HANDY_VAST_H__\n");
             fprintf(out, "#define __HANDY_VAST_H__\n");
             fprintf(out, "\n");
-            fprintf(out, "#include <stdio.h>\n");
-            fprintf(out, "#include <string.h>\n");
+            fprintf(out, "#include <string>\n");
+            fprintf(out, "#include <vector>\n");
+            fprintf(out, "\n");
+            fprintf(out, "#include <cstdio>\n");
+            fprintf(out, "#include <cstring>\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
@@ -327,12 +330,13 @@ int metacc_main(int argc, const char *argv[]) {
         // 
         {
             out = out_lyc_ast_c;
-            fprintf(out, "#include <stdio.h>\n");
-            fprintf(out, "#include <stdlib.h>\n");
+            fprintf(out, "#include <cstdio>\n");
+            fprintf(out, "#include <cstdlib>\n");
             fprintf(out, "#include \"parser_ast.h\"\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
+            /*
             fprintf(out, "//==============================================================================\n");
             fprintf(out, "// \n");
             fprintf(out, "static struct ast_list_node *ast_list_node_new(void *elem, ast_type type) {\n");
@@ -386,6 +390,7 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "static void tab_depth() {\n");
             fprintf(out, "    indent_depth(\"    \");\n");
             fprintf(out, "}\n");
+            */
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
@@ -442,7 +447,7 @@ int metacc_main(int argc, const char *argv[]) {
                 const char *symbol_name = symbols.list[i];
 
                 // 
-                sprintf(fmt, "    struct ast_%%-%ds *ast_%%s;\n", ::longest_symbol_length);
+                sprintf(fmt, "    ast_%%-%ds *ast_%%s;\n", ::longest_symbol_length);
                 fprintf(out_lyc_y_union, fmt, symbol_name, symbol_name);
             }
 
@@ -497,14 +502,6 @@ int metacc_main(int argc, const char *argv[]) {
             for (int i=0, len=string_token_keys.count; i<len; ++i) {
                 fprintf(out, "%%type <token_str> %s\n", string_token_keys.list[i]);
             }
-
-            // fprintf(out, "\n");
-            // fprintf(out, "\n");
-            // fprintf(out, "\n");
-
-            // 
-            //// fclose(out_lyc_y_type);
-            //// out_lyc_y_type = NULL;
         }
         // 
         {
@@ -532,8 +529,6 @@ int metacc_main(int argc, const char *argv[]) {
                 // 
                 paste_s2f_slice(out_lyc_y_token, LYC_Y_TOKEN_AFTER, HEAD_IGNORE_COUNT);
                 paste_s2f_slice(out_lyc_y_type, LYC_Y_TYPE_AFTER, HEAD_IGNORE_COUNT);
-
-                // 
             }
             fclose(out_lyc_l_tokendef);
             fclose(out_lyc_y_token);
@@ -564,6 +559,8 @@ int metacc_main(int argc, const char *argv[]) {
             out = out_lyc_ast_h;
 
             // type definitions.
+            fprintf(out, "namespace ast {\n");
+            fprintf(out, "using std::string;\n");
             fprintf(out, "typedef enum ast_type {\n");
             fprintf(out, "    AST_UNTYPED,\n");
             fprintf(out, "    AST_LIST,\n");
@@ -576,36 +573,91 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
+
+            // 
+            fprintf(out, "class object {\n");
+            fprintf(out, "    ast_type _type;\n");
+            fprintf(out, "\n");
+            fprintf(out, "public:\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    object(ast_type type): _type(type) { }\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    virtual ~object();\n");
+            fprintf(out, "    \n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    ast_type type() const { return _type; }\n");
+            fprintf(out, "    \n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    void describe(FILE *out) {\n");
+            fprintf(out, "        ;\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    virtual std::string glance(FILE *out) = 0;\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    virtual void action(FILE *out) = 0;\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    virtual int compare(const object *p2) const {\n");
+            fprintf(out, "        return this == p2;\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    static int compare(const object *p1, const object *p2) {\n");
+            fprintf(out, "        return p1->compare(p2);\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "};\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
             
             // common list & node definitions.
             fprintf(out, "// \n");
-            fprintf(out, "struct ast_list_node {\n");
-            fprintf(out, "    ast_type                      type;\n");
-            fprintf(out, "    ast_type                      elem_type;\n");
-            fprintf(out, "    void                          *elem;\n");
-            fprintf(out, "    struct ast_list_node          *next;\n");
-            fprintf(out, "};\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_node_describe(struct ast_list_node *node);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_node_action(struct ast_list_node *node);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "struct ast_list {\n");
-            fprintf(out, "    ast_type                      type;\n");
-            fprintf(out, "    ast_type                      elem_type;\n");
+            fprintf(out, "template <class Type>\n");
+            fprintf(out, "class list: public object {\n");
+            fprintf(out, "    ast_type _elem_type;\n");
+            fprintf(out, "    std::vector<Type> _vector;\n");
+            fprintf(out, "\n");
+            fprintf(out, "public:\n");
+            fprintf(out, "    list(ast_type elem_type)\n");
+            fprintf(out, "        : object(AST_LIST), _elem_type(elem_type)\n");
+            fprintf(out, "    {\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "    ~list();\n");
             fprintf(out, "    \n");
-            fprintf(out, "    struct ast_list_node          head;\n");
-            fprintf(out, "    struct ast_list_node          *tail;\n");
-            fprintf(out, "    int                           count;\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    ast_type elem_type() const { return _elem_type; }\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    int count() const { return _vector.size(); }\n");
+            fprintf(out, "    \n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    void describe(FILE *out);\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    std::string glance(FILE *out);\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    void action(FILE *out);\n");
+            fprintf(out, "    \n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    int compare(const list *p2) const;\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    virtual int compare(const object *p2) const {\n");
+            fprintf(out, "        return compare(dynamic_cast<const list *>(p2));\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    static int compare(const list *p1, const list *p2) {\n");
+            fprintf(out, "        return p1->compare(p2);\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "    \n");
+            fprintf(out, "    // \n");
+            fprintf(out, "    void append(object *o, ast_type elem_type) {\n");
+            fprintf(out, "        _vector.push_back(o);\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "    typename ");
+            fprintf(out, "    std::vector<Type>::iterator first() {\n");
+            fprintf(out, "        return _vector.begin();\n");
+            fprintf(out, "    }\n");
+            fprintf(out, "    typename ");
+            fprintf(out, "    std::vector<Type>::const_iterator first() const {\n");
+            fprintf(out, "        return _vector.begin();\n");
+            fprintf(out, "    }\n");
             fprintf(out, "};\n");
-            fprintf(out, "// \n");
-            fprintf(out, "struct ast_list *ast_list_new(ast_type type);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_append(struct ast_list *list, void *elem, ast_type type);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_iterate(struct ast_list *list);\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_traverse(struct ast_list *list);\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
@@ -614,6 +666,9 @@ int metacc_main(int argc, const char *argv[]) {
             fclose(out_lyc_ast_h_declaration);
             out_lyc_ast_h_declaration = NULL;
             paste_s2f(out, LYC_AST_H_DECLARATION);
+            fprintf(out, "}\n");
+            fprintf(out, "\n");
+            fprintf(out, "\n");
             
             // end of symbol definitions.
             fprintf(out, "#endif\n");
@@ -640,12 +695,11 @@ int metacc_main(int argc, const char *argv[]) {
 
         // 
         fprintf(out_lyc_y, "%%{\n");
-        fprintf(out_lyc_y, "#include <stdio.h>\n");
-        fprintf(out_lyc_y, "#include <stdlib.h>\n");
+        fprintf(out_lyc_y, "#include <cstdio>\n");
+        fprintf(out_lyc_y, "#include <cstdlib>\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "#include \"parser_ast.h\"\n");
-        fprintf(out_lyc_y, "#define MAX_TOKEN_LEN 2048\n");
-        fprintf(out_lyc_y, "#define new(TYPE) (TYPE *)malloc(sizeof(TYPE))\n");
+        fprintf(out_lyc_y, "const int MAX_TOKEN_LEN = 2048;\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
@@ -655,9 +709,9 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
-        fprintf(out_lyc_y, "struct ast_list *start_list;\n");
-        fprintf(out_lyc_y, "struct ast_library_text *start_library_text;\n");
-        fprintf(out_lyc_y, "struct ast_source_text *start_source_text;\n");
+        fprintf(out_lyc_y, "ast::object *start;\n");
+        fprintf(out_lyc_y, "// ast::library_text *start_library_text;\n");
+        fprintf(out_lyc_y, "// ast::source_text *start_source_text;\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");

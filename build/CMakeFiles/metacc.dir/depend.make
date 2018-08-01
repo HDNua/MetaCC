@@ -16,10 +16,10 @@ CMakeFiles/metacc.dir/ast_glance.cpp.o: ../ast_glance.cpp
 CMakeFiles/metacc.dir/main.cpp.o: ../ast.h
 CMakeFiles/metacc.dir/main.cpp.o: ../main.cpp
 
-CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: .././ast.h
-CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: sv_lexer.yy.cc
-CMakeFiles/metacc.dir/sv_lexer.yy.cc.o: sv_parser.h
+CMakeFiles/metacc.dir/mcc_lexer.yy.cc.o: .././ast.h
+CMakeFiles/metacc.dir/mcc_lexer.yy.cc.o: mcc_lexer.yy.cc
+CMakeFiles/metacc.dir/mcc_lexer.yy.cc.o: mcc_parser.tab.hh
 
-CMakeFiles/metacc.dir/sv_parser.tab.cc.o: .././ast.h
-CMakeFiles/metacc.dir/sv_parser.tab.cc.o: sv_parser.tab.cc
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: .././ast.h
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: mcc_parser.tab.cc
 

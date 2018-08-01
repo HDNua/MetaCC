@@ -312,12 +312,10 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc_y_list, "\n");
                 fprintf(out_lyc_y_list, "    {\n");
-                fprintf(out_lyc_y_list, "        struct ast_list *list = ast_list_new(AST_UNTYPED);\n");
-                fprintf(out_lyc_y_list, "        ast_list_append(list, $1, AST_UNTYPED);\n");
+                fprintf(out_lyc_y_list, "        ast::list *list = new ast::list();\n");
+                fprintf(out_lyc_y_list, "        list->append($1);\n");
                 fprintf(out_lyc_y_list, "        $$ = list;\n");
                 fprintf(out_lyc_y_list, "    }\n");
-                // fprintf(out_lyc_y_list, "\n");
-                // fprintf(out_lyc_y_list, "\n");
 
                 // 
                 fprintf(out_lyc_y_list, "    | LIST_%d ", index);
@@ -336,7 +334,7 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc_y_list, "\n");
                 fprintf(out_lyc_y_list, "    {\n");
-                fprintf(out_lyc_y_list, "        ast_list_append($1, $2, AST_UNTYPED);\n");
+                fprintf(out_lyc_y_list, "        $1->append($2);\n");
                 fprintf(out_lyc_y_list, "        $$ = $1;\n");
                 fprintf(out_lyc_y_list, "    }\n");
             }
@@ -352,8 +350,8 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
     //
     if (out_lyc) {
         char key_name[256] = "";
-
-        option_parameter_value *ast_option_parameter_value = this->ast_option_parameter_value();
+        option_parameter_value *ast_option_parameter_value 
+            = this->ast_option_parameter_value();
         list *ast_symbol_value_list = ast_option_parameter_value->ast_symbol_value_list();
         // mcc_symbol *new_elem = nullptr;
 
@@ -378,24 +376,18 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                     case AST_LIST_PARAMETER:
                     case AST_OPTION_PARAMETER:
                     case AST_STAR_PARAMETER:
-                        // new_elem = new mcc_symbol(symbol2);
-                        // delete elem2;
-                        // node2->set_ast_elem(new_elem);
-                        // elem2 = new_elem;
                         break;
                     default:
-                        fprintf(stderr, "option_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
+fprintf(stderr, "option_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
                         // exit(1);
                         break;
                 }
 
                 // 
-                // symbol_list.push_back(symbol2);
                 object_list.push_back(elem2);
             }
 
             // 
-            // symbol_list_list.push_back(symbol_list);
             object_list_list.push_back(object_list);
         }
         // 
@@ -441,8 +433,8 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                 }
                 fprintf(out_lyc_y_option, "\n");
                 fprintf(out_lyc_y_option, "    {\n");
-                fprintf(out_lyc_y_option, "        struct ast_list *list = ast_list_new(AST_UNTYPED);\n");
-                fprintf(out_lyc_y_option, "        ast_list_append(list, $1, AST_UNTYPED);\n");
+                fprintf(out_lyc_y_option, "        ast::list *list = new ast::list();\n");
+                fprintf(out_lyc_y_option, "        list->append($1);\n");
                 fprintf(out_lyc_y_option, "        $$ = list;\n");
                 fprintf(out_lyc_y_option, "    }\n");
             }
@@ -463,9 +455,8 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
         list_parameter_value *ast_list_parameter_value 
             = ast_list_parameter->ast_list_parameter_value();
         list *ast_symbol_value_list = ast_list_parameter_value->ast_symbol_value_list();
-        // mcc_symbol *new_elem = nullptr;
 
-        // std::vector< std::vector<std::string> > symbol_list_list;
+        // 
         std::vector< std::vector<ast::object *> > object_list_list;
         for (list_node *node1=ast_symbol_value_list->first(); node1; node1=node1->next()) {
             symbol_value *elem1 = dynamic_cast<symbol_value *>(node1->ast_elem());
@@ -487,24 +478,18 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                     case AST_LIST_PARAMETER:
                     case AST_OPTION_PARAMETER:
                     case AST_STAR_PARAMETER:
-                        // new_elem = new mcc_symbol(symbol2);
-                        // delete elem2;
-                        // node2->set_ast_elem(new_elem);
-                        // elem2 = new_elem;
                         break;
                     default:
-                        fprintf(stderr, "star_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
+    fprintf(stderr, "star_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
                         // exit(1);
                         break;
                 }
 
                 // 
-                // symbol_list.push_back(symbol2);
                 object_list.push_back(elem2);
             }
 
             // 
-            // symbol_list_list.push_back(symbol_list);
             object_list_list.push_back(object_list);
         }
         // 
@@ -518,7 +503,6 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             // 
             // bool first = true;
             fprintf(out_lyc_y_star, "STAR_%d\n", index);
-            // fprintf(out_lyc_y_star, "    %c ", (first) ? (first=false, ':') : ('|'));
             fprintf(out_lyc_y_star, "    : /""* empty *""/\n");
             fprintf(out_lyc_y_star, "    {\n");
             fprintf(out_lyc_y_star, "        $$ = NULL;\n");
