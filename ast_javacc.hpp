@@ -1,8 +1,5 @@
-#ifndef __HANDY_AST_H__
-#define __HANDY_AST_H__
-
-// #include <stdio.h>
-// #include <string.h>
+#ifndef __HANDY_AST_JAVACC_HPP__
+#define __HANDY_AST_JAVACC_HPP__
 
 #include <string>
 #include <vector>
@@ -13,6 +10,12 @@
 
 
 namespace ast {
+    namespace javacc;
+}
+
+
+
+namespace ast::javacc {
     using std::string;
 
     // 

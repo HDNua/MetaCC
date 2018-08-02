@@ -17,10 +17,18 @@ FLEX_TARGET(sv_lexer
 
 add_executable(metacc
     main.cpp
-    ast_common.cpp
-	ast_describe.cpp
-	ast_glance.cpp
-	ast_action.cpp
+    ast_lyc_common.cpp
+	ast_lyc_describe.cpp
+	ast_lyc_glance.cpp
+	ast_lyc_action.cpp
+    ast_lycpp_common.cpp
+	ast_lycpp_describe.cpp
+	ast_lycpp_glance.cpp
+	ast_lycpp_action.cpp
+    ast_javacc_common.cpp
+	ast_javacc_describe.cpp
+	ast_javacc_glance.cpp
+	ast_javacc_action.cpp
 
     ${FLEX_sv_lexer_OUTPUTS}
     ${BISON_sv_parser_OUTPUTS}

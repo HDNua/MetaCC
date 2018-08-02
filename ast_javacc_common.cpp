@@ -1,4 +1,4 @@
-#include "ast.h"
+#include "ast_javacc.hpp"
 
 #include <cstdio>
 #include <cstdlib>
@@ -7,16 +7,15 @@
 
 #include <boost/format.hpp>
 
-
-
-
 #ifndef nullptr
 #define nullptr NULL
 #endif
 
+
+
 //==============================================================================
 // 
-using namespace ast;
+using namespace ast::javacc;
 
 // 
 // const int MAX_TOKEN_LEN = 2048;
@@ -189,12 +188,6 @@ int ast_table_index(struct ast_table *table, symbol_value_element *elem) {
     symbol_value_element **list = table->list;
     for (i=0, len=table->count; i<len; ++i) {
         int ret = 0;
-        /*
-        // if (list[i]->compare(elem) == 0) {
-        if (elem->compare(list[i]) == 0) {
-            return i;
-        }
-        */
 
         // 
         switch (elem->elem_type()) {
@@ -237,7 +230,7 @@ int ast_table_index(struct ast_table *table, symbol_value_element *elem) {
         if (ret == 0)
             return i;
     }
-    // * /
+    // 
     return -1;
 }
 void ast_table_add(struct ast_table *table, symbol_value_element *elem) {
@@ -286,18 +279,6 @@ int ast_table_LIST_index(const std::vector<std::string> &sve_list) {
     if (index < 0) {
         fprintf(stderr, "cannot find defined LIST [%d] \n", index);
         exit(1);
-
-        // 
-        // std::string key_name = ast_list_parameter->glance(out_lyc_y_star, ACTOPT_NONE);
-        // std::string key_name = ast_list_parameter->glance(out_lyc_y_list, ACTOPT_NONE);
-
-        if (0) { 
-            index = table_LIST_keys.count;
-            ast_table_LIST_add(key_name.c_str(), ast_list_parameter);
-        }
-        else {
-            sscanf(key_name.c_str()+5, "%d", &index);
-        }
     }
     else {
         // delete ast_list_parameter;
@@ -404,7 +385,6 @@ symbol_key::~symbol_key() {
     fprintf(stderr, "~symbol_key(%p) \n", this);
 }
 key_attributes::~key_attributes() {
-
     fprintf(stderr, "~key_attributes(%p) \n", this);
 }
 symbol_value::~symbol_value() {
@@ -412,15 +392,12 @@ symbol_value::~symbol_value() {
     fprintf(stderr, "~symbol_value(%p) \n", this);
 }
 symbol_value_element::~symbol_value_element() {
-
     fprintf(stderr, "~symbol_value_element(%p) \n", this);
 }
 mcc_string::~mcc_string() {
-
     fprintf(stderr, "~mcc_string(%p) \n", this);
 }
 mcc_symbol::~mcc_symbol() {
-
     fprintf(stderr, "~mcc_symbol(%p) \n", this);
 }
 list_parameter::~list_parameter() {
@@ -445,12 +422,10 @@ option_parameter_value::~option_parameter_value() {
     fprintf(stderr, "~option_parameter_value(%p) \n", this);
 }
 star_parameter_value::~star_parameter_value() {
-    // delete _symbol_value_list;
     delete _list_parameter;
     fprintf(stderr, "~star_parameter_value(%p) \n", this);
 }
 token_definition::~token_definition() {
-
     fprintf(stderr, "~token_definition(%p) \n", this);
 }
 
