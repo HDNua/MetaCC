@@ -13,6 +13,29 @@ MetaCC - Meta Compiler Compiler v0.4.2.4
 
 - temporary commit 2.
 > LYC, LYCPP, JAVACC 별로 코드 분리 시작.
+>> 지금 네임스페이스 별로 분리 중인데 접근이 잘못 된 것 같다.
+
+이 사본은 복사하고 롤백하겠음.
+
+
+end.
+
+
+MetaCC - Meta Compiler Compiler v0.4.2.4
+----
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+! key_attributes를 쓸 때가 드디어 왔다.
+  이 개선은 다음과 같이 이루어지는 것으로 하자.
+  module_keyword TYPE( "token_str" )
+      : "module"
+      | "macromodule"
+      ;
+! 최소한 토큰에 한해서는 TOKEN_0과 같은 간접적인 이름 대선 직접적인 이름이 필요하다.
+
+
+- temporary commit 2.
+> LYC, LYCPP, JAVACC 별로 코드 분리 시작.
 
 
 end.

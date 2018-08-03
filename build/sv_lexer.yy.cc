@@ -417,11 +417,10 @@ char *yytext;
 // #define MAX_TOKEN_LEN 2048
 const int MAX_TOKEN_LEN = 2048;
 
-#include "ast.h"
-#include <stdio.h>
-#include <string.h>
-// #include "y.tab.h"
-#include "sv_parser.h"
+#include "ast.hpp"
+#include <cstdio>
+#include <cstring>
+#include "sv_parser.tab.hh"
 
 
 #ifdef YYDEBUG
@@ -445,7 +444,7 @@ char *mcc_string_ptr;
 
 #define STRING 3
 
-#line 449 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/sv_lexer.yy.cc"
+#line 448 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/sv_lexer.yy.cc"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -607,12 +606,12 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 35 "sv_lexer.l"
+#line 34 "sv_lexer.l"
 
 
 
 
-#line 616 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/sv_lexer.yy.cc"
+#line 615 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/sv_lexer.yy.cc"
 
 	if ( yy_init )
 		{
@@ -697,79 +696,79 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 39 "sv_lexer.l"
+#line 38 "sv_lexer.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 40 "sv_lexer.l"
+#line 39 "sv_lexer.l"
 {
 	++line_count;
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 43 "sv_lexer.l"
+#line 42 "sv_lexer.l"
 return VBAR;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 44 "sv_lexer.l"
+#line 43 "sv_lexer.l"
 return LP;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 45 "sv_lexer.l"
+#line 44 "sv_lexer.l"
 return RP;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 46 "sv_lexer.l"
+#line 45 "sv_lexer.l"
 return COMMA;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 47 "sv_lexer.l"
+#line 46 "sv_lexer.l"
 return COLON;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 48 "sv_lexer.l"
+#line 47 "sv_lexer.l"
 return SEMICOLON;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 52 "sv_lexer.l"
+#line 51 "sv_lexer.l"
 return LIST;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 53 "sv_lexer.l"
+#line 52 "sv_lexer.l"
 return OPTION;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 54 "sv_lexer.l"
+#line 53 "sv_lexer.l"
 return STAR;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 58 "sv_lexer.l"
+#line 57 "sv_lexer.l"
 return CSTRING;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 59 "sv_lexer.l"
+#line 58 "sv_lexer.l"
 return NULL_;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 60 "sv_lexer.l"
+#line 59 "sv_lexer.l"
 return TOKEN;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 64 "sv_lexer.l"
+#line 63 "sv_lexer.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return SKIP;
@@ -777,7 +776,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 68 "sv_lexer.l"
+#line 67 "sv_lexer.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return TERMINAL;
@@ -785,42 +784,42 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 75 "sv_lexer.l"
+#line 74 "sv_lexer.l"
 {
 	BEGIN(COMMENT);
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 78 "sv_lexer.l"
+#line 77 "sv_lexer.l"
 {
 	++line_count;
 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 81 "sv_lexer.l"
+#line 80 "sv_lexer.l"
 {
 	BEGIN(INITIAL);
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 84 "sv_lexer.l"
+#line 83 "sv_lexer.l"
 {
 	BEGIN(LINECOMMENT);
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 87 "sv_lexer.l"
+#line 86 "sv_lexer.l"
 {
 	BEGIN(LINECOMMENT);
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 90 "sv_lexer.l"
+#line 89 "sv_lexer.l"
 {
 	++line_count;
 	BEGIN(INITIAL);
@@ -828,14 +827,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 94 "sv_lexer.l"
+#line 93 "sv_lexer.l"
 {
 	
 }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 100 "sv_lexer.l"
+#line 99 "sv_lexer.l"
 {
 	BEGIN(STRING);
 	mcc_string_ptr = mcc_string_buf;
@@ -843,7 +842,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 104 "sv_lexer.l"
+#line 103 "sv_lexer.l"
 {
 	fprintf(stderr, "invalid stirng \n");
 	exit(1);
@@ -851,7 +850,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 108 "sv_lexer.l"
+#line 107 "sv_lexer.l"
 {
 	*mcc_string_ptr = '\0';
 	BEGIN(INITIAL);
@@ -861,14 +860,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 114 "sv_lexer.l"
+#line 113 "sv_lexer.l"
 {
 	*mcc_string_ptr++ = *yytext;
 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 123 "sv_lexer.l"
+#line 122 "sv_lexer.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return MCC_SYMBOL;
@@ -876,7 +875,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 127 "sv_lexer.l"
+#line 126 "sv_lexer.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return MCC_METHOD;
@@ -884,10 +883,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 135 "sv_lexer.l"
+#line 134 "sv_lexer.l"
 ECHO;
 	YY_BREAK
-#line 891 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/sv_lexer.yy.cc"
+#line 890 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/sv_lexer.yy.cc"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(LINECOMMENT):
@@ -1780,4 +1779,4 @@ int main()
 	return 0;
 	}
 #endif
-#line 135 "sv_lexer.l"
+#line 134 "sv_lexer.l"

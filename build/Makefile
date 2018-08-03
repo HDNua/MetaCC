@@ -134,114 +134,6 @@ metacc/fast:
 	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/build
 .PHONY : metacc/fast
 
-ast_javacc_action.o: ast_javacc_action.cpp.o
-
-.PHONY : ast_javacc_action.o
-
-# target to build an object file
-ast_javacc_action.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_action.cpp.o
-.PHONY : ast_javacc_action.cpp.o
-
-ast_javacc_action.i: ast_javacc_action.cpp.i
-
-.PHONY : ast_javacc_action.i
-
-# target to preprocess a source file
-ast_javacc_action.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_action.cpp.i
-.PHONY : ast_javacc_action.cpp.i
-
-ast_javacc_action.s: ast_javacc_action.cpp.s
-
-.PHONY : ast_javacc_action.s
-
-# target to generate assembly for a file
-ast_javacc_action.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_action.cpp.s
-.PHONY : ast_javacc_action.cpp.s
-
-ast_javacc_common.o: ast_javacc_common.cpp.o
-
-.PHONY : ast_javacc_common.o
-
-# target to build an object file
-ast_javacc_common.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_common.cpp.o
-.PHONY : ast_javacc_common.cpp.o
-
-ast_javacc_common.i: ast_javacc_common.cpp.i
-
-.PHONY : ast_javacc_common.i
-
-# target to preprocess a source file
-ast_javacc_common.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_common.cpp.i
-.PHONY : ast_javacc_common.cpp.i
-
-ast_javacc_common.s: ast_javacc_common.cpp.s
-
-.PHONY : ast_javacc_common.s
-
-# target to generate assembly for a file
-ast_javacc_common.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_common.cpp.s
-.PHONY : ast_javacc_common.cpp.s
-
-ast_javacc_describe.o: ast_javacc_describe.cpp.o
-
-.PHONY : ast_javacc_describe.o
-
-# target to build an object file
-ast_javacc_describe.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_describe.cpp.o
-.PHONY : ast_javacc_describe.cpp.o
-
-ast_javacc_describe.i: ast_javacc_describe.cpp.i
-
-.PHONY : ast_javacc_describe.i
-
-# target to preprocess a source file
-ast_javacc_describe.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_describe.cpp.i
-.PHONY : ast_javacc_describe.cpp.i
-
-ast_javacc_describe.s: ast_javacc_describe.cpp.s
-
-.PHONY : ast_javacc_describe.s
-
-# target to generate assembly for a file
-ast_javacc_describe.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_describe.cpp.s
-.PHONY : ast_javacc_describe.cpp.s
-
-ast_javacc_glance.o: ast_javacc_glance.cpp.o
-
-.PHONY : ast_javacc_glance.o
-
-# target to build an object file
-ast_javacc_glance.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_glance.cpp.o
-.PHONY : ast_javacc_glance.cpp.o
-
-ast_javacc_glance.i: ast_javacc_glance.cpp.i
-
-.PHONY : ast_javacc_glance.i
-
-# target to preprocess a source file
-ast_javacc_glance.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_glance.cpp.i
-.PHONY : ast_javacc_glance.cpp.i
-
-ast_javacc_glance.s: ast_javacc_glance.cpp.s
-
-.PHONY : ast_javacc_glance.s
-
-# target to generate assembly for a file
-ast_javacc_glance.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_javacc_glance.cpp.s
-.PHONY : ast_javacc_glance.cpp.s
-
 ast_lyc_action.o: ast_lyc_action.cpp.o
 
 .PHONY : ast_lyc_action.o
@@ -350,114 +242,6 @@ ast_lyc_glance.cpp.s:
 	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lyc_glance.cpp.s
 .PHONY : ast_lyc_glance.cpp.s
 
-ast_lycpp_action.o: ast_lycpp_action.cpp.o
-
-.PHONY : ast_lycpp_action.o
-
-# target to build an object file
-ast_lycpp_action.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_action.cpp.o
-.PHONY : ast_lycpp_action.cpp.o
-
-ast_lycpp_action.i: ast_lycpp_action.cpp.i
-
-.PHONY : ast_lycpp_action.i
-
-# target to preprocess a source file
-ast_lycpp_action.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_action.cpp.i
-.PHONY : ast_lycpp_action.cpp.i
-
-ast_lycpp_action.s: ast_lycpp_action.cpp.s
-
-.PHONY : ast_lycpp_action.s
-
-# target to generate assembly for a file
-ast_lycpp_action.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_action.cpp.s
-.PHONY : ast_lycpp_action.cpp.s
-
-ast_lycpp_common.o: ast_lycpp_common.cpp.o
-
-.PHONY : ast_lycpp_common.o
-
-# target to build an object file
-ast_lycpp_common.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_common.cpp.o
-.PHONY : ast_lycpp_common.cpp.o
-
-ast_lycpp_common.i: ast_lycpp_common.cpp.i
-
-.PHONY : ast_lycpp_common.i
-
-# target to preprocess a source file
-ast_lycpp_common.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_common.cpp.i
-.PHONY : ast_lycpp_common.cpp.i
-
-ast_lycpp_common.s: ast_lycpp_common.cpp.s
-
-.PHONY : ast_lycpp_common.s
-
-# target to generate assembly for a file
-ast_lycpp_common.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_common.cpp.s
-.PHONY : ast_lycpp_common.cpp.s
-
-ast_lycpp_describe.o: ast_lycpp_describe.cpp.o
-
-.PHONY : ast_lycpp_describe.o
-
-# target to build an object file
-ast_lycpp_describe.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_describe.cpp.o
-.PHONY : ast_lycpp_describe.cpp.o
-
-ast_lycpp_describe.i: ast_lycpp_describe.cpp.i
-
-.PHONY : ast_lycpp_describe.i
-
-# target to preprocess a source file
-ast_lycpp_describe.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_describe.cpp.i
-.PHONY : ast_lycpp_describe.cpp.i
-
-ast_lycpp_describe.s: ast_lycpp_describe.cpp.s
-
-.PHONY : ast_lycpp_describe.s
-
-# target to generate assembly for a file
-ast_lycpp_describe.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_describe.cpp.s
-.PHONY : ast_lycpp_describe.cpp.s
-
-ast_lycpp_glance.o: ast_lycpp_glance.cpp.o
-
-.PHONY : ast_lycpp_glance.o
-
-# target to build an object file
-ast_lycpp_glance.cpp.o:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_glance.cpp.o
-.PHONY : ast_lycpp_glance.cpp.o
-
-ast_lycpp_glance.i: ast_lycpp_glance.cpp.i
-
-.PHONY : ast_lycpp_glance.i
-
-# target to preprocess a source file
-ast_lycpp_glance.cpp.i:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_glance.cpp.i
-.PHONY : ast_lycpp_glance.cpp.i
-
-ast_lycpp_glance.s: ast_lycpp_glance.cpp.s
-
-.PHONY : ast_lycpp_glance.s
-
-# target to generate assembly for a file
-ast_lycpp_glance.cpp.s:
-	$(MAKE) -f CMakeFiles/metacc.dir/build.make CMakeFiles/metacc.dir/ast_lycpp_glance.cpp.s
-.PHONY : ast_lycpp_glance.cpp.s
-
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -549,18 +333,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... metacc"
-	@echo "... ast_javacc_action.o"
-	@echo "... ast_javacc_action.i"
-	@echo "... ast_javacc_action.s"
-	@echo "... ast_javacc_common.o"
-	@echo "... ast_javacc_common.i"
-	@echo "... ast_javacc_common.s"
-	@echo "... ast_javacc_describe.o"
-	@echo "... ast_javacc_describe.i"
-	@echo "... ast_javacc_describe.s"
-	@echo "... ast_javacc_glance.o"
-	@echo "... ast_javacc_glance.i"
-	@echo "... ast_javacc_glance.s"
 	@echo "... ast_lyc_action.o"
 	@echo "... ast_lyc_action.i"
 	@echo "... ast_lyc_action.s"
@@ -573,18 +345,6 @@ help:
 	@echo "... ast_lyc_glance.o"
 	@echo "... ast_lyc_glance.i"
 	@echo "... ast_lyc_glance.s"
-	@echo "... ast_lycpp_action.o"
-	@echo "... ast_lycpp_action.i"
-	@echo "... ast_lycpp_action.s"
-	@echo "... ast_lycpp_common.o"
-	@echo "... ast_lycpp_common.i"
-	@echo "... ast_lycpp_common.s"
-	@echo "... ast_lycpp_describe.o"
-	@echo "... ast_lycpp_describe.i"
-	@echo "... ast_lycpp_describe.s"
-	@echo "... ast_lycpp_glance.o"
-	@echo "... ast_lycpp_glance.i"
-	@echo "... ast_lycpp_glance.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

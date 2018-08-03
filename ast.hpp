@@ -9,4 +9,11 @@
 
 
 
+// 
+namespace ast {
+    const int MAX_TOKEN_LEN = 2048;
+}
+
+
+
 #endif

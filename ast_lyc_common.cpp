@@ -47,7 +47,7 @@ FILE *out_lycpp;
 
 //==============================================================================
 // 
-const char *ast::ast_str(ast::ast_type type) {
+const char *ast::lyc::ast_str(ast::lyc::ast_type type) {
     static const char *ast_str_[] = {
         "untyped",                  // 0
         "list",                     // 1
@@ -77,11 +77,11 @@ const char *ast::ast_str(ast::ast_type type) {
 //==============================================================================
 // tables.
 // 
-void table_init(struct table *table) {
+void ast::lyc::table_init(struct table *table) {
     table->count = 0;
 }
 // 
-int table_index(struct table *table, const char *key) {
+int ast::lyc::table_index(struct table *table, const char *key) {
     int i, len;
     const char **list = (const char **)table->list;
 
@@ -94,26 +94,22 @@ int table_index(struct table *table, const char *key) {
     return -1;
 }
 // 
-void table_add(struct table *table, const char *key) {
+void ast::lyc::table_add(struct table *table, const char *key) {
     table->list[table->count++] = strdup(key);
 }
 
 
 //------------------------------------------------------------------------------
 // 
-int longest_symbol_length = 0;
-// 
-struct table symbols;
-// 
-void symbols_init() {
+void ast::lyc::symbols_init() {
     table_init(&symbols);
 }
 // 
-int symbols_index(const char *symbol_name) {
+int ast::lyc::symbols_index(const char *symbol_name) {
     return table_index(&symbols, symbol_name);
 }
 // 
-int symbols_add(const char *symbol_name) {
+int ast::lyc::symbols_add(const char *symbol_name) {
     if (symbols_index(symbol_name) < 0) {
         table_add(&symbols, symbol_name);
         
@@ -132,24 +128,21 @@ int symbols_add(const char *symbol_name) {
 }
 
 //------------------------------------------------------------------------------
-//
-struct table string_token_keys;
-struct table string_token_values;
 // 
-void string_tokens_init() {
+void ast::lyc::string_tokens_init() {
     table_init(&string_token_keys);
     table_init(&string_token_values);
 }
 // 
-int string_tokens_key_index(const char *key) {
+int ast::lyc::string_tokens_key_index(const char *key) {
     return table_index(&string_token_keys, key);
 }
 // 
-int string_tokens_value_index(const char *value) {
+int ast::lyc::string_tokens_value_index(const char *value) {
     return table_index(&string_token_values, value);
 }
 // 
-int string_tokens_add(const char *key, const char *value) {
+int ast::lyc::string_tokens_add(const char *key, const char *value) {
     if (string_tokens_key_index(key) < 0) {
         table_add(&string_token_keys, key);
         table_add(&string_token_values, value);
@@ -161,17 +154,16 @@ int string_tokens_add(const char *key, const char *value) {
 }
 
 //------------------------------------------------------------------------------
-struct table tokens;
 // 
-void tokens_init() {
+void ast::lyc::tokens_init() {
     table_init(&tokens);
 }
 // 
-int tokens_index(const char *symbol_name) {
+int ast::lyc::tokens_index(const char *symbol_name) {
     return table_index(&tokens, symbol_name);
 }
 // 
-void tokens_add(const char *token_name) {
+void ast::lyc::tokens_add(const char *token_name) {
     table_add(&tokens, token_name);
 }
 
@@ -179,10 +171,10 @@ void tokens_add(const char *token_name) {
 
 //==============================================================================
 // 
-void ast_table_init(struct ast_table *table) {
+void ast::lyc::ast_table_init(struct ast_table *table) {
     table->count = 0;
 }
-int ast_table_index(struct ast_table *table, symbol_value_element *elem) {
+int ast::lyc::ast_table_index(struct ast_table *table, symbol_value_element *elem) {
     // / *
     int i, len;
     symbol_value_element **list = table->list;
@@ -233,28 +225,22 @@ int ast_table_index(struct ast_table *table, symbol_value_element *elem) {
     // 
     return -1;
 }
-void ast_table_add(struct ast_table *table, symbol_value_element *elem) {
+void ast::lyc::ast_table_add(struct ast_table *table, symbol_value_element *elem) {
     table->list[table->count++] = elem;
 }
 //------------------------------------------------------------------------------
-struct table table_LIST_keys;
-struct table table_OPT_keys;
-struct table table_STAR_keys;
-struct ast_table table_LIST_values;
-struct ast_table table_OPT_values;
-struct ast_table table_STAR_values;
 // 
-void ast_table_LIST_init() {
+void ast::lyc::ast_table_LIST_init() {
     table_init(&table_LIST_keys);
     ast_table_init(&table_LIST_values);
 }
 // 
-int ast_table_LIST_index(list_parameter *elem) {
+int ast::lyc::ast_table_LIST_index(list_parameter *elem) {
     // return ast_table_index(&table_LIST_values, elem, (int(*)(const void *, const void *))list_parameter::compare);
     return ast_table_index(&table_LIST_values, elem);
 }
 // 
-int ast_table_LIST_index(const std::vector<std::string> &sve_list) {
+int ast::lyc::ast_table_LIST_index(const std::vector<std::string> &sve_list) {
     list *ast_symbol_value_element_list = new list(AST_MCC_SYMBOL);
     for (std::vector<std::string>::const_iterator it = sve_list.begin(); it != sve_list.end(); ++it) {
         ast_symbol_value_element_list->append(new mcc_symbol(*it), AST_MCC_SYMBOL);
@@ -286,9 +272,9 @@ int ast_table_LIST_index(const std::vector<std::string> &sve_list) {
     return index;
 }
 // 
-int ast_table_LIST_index(const std::vector<ast::object *> &obj_list) {
+int ast::lyc::ast_table_LIST_index(const std::vector<ast::lyc::object *> &obj_list) {
     list *ast_symbol_value_element_list = new list(AST_SYMBOL_VALUE_ELEMENT);
-    for (std::vector<ast::object *>::const_iterator it = obj_list.begin(); 
+    for (std::vector<ast::lyc::object *>::const_iterator it = obj_list.begin(); 
             it != obj_list.end(); 
             ++it) {
         ast_symbol_value_element_list->append(*it, AST_SYMBOL_VALUE_ELEMENT);
@@ -321,37 +307,37 @@ int ast_table_LIST_index(const std::vector<ast::object *> &obj_list) {
     return index;   
 }
 // 
-void ast_table_LIST_add(const char *key, list_parameter *elem) {
+void ast::lyc::ast_table_LIST_add(const char *key, list_parameter *elem) {
     table_add(&table_LIST_keys, key);
     ast_table_add(&table_LIST_values, elem);
 }
 // 
-void ast_table_OPT_init() {
+void ast::lyc::ast_table_OPT_init() {
     table_init(&table_OPT_keys);
     ast_table_init(&table_OPT_values);
 }
 // 
-int ast_table_OPT_index(option_parameter *elem) {
+int ast::lyc::ast_table_OPT_index(option_parameter *elem) {
     // return ast_table_index(&table_OPT_values, elem, (int(*)(const void *, const void *))ast_option_parameter_compare);
     return ast_table_index(&table_OPT_values, elem);
 }
 // 
-void ast_table_OPT_add(const char *key, option_parameter *elem) {
+void ast::lyc::ast_table_OPT_add(const char *key, option_parameter *elem) {
     table_add(&table_OPT_keys, key);
     ast_table_add(&table_OPT_values, elem);
 }
 // 
-void ast_table_STAR_init() {
+void ast::lyc::ast_table_STAR_init() {
     table_init(&table_STAR_keys);
     ast_table_init(&table_STAR_values);
 }
 // 
-int ast_table_STAR_index(star_parameter *elem) {
+int ast::lyc::ast_table_STAR_index(star_parameter *elem) {
     // return ast_table_index(&table_STAR_values, elem, (int(*)(const void *, const void *))ast_star_parameter_compare);
     return ast_table_index(&table_STAR_values, elem);
 }
 // 
-void ast_table_STAR_add(const char *key, star_parameter *elem) {
+void ast::lyc::ast_table_STAR_add(const char *key, star_parameter *elem) {
     table_add(&table_STAR_keys, key);
     ast_table_add(&table_STAR_values, elem);
 }

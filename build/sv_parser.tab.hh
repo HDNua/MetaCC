@@ -74,19 +74,19 @@ union YYSTYPE
 
     char                                    token_str[MAX_TOKEN_LEN];
 											
-    class ast::list                         *ast_list;
-    class ast::symbol_definition            *ast_symbol_definition;
-    class ast::symbol_key                   *ast_symbol_key;
-    class ast::key_attributes               *ast_key_attributes;
-    class ast::symbol_value                 *ast_symbol_value;
-    class ast::symbol_value_element         *ast_symbol_value_element;
-    class ast::list_parameter               *ast_list_parameter;
-    class ast::option_parameter             *ast_option_parameter;
-    class ast::star_parameter               *ast_star_parameter;
-    class ast::list_parameter_value         *ast_list_parameter_value;
-    class ast::option_parameter_value       *ast_option_parameter_value;
-    class ast::star_parameter_value         *ast_star_parameter_value;
-    class ast::token_definition             *ast_token_definition;
+    class list                         *ast_list;
+    class symbol_definition            *ast_symbol_definition;
+    class symbol_key                   *ast_symbol_key;
+    class key_attributes               *ast_key_attributes;
+    class symbol_value                 *ast_symbol_value;
+    class symbol_value_element         *ast_symbol_value_element;
+    class list_parameter               *ast_list_parameter;
+    class option_parameter             *ast_option_parameter;
+    class star_parameter               *ast_star_parameter;
+    class list_parameter_value         *ast_list_parameter_value;
+    class option_parameter_value       *ast_option_parameter_value;
+    class star_parameter_value         *ast_star_parameter_value;
+    class token_definition             *ast_token_definition;
 
 #line 92 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/sv_parser.tab.hh" /* yacc.c:1909  */
 };

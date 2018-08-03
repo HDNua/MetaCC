@@ -2,11 +2,10 @@
 // #define MAX_TOKEN_LEN 2048
 const int MAX_TOKEN_LEN = 2048;
 
-#include "ast.h"
-#include <stdio.h>
-#include <string.h>
-// #include "y.tab.h"
-#include "sv_parser.h"
+#include "ast.hpp"
+#include <cstdio>
+#include <cstring>
+#include "sv_parser.tab.hh"
 
 
 #ifdef YYDEBUG

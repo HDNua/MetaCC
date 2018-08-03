@@ -23,30 +23,6 @@ const int MAX_TOKEN_LEN = 2048;
 
 
 //==============================================================================
-extern FILE *out_jj;
-extern FILE *out_java;
-
-//------------------------------------------------------------------------------
-extern FILE *out_lyc;
-extern FILE *out_lyc_y;
-extern FILE *out_lyc_y_token;
-extern FILE *out_lyc_y_list;
-extern FILE *out_lyc_y_option;
-extern FILE *out_lyc_y_star;
-extern FILE *out_lyc_l;
-extern FILE *out_lyc_l_tokendef;
-extern FILE *out_lyc_ast_h;
-extern FILE *out_lyc_ast_h_typedef;
-extern FILE *out_lyc_ast_h_declaration;
-extern FILE *out_lyc_ast_c;
-extern FILE *out_lyc_ast_c_templates;
-
-//------------------------------------------------------------------------------
-extern FILE *out_lycpp;
-
-
-
-//==============================================================================
 // 
 static int description_depth = 0;
 // 
@@ -58,15 +34,15 @@ static int describe_end() {
     return --description_depth;
 }
 // 
-static void indent_depth(const char *s) {
+static void indent_depth(FILE *out, const char *s) {
     int i;
     for (i=0; i<description_depth; ++i) {
-        fprintf(out_jj, "%s", s); 
+        fprintf(out, "%s", s); 
     }
 }
 // 
-static void tab_depth() {
-    indent_depth("    ");
+static void tab_depth(FILE *out) {
+    indent_depth(out, "    ");
 }
 
 
@@ -128,7 +104,7 @@ void list_node::describe(FILE *out) {
 // 
 void ast_symbol_definition_describe(FILE *out) {
     describe_begin();
-    tab_depth();
+    tab_depth(out);
 
     /*
     // fprintf(out_jj, "%s \n", ast_str(this->type));
