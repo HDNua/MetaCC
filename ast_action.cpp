@@ -261,25 +261,13 @@ void key_attributes::action(FILE *out, act_opt option) {
 
 // 
 void symbol_value::action(FILE *out, act_opt option) {
-    // describe_begin();
-    // tab_depth();
-    // fprintf(out_jj, "%s \n", ast_str(this->type));
-
-    // ast_list_traverse(out, this->ast_symbol_value_element_list, option);
-    // this->ast_symbol_value_element_list()->action(out, option);
-
     list *ast_symbol_value_element_list = this->ast_symbol_value_element_list();
     for (list_node *node=ast_symbol_value_element_list->first(); node; node=node->next()) {
         symbol_value_element *elem = dynamic_cast<symbol_value_element *>(node->ast_elem());
-        // mcc_symbol *ret;
         
         // 
         switch (elem->elem_type()) {
             case AST_MCC_STRING:
-                // ret = new mcc_symbol(elem->glance(out, option));
-                // delete elem;
-                // node->set_ast_elem(ret);
-                // ret->action(out, option);
                 elem->action(out, option);
                 break;
 
@@ -288,26 +276,14 @@ void symbol_value::action(FILE *out, act_opt option) {
                 break;
 
             case AST_LIST_PARAMETER:
-                // ret = new mcc_symbol(elem->glance(out, option));
-                // delete elem;
-                // node->set_ast_elem(ret);
-                // ret->action(out, option);
                 elem->action(out, option);
                 break;
 
             case AST_OPTION_PARAMETER:
-                // ret = new mcc_symbol(elem->glance(out, option));
-                // delete elem;
-                // node->set_ast_elem(ret);
-                // ret->action(out, option);
                 elem->action(out, option);
                 break;
 
             case AST_STAR_PARAMETER:
-                // ret = new mcc_symbol(elem->glance(out, option));
-                // delete elem;
-                // node->set_ast_elem(ret);
-                // ret->action(out, option);
                 elem->action(out, option);
                 break;
 
@@ -316,12 +292,10 @@ void symbol_value::action(FILE *out, act_opt option) {
                 break;
                 
             default:
-                fprintf(stderr, "symbol_value_action >> invalid type [%s] \n", ast_str(elem->elem_type()));
+fprintf(stderr, "symbol_value_action >> invalid type [%s] \n", ast_str(elem->elem_type()));
                 break;
         }
     }
-
-    // describe_end();
 }
 void symbol_value_element::action(FILE *out, act_opt option) {
     // 

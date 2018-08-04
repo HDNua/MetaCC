@@ -1,3 +1,13 @@
+MetaCC - Meta Compiler Compiler v0.5.2.1
+----
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+- temporary commit.
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.5.2.0 (IMPORTANT)
 ----
 
