@@ -145,6 +145,14 @@ void symbol_definition::action(FILE *out, act_opt option) {
         fprintf(out_lyc_ast_h_declaration, "    \n");
         fprintf(out_lyc_ast_h_declaration, "public: \n");
         fprintf(out_lyc_ast_h_declaration, "    // \n");
+        fprintf(out_lyc_ast_h_declaration, "    %s(): object(%s) {\n", symbol_name, buf);
+        fprintf(out_lyc_ast_h_declaration, "        \n");
+        fprintf(out_lyc_ast_h_declaration, "    }\n");
+        fprintf(out_lyc_ast_h_declaration, "    ~%s() {\n", symbol_name);
+        fprintf(out_lyc_ast_h_declaration, "        \n");
+        fprintf(out_lyc_ast_h_declaration, "    }\n");
+        fprintf(out_lyc_ast_h_declaration, "    \n");
+        fprintf(out_lyc_ast_h_declaration, "    // \n");
         fprintf(out_lyc_ast_h_declaration, "    void describe(FILE *out);\n");
         fprintf(out_lyc_ast_h_declaration, "    // \n");
         fprintf(out_lyc_ast_h_declaration, "    void action(FILE *out);\n");

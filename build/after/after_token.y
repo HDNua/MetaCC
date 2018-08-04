@@ -2,14 +2,13 @@
 
 %}
 
-
-
+%token SV_STRING
+%token SV_IDENTIFIER
 
 
 
 
 %token SV_INTEGER
-%token SV_IDENTIFIER
 %token SV_ESCAPED_IDENTIFIER
 %token SV_UNSIGNED_NUMBER
 %token SV_DECIMAL_NUMBER
@@ -18,4 +17,3 @@
 %token SV_HEX_NUMBER
 %token SV_FIXED_POINT_NUMBER
 %token SV_EXPONENTIAL_NUMBER
-%token SV_STRING

@@ -23,8 +23,8 @@ term
     ;
 
 primary
-    : TOKEN( "INTEGER" )
-    | TOKEN( "STRING" )
-    | TOKEN( "IDENTIFIER" )
+    : TOKEN( "SV_UNSIGNED_INTEGER" )
+    | TOKEN( "SV_STRING" )
+    | TOKEN( "SV_IDENTIFIER" )
     | "(" expr ")"
     ;

@@ -312,8 +312,8 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc_y_list, "\n");
                 fprintf(out_lyc_y_list, "    {\n");
-                fprintf(out_lyc_y_list, "        class ast::list<class ast::object *> *list ");
-                fprintf(out_lyc_y_list, "= new ast::list();\n");
+                fprintf(out_lyc_y_list, "        ast::list<ast::object *> ");
+                fprintf(out_lyc_y_list, "*list = new ast::list<ast::object *>();\n");
                 fprintf(out_lyc_y_list, "        list->append($1);\n");
                 fprintf(out_lyc_y_list, "        $$ = list;\n");
                 fprintf(out_lyc_y_list, "    }\n");
