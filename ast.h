@@ -822,6 +822,9 @@ int symbols_index(const char *symbol_name);
 int symbols_add(const char *symbol_name);
 
 // 
+extern struct table string_token_keys;
+extern struct table string_token_values;
+// 
 void string_tokens_init();
 // 
 int string_tokens_key_index(const char *key);

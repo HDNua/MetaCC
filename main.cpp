@@ -30,6 +30,7 @@ const char *LYC_AST_C_TEMPLATES     = "out/parser_ast.cpp.templates";
 const char *LYC_L_INIT_AFTER        = "after/after_init.l";
 const char *LYC_L_PERCENTS_AFTER    = "after/after_percents.l";
 const char *LYC_L_TOKENDEF_AFTER    = "after/after_tokendef.l";
+const char *LYC_Y_PREDEF_TOKENS     = "after/predef_tokens.txt";
 const char *LYC_Y_UNION_AFTER       = "after/after_union.y";
 const char *LYC_Y_TOKEN_AFTER       = "after/after_token.y";
 const char *LYC_Y_TYPE_AFTER        = "after/after_type.y";
@@ -82,15 +83,48 @@ void paste_s2f_slice(FILE *out, const char *srcname, int head_ignore) {
 
 //==============================================================================
 // 
-int metacc_init(int argc, const char *argv[]) {
+void load_predefined_tokens() {
     // 
+    extern struct table string_token_keys;
+    extern struct table string_token_values;
+    char buf[ast::MAX_TOKEN_LEN] = "";
+    char key[ast::MAX_TOKEN_LEN] = "";
+    char value[ast::MAX_TOKEN_LEN] = "";
+    FILE *fin;
+    
+    fin = fopen(LYC_Y_PREDEF_TOKENS, "rt");
+    if (fin) {
+        // 
+        while (fgets(buf, sizeof(buf), fin)) {
+            //  
+            sscanf(buf, "%s%s", value, key);
+
+            // 
+            string_tokens_add(key, value);
+        }
+
+        // 
+        fclose(fin);
+    }
+}
+
+
+
+//==============================================================================
+// 
+int metacc_init(int argc, const char *argv[]) {
+    // prepare output directory.
     mkdir("out", 0777);
 
     // 
+    load_predefined_tokens();
+
+    // 
     if (argc < 2) {
-        fprintf(stderr, "usage: %s [ lyc ] \n", argv[0]);
+        fprintf(stderr, "usage: metacc [ lyc ] \n");
         return 1;
     }
+    // 
     else if (strcmp(argv[1], "javacc") == 0) {
         extern FILE *out_jj;
         extern FILE *out_java;
@@ -99,6 +133,7 @@ int metacc_init(int argc, const char *argv[]) {
         out_jj          = fopen("out/SVParser.jj", "wt");
         out_java        = fopen("out/SVObject.java", "wt");
     }
+    // LEX & YACC PARSER GENERATOR WRITTEN IN C. (ACTUALLY C++)
     else if (strcmp(argv[1], "lyc") == 0) {
         extern FILE *out_lyc;
         extern FILE *out_lyc_y;
@@ -511,7 +546,9 @@ int metacc_main(int argc, const char *argv[]) {
 
             // define string tokens list.
             for (i=0, len=string_token_keys.count; i < len; ++i) {
-                fprintf(out, "%%token TOKEN_%-5d /* %s */\n", i, string_token_values.list[i]);
+                // fprintf(out, "%%token TOKEN_%-5d /*%s*/\n", i, string_token_values.list[i]);
+                fprintf(out, "%%token %s ", string_token_keys.list[i]);
+                fprintf(out, "/* %s */\n", string_token_values.list[i]);
             }
 
             // define extended tokens list.

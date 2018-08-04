@@ -210,12 +210,15 @@ std::string mcc_string::glance(FILE *out, act_opt option) {
         int index = string_tokens_value_index(_value.c_str());
 
         // 
-        sprintf(key_name, "TOKEN_%d", index);
+        //// sprintf(key_name, "TOKEN_%d", index);
         if (index < 0) {
             index = string_token_keys.count;
             sprintf(key_name, "TOKEN_%d", index);
             string_tokens_add(key_name, _value.c_str());
             fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
+        }
+        else {
+            sprintf(key_name, "%s", string_token_keys.list[index]);
         }
 
         // 
@@ -261,24 +264,18 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                     case AST_LIST_PARAMETER:
                     case AST_OPTION_PARAMETER:
                     case AST_STAR_PARAMETER:
-                        // new_elem = new mcc_symbol(symbol2);
-                        // delete elem2;
-                        // node2->set_ast_elem(new_elem);
-                        // elem2 = new_elem;
                         break;
                     default:
-                        fprintf(stderr, "list_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
+fprintf(stderr, "list_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
                         // exit(1);
                         break;
                 }
 
                 // 
-                // symbol_list.push_back(symbol2);
                 object_list.push_back(elem2);
             }
 
             // 
-            // symbol_list_list.push_back(symbol_list);
             object_list_list.push_back(object_list);
         }
 
@@ -421,9 +418,14 @@ fprintf(stderr, "option_parameter >> invalid type [%s] \n", ast_str(node2->elem_
                     // 
                     switch (symbol[0]) {
                         case 'T': // TOKEN in string_tokens
-                            {
+                            if (0) {
                                 int token_index;
                                 sscanf(symbol.c_str()+6, "%d", &token_index); 
+                                fprintf(out_lyc_y_option, "/""* %s *""/ ", 
+                                        string_token_values.list[token_index]);
+                            }
+                            else {
+                                int token_index = string_tokens_value_index(symbol.c_str());
                                 fprintf(out_lyc_y_option, "/""* %s *""/ ", 
                                         string_token_values.list[token_index]);
                             }

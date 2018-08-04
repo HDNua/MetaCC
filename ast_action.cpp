@@ -376,13 +376,15 @@ void mcc_string::action(FILE *out, act_opt option) {
         int index = string_tokens_value_index(_value.c_str());
 
         if (index < 0) {
-            fprintf(stderr, "mcc_string_action >> cannot find token definition of [%s] \n", _value.c_str());
+fprintf(stderr, "mcc_string_action >> cannot find token [%s] \n", _value.c_str());
             exit(1);
         }
 
         // 
-        sprintf(key_name, "TOKEN_%d", index);
-        fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
+        //// sprintf(key_name, "TOKEN_%d", index);
+        sprintf(key_name, "%s", string_token_keys.list[index]);
+        // fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
+        fprintf(out, "%s ", key_name);
     }
 }
 // 
