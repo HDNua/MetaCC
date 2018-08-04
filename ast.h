@@ -205,31 +205,68 @@ namespace ast {
     // 
     class symbol_definition: public object {
         class symbol_key                    *_symbol_key; 
-        class list                          *_symbol_value_list;
+        class symbol_value_list             *_symbol_value_list;
 
     public:
-        symbol_definition(symbol_key *_symbol_key, list *_symbol_value_list)
-            : object(AST_SYMBOL_DEFINITION), _symbol_key(_symbol_key), _symbol_value_list(_symbol_value_list)
+        // 
+        symbol_definition(symbol_key *_symbol_key, symbol_value_list *_symbol_value_list)
+            : object(AST_SYMBOL_DEFINITION), 
+            _symbol_key(_symbol_key), 
+            _symbol_value_list(_symbol_value_list)
         {
         }
+        // 
         ~symbol_definition();
 
+        // 
         symbol_key *ast_symbol_key() { return _symbol_key; }
+        // 
         const symbol_key *ast_symbol_key() const { return _symbol_key; }
-        list *ast_symbol_value_list() { return _symbol_value_list; }
-        const list *ast_symbol_value_list() const { return _symbol_value_list; }
+        // 
+        symbol_value_list *ast_symbol_value_list() { return _symbol_value_list; }
+        // 
+        const symbol_value_list *ast_symbol_value_list() const { return _symbol_value_list; }
 
+        // 
         void describe(FILE *out);
+        // 
         std::string glance(FILE *out, act_opt option);
+        // 
         void action(FILE *out, act_opt option);
+        // 
         int compare(const symbol_definition *p2) const;
+        // 
         virtual int compare(const object *p2) const { 
             const symbol_definition *child = (const symbol_definition *)p2;
             return compare(child);
         }
+        // 
         static int compare(const symbol_definition *p1, const symbol_definition *p2) {
             return p1->compare(p2);
         }
+    };
+
+
+
+    // 
+    class symbol_value_list: public list {
+        std::string _symbol_name;
+
+    public:
+        // 
+        symbol_value_list(): 
+            list(AST_SYMBOL_VALUE)
+        { }
+        // 
+        ~symbol_value_list() { }
+
+        // 
+        std::string &symbol_name() { return _symbol_name; }
+        const std::string &symbol_name() const { return _symbol_name; }
+        void set_symbol_name(const std::string &value) { _symbol_name = value; }
+
+        // 
+        void action(FILE *out, act_opt option);
     };
 
 

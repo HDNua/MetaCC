@@ -91,7 +91,7 @@ void list_node::action(FILE *out, act_opt option) {
 void symbol_definition::action(FILE *out, act_opt option) {
     symbol_key *ast_symbol_key = this->ast_symbol_key();
     key_attributes *ast_key_attr = ast_symbol_key->ast_key_attributes();
-    list *ast_symbol_value_list = this->ast_symbol_value_list();
+    symbol_value_list *ast_symbol_value_list = this->ast_symbol_value_list();
     const char *symbol_name = ast_symbol_key->symbol_name().c_str();
 
     // 
@@ -177,6 +177,11 @@ void symbol_definition::action(FILE *out, act_opt option) {
         // 
         symbols_add(symbol_name);
 
+        // 
+        ast_symbol_value_list->set_symbol_name(symbol_name);
+        ast_symbol_value_list->action(out, option);
+
+        /*
         // gather syntax list.
         {
             list *ast_list = ast_symbol_value_list;
@@ -233,6 +238,7 @@ void symbol_definition::action(FILE *out, act_opt option) {
 
         // 
         fprintf(out_lyc, "    ;\n\n");
+        */
     }
 }
 // 
@@ -258,7 +264,64 @@ void key_attributes::action(FILE *out, act_opt option) {
     // fprintf(out_jj, "%s \n", ast_str(this->type));
     // describe_end();
 }
+// 
+void symbol_value_list::action(FILE *out, act_opt option) {
+    // gather syntax list.
+    list *ast_list = this;
+    list_node *node;
+    int elem_list_flag = 0;
 
+    // fprintf(out_lyc, "    %c", (value_list_flag ? '|' : (value_list_flag=1, ':')));
+    for (node = ast_list->first(); node; node = node->next()) {
+        symbol_value *ast_symbol_value 
+            = dynamic_cast<symbol_value *>(node->ast_elem());
+        list *ast_elem_list = ast_symbol_value->ast_symbol_value_element_list();
+        list_node *node2;
+
+        // 
+        fprintf(out_lyc, "    %c ", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
+        for (node2 = ast_elem_list->first(); node2; node2 = node2->next()) {
+            symbol_value_element *ast_elem 
+                = dynamic_cast<symbol_value_element *>(node2->ast_elem());
+            // mcc_symbol *new_elem = nullptr;
+
+            if (ast_elem == nullptr) {
+                fprintf(out_lyc, "/""* empty *""/ ");
+                continue;
+            }
+
+            switch (ast_elem->elem_type()) {
+                case AST_MCC_STRING:
+                case AST_MCC_SYMBOL:
+                case AST_TOKEN_DEFINITION:
+                    ast_elem->glance(out, option);
+                    ast_elem->action(out, option);
+                    break;
+                case AST_LIST_PARAMETER:
+                case AST_OPTION_PARAMETER:
+                case AST_STAR_PARAMETER:
+                    ast_elem->glance(out, option);
+                    ast_elem->action(out, option);
+                    break;
+
+                default:
+                    fprintf(stderr, "symbol_definition_action >> invalid type [%s] \n", 
+                            ast_str(ast_elem->elem_type()));
+                    exit(1);
+            }
+        }
+        fprintf(out_lyc, "\n    {\n");
+        if (islower(symbol_name()[0])) {
+            fprintf(out_lyc, "        ast::%s *ret = new ast::%s;\n", 
+                    symbol_name().c_str(), symbol_name().c_str());
+            fprintf(out_lyc, "        $$ = ret;\n");
+        }
+        fprintf(out_lyc, "    }\n");
+    }
+
+    // 
+    fprintf(out_lyc, "    ;\n\n");
+}
 // 
 void symbol_value::action(FILE *out, act_opt option) {
     list *ast_symbol_value_element_list = this->ast_symbol_value_element_list();

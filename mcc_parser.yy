@@ -23,6 +23,8 @@ int yyerror(char const *str);
     char                                    token_str[MAX_TOKEN_LEN];
 											
     class ast::list                         *ast_list;
+    class ast::symbol_value_list            *ast_symbol_value_list;
+
     class ast::symbol_definition            *ast_symbol_definition;
     class ast::symbol_key                   *ast_symbol_key;
     class ast::key_attributes               *ast_key_attributes;
@@ -52,9 +54,10 @@ int yyerror(char const *str);
 %type <token_str> list_parameter_delim
 %type <token_str> SKIP TERMINAL TOKEN
 
+%type <ast_symbol_value_list> symbol_value_list 
 %type <ast_list> symbol_definition_list
-%type <ast_list> symbol_value_list 
 %type <ast_list> symbol_value_element_list
+
 %type <ast_symbol_definition> symbol_definition
 %type <ast_symbol_key> symbol_key
 %type <ast_key_attributes> key_attributes
@@ -78,9 +81,6 @@ source_text
 symbol_definition_list
 	: symbol_definition
 	{
-		// struct ast_list *list = ast_list_new(AST_SYMBOL_DEFINITION);
-		// ast_list_append(list, $1, AST_SYMBOL_DEFINITION);
-		// $$ = list;
 		ast::list *list = new ast::list(ast::AST_SYMBOL_DEFINITION);
 		if ($1 == nullptr) { puts("1"); }
 		list->append($1, ast::AST_SYMBOL_DEFINITION);
@@ -88,8 +88,6 @@ symbol_definition_list
 	}
 	| symbol_definition_list symbol_definition
 	{
-		// ast_list_append($1, $2, AST_SYMBOL_DEFINITION);
-		// $$ = $1;
 		if ($2 == nullptr) { puts("2"); }
 		$1->append($2, ast::AST_SYMBOL_DEFINITION);
 		$$ = $1;
@@ -98,12 +96,6 @@ symbol_definition_list
 symbol_definition
 	: symbol_key COLON symbol_value_list SEMICOLON 
 	{
-		// struct ast_symbol_definition *ret = 
-		//     (struct ast_symbol_definition *)malloc(sizeof(struct ast_symbol_definition));
-		// ret->type = AST_SYMBOL_DEFINITION;
-		// ret->ast_symbol_key = $1;
-		// ret->ast_symbol_value_list = $3;
-		// $$ = ret;
 		ast::symbol_definition *ret = new ast::symbol_definition($1, $3);
 		$$ = ret;
 	}
@@ -111,23 +103,11 @@ symbol_definition
 symbol_key
 	: MCC_SYMBOL 
 	{
-		// struct ast_symbol_key *ret = 
-		//     (struct ast_symbol_key *)malloc(sizeof(struct ast_symbol_key));
-		// ret->type = AST_SYMBOL_KEY;
-		// ret->symbol_name = strdup($1);
-		// ret->ast_key_attributes = NULL;
-		// $$ = ret;
 		ast::symbol_key *ret = new ast::symbol_key($1, nullptr);
 		$$ = ret;
 	}
 	| MCC_SYMBOL key_attributes
 	{
-		// struct ast_symbol_key *ret = 
-		//     (struct ast_symbol_key *)malloc(sizeof(struct ast_symbol_key));
-		// ret->type = AST_SYMBOL_KEY;
-		// ret->symbol_name = strdup($1);
-		// ret->ast_key_attributes = $2;
-		// $$ = ret;
 		ast::symbol_key *ret = new ast::symbol_key($1, $2);
 		$$ = ret;
 	}
@@ -135,21 +115,11 @@ symbol_key
 key_attributes
 	: SKIP
 	{
-		// struct ast_key_attributes *ret = 
-		// 	(struct ast_key_attributes *)malloc(sizeof(struct ast_key_attributes));
-		// ret->type = AST_KEY_ATTRIBUTES;
-		// ret->attributes = strdup($1);
-		// $$ = ret;
 		ast::key_attributes *ret = new ast::key_attributes($1);
 		$$ = ret;
 	}
 	| TERMINAL
 	{
-		// struct ast_key_attributes *ret = 
-		//     (struct ast_key_attributes *)malloc(sizeof(struct ast_key_attributes));
-		// ret->type = AST_KEY_ATTRIBUTES;
-		// ret->attributes = strdup($1);
-		// $$ = ret;
 		ast::key_attributes *ret = new ast::key_attributes($1);
 		$$ = ret;
 	}
@@ -157,22 +127,14 @@ key_attributes
 symbol_value_list
 	: symbol_value
 	{
-		// struct ast_list *list = ast_list_new(AST_SYMBOL_VALUE);
-		// ast_list_append(list, $1, AST_SYMBOL_VALUE);
-		// $$ = list;
-		ast::list *list = new ast::list(ast::AST_SYMBOL_VALUE);
-		if ($1 == nullptr) { puts("3"); }
+		ast::symbol_value_list *list = new ast::symbol_value_list();
+		if ($1 == nullptr) { puts("symbol_value_list found nullptr parameter $1;"); }
 		list->append($1, ast::AST_SYMBOL_VALUE);
 		$$ = list;
 	}
 	| symbol_value_list VBAR symbol_value
 	{
-		// struct ast_symbol_value *ret = 
-		//     (struct ast_symbol_value *)malloc(sizeof(struct ast_symbol_value));
-		// ret->type = AST_SYMBOL_VALUE;
-		// ast_list_append($1, $3, AST_SYMBOL_VALUE);
-		// $$ = $1;
-		if ($3 == nullptr) { puts("4"); }
+		if ($3 == nullptr) { puts("symbol_value_list found nullptr parameter $3;"); }
 		$1->append($3, ast::AST_SYMBOL_VALUE);
 		$$ = $1;
 	}
