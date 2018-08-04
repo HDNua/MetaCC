@@ -13,11 +13,11 @@ BISON_TARGET(mcc_parser
 
 FLEX_TARGET(mcc_lexer
     mcc_lexer.l
-    ${CMAKE_CURRENT_BINARY_DIR}/mcc_lexer.yy.cc)
+    ${CMAKE_CURRENT_BINARY_DIR}/mcc_parser.yy.cc)
 
 add_executable(metacc
     main.cpp
-    ast_common.cpp
+	ast_common.cpp
 	ast_describe.cpp
 	ast_glance.cpp
 	ast_action.cpp

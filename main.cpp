@@ -252,7 +252,7 @@ int metacc_main(int argc, const char *argv[]) {
             // 
             fprintf(out, "%%union {\n");
             fprintf(out, "    char token_str[MAX_TOKEN_LEN];\n");
-            fprintf(out, "    ast::list *ast_list;\n");
+            fprintf(out, "    class ast::list<class ast::object *> *ast_list;\n");
             fprintf(out, "    \n");
         }
         // 
@@ -285,6 +285,7 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "#include <cstdio>\n");
             fprintf(out, "#include <cstdlib>\n");
             fprintf(out, "#include <cstring>\n");
+            fprintf(out, "#include \"parser_ast.h\"\n");
             fprintf(out, "#include \"parser.tab.hh\"\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
@@ -294,7 +295,7 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "extern int line_count;\n");
             fprintf(out, "\n");
-            fprintf(out, "int\n");
+            fprintf(out, "extern \"C\" int ");
             fprintf(out, "yywrap(void)\n");
             fprintf(out, "{\n");
             fprintf(out, "    return 1;\n");
@@ -390,7 +391,6 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "static void tab_depth() {\n");
             fprintf(out, "    indent_depth(\"    \");\n");
             fprintf(out, "}\n");
-            */
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
@@ -405,9 +405,7 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "void ast_list_node_action(struct ast_list_node *node) {\n");
             fprintf(out, "    \n");
             fprintf(out, "}\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
+            */
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
@@ -447,13 +445,12 @@ int metacc_main(int argc, const char *argv[]) {
                 const char *symbol_name = symbols.list[i];
 
                 // 
-                sprintf(fmt, "    ast_%%-%ds *ast_%%s;\n", ::longest_symbol_length);
+                sprintf(fmt, "    ast::%%-%ds *ast_%%s;\n", ::longest_symbol_length);
                 fprintf(out_lyc_y_union, fmt, symbol_name, symbol_name);
             }
 
             // 
             fprintf(out, "}\n");
-            fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
 
@@ -588,13 +585,17 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "    ast_type type() const { return _type; }\n");
             fprintf(out, "    \n");
             fprintf(out, "    // \n");
-            fprintf(out, "    void describe(FILE *out) {\n");
-            fprintf(out, "        ;\n");
+            fprintf(out, "    virtual void describe(FILE *out) {\n");
+            fprintf(out, "        // throw Exception(\"NOT IMPLEMETED\");\n");
             fprintf(out, "    }\n");
             fprintf(out, "    // \n");
-            fprintf(out, "    virtual std::string glance(FILE *out) = 0;\n");
+            fprintf(out, "    virtual std::string glance(FILE *out) {\n");
+            fprintf(out, "        // throw Exception(\"NOT IMPLEMETED\");\n");
+            fprintf(out, "    }\n");
             fprintf(out, "    // \n");
-            fprintf(out, "    virtual void action(FILE *out) = 0;\n");
+            fprintf(out, "    virtual void action(FILE *out) {\n");
+            fprintf(out, "        // throw Exception(\"NOT IMPLEMETED\");\n");
+            fprintf(out, "    }\n");
             fprintf(out, "    // \n");
             fprintf(out, "    virtual int compare(const object *p2) const {\n");
             fprintf(out, "        return this == p2;\n");
@@ -613,7 +614,7 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "template <class Type>\n");
             fprintf(out, "class list: public object {\n");
             fprintf(out, "    ast_type _elem_type;\n");
-            fprintf(out, "    std::vector<Type> _vector;\n");
+            fprintf(out, "    std::vector<object *> _vector;\n");
             fprintf(out, "\n");
             fprintf(out, "public:\n");
             fprintf(out, "    list(ast_type elem_type)\n");
@@ -646,14 +647,17 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "    }\n");
             fprintf(out, "    \n");
             fprintf(out, "    // \n");
-            fprintf(out, "    void append(object *o, ast_type elem_type) {\n");
+            // fprintf(out, "    void append(object *o, ast_type elem_type) {\n");
+            fprintf(out, "    void append(object *o) {\n");
             fprintf(out, "        _vector.push_back(o);\n");
             fprintf(out, "    }\n");
             fprintf(out, "    typename ");
+            // fprintf(out, "    std::vector<object *>::iterator first() {\n");
             fprintf(out, "    std::vector<Type>::iterator first() {\n");
             fprintf(out, "        return _vector.begin();\n");
             fprintf(out, "    }\n");
             fprintf(out, "    typename ");
+            // fprintf(out, "    std::vector<object *>::const_iterator first() const {\n");
             fprintf(out, "    std::vector<Type>::const_iterator first() const {\n");
             fprintf(out, "        return _vector.begin();\n");
             fprintf(out, "    }\n");
@@ -709,9 +713,9 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
-        fprintf(out_lyc_y, "ast::object *start;\n");
-        fprintf(out_lyc_y, "// ast::library_text *start_library_text;\n");
-        fprintf(out_lyc_y, "// ast::source_text *start_source_text;\n");
+        fprintf(out_lyc_y, "class ast::object *start;\n");
+        fprintf(out_lyc_y, "// class ast::library_text *start_library_text;\n");
+        fprintf(out_lyc_y, "// class ast::source_text *start_source_text;\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");

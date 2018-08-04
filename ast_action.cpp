@@ -140,7 +140,7 @@ void symbol_definition::action(FILE *out, act_opt option) {
 
         // 
         fprintf(out_lyc_ast_h_declaration, "// \n");
-        fprintf(out_lyc_ast_h_declaration, "class %s {\n", symbol_name);
+        fprintf(out_lyc_ast_h_declaration, "class %s: public object {\n", symbol_name);
         fprintf(out_lyc_ast_h_declaration, "    %-31s %s;\n", "ast_type", "type");
         fprintf(out_lyc_ast_h_declaration, "    \n");
         fprintf(out_lyc_ast_h_declaration, "public: \n");

@@ -1,3 +1,17 @@
+MetaCC - Meta Compiler Compiler v0.5.0.2
+----
+
+- out 폴더에 대해 CMakeLists.txt 작성 시작.
+> 완료. 잘 동작함.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+- 구조 변경 직전 임시 커밋.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.5.0.1
 ----
 

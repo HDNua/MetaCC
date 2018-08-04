@@ -13,6 +13,31 @@
 
 
 namespace ast {
+    class object;
+    class list_node;
+    class list;
+    class symbol_definition;
+    class symbol_key;
+    class key_attributes;
+    class symbol_value;
+    class symbol_value_element;
+    class list_parameter;
+    class option_parameter;
+    class star_parameter;
+    class token_definition;
+    
+    class list_node;
+    class mcc_string;
+    class mcc_symbol;
+
+    class list_parameter_value;
+    class option_parameter_value;
+    class star_parameter_value;
+}
+
+
+
+namespace ast {
     using std::string;
 
     // 
