@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_HOME_HANDY_DROPBOX_LINUX_WORK_YACC_METACC_LATEST_BUILD_MCC_PARSER_TAB_HH_INCLUDED
-# define YY_YY_HOME_HANDY_DROPBOX_LINUX_WORK_YACC_METACC_LATEST_BUILD_MCC_PARSER_TAB_HH_INCLUDED
+#ifndef YY_YY_HOME_HANDY_CORRECT_BUILD_MCC_PARSER_TAB_HH_INCLUDED
+# define YY_YY_HOME_HANDY_CORRECT_BUILD_MCC_PARSER_TAB_HH_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -88,7 +88,7 @@ union YYSTYPE
     class ast::star_parameter_value         *ast_star_parameter_value;
     class ast::token_definition             *ast_token_definition;
 
-#line 92 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.hh" /* yacc.c:1909  */
+#line 92 "/home/handy/correct/build/mcc_parser.tab.hh" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -101,4 +101,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_HOME_HANDY_DROPBOX_LINUX_WORK_YACC_METACC_LATEST_BUILD_MCC_PARSER_TAB_HH_INCLUDED  */
+#endif /* !YY_YY_HOME_HANDY_CORRECT_BUILD_MCC_PARSER_TAB_HH_INCLUDED  */

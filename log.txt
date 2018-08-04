@@ -1,3 +1,21 @@
+MetaCC - Meta Compiler Compiler v0.5.0.1
+----
+
+- lyc를 lycpp로 변경하는 프로젝트 시작.
+
+- out 폴더에 대해 CMakeLists.txt 작성 시작.
+
+- 파서 이름이 sv_parser였던 것을 mcc_parser로 변경.
+> 변경하면서 일어난 문제 해결.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+- 꼬인 거 처리 완료.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.5.0.0
 ----
 

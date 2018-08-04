@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-3f280bf27e4076be8afc75a6013dc8e7 mcc_lexer.yy.cc
-14ad056216905e3a48762ef2223a959f mcc_parser.tab.cc

@@ -1,6 +1,6 @@
-#line 2 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_lexer.yy.cc"
+#line 2 "/home/handy/correct/build/mcc_lexer.yy.cc"
 
-#line 4 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_lexer.yy.cc"
+#line 4 "/home/handy/correct/build/mcc_lexer.yy.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -541,7 +541,7 @@ char *mcc_string_ptr;
 
 
 
-#line 545 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_lexer.yy.cc"
+#line 545 "/home/handy/correct/build/mcc_lexer.yy.cc"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -765,7 +765,7 @@ YY_DECL
 
 
 
-#line 769 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_lexer.yy.cc"
+#line 769 "/home/handy/correct/build/mcc_lexer.yy.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1018,7 +1018,7 @@ YY_RULE_SETUP
 #line 134 "mcc_lexer.l"
 ECHO;
 	YY_BREAK
-#line 1022 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_lexer.yy.cc"
+#line 1022 "/home/handy/correct/build/mcc_lexer.yy.cc"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(LINECOMMENT):
