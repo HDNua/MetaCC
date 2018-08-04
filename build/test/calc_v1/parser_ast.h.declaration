@@ -1,0 +1,105 @@
+// 
+class line_list: public object {
+    ast_type                        type;
+    
+public: 
+    // 
+    line_list(): object(AST_LINE_LIST) {
+        
+    }
+    ~line_list() {
+        
+    }
+    
+    // 
+    void describe(FILE *out);
+    // 
+    void action(FILE *out);
+};
+
+
+
+// 
+class line: public object {
+    ast_type                        type;
+    
+public: 
+    // 
+    line(): object(AST_LINE) {
+        
+    }
+    ~line() {
+        
+    }
+    
+    // 
+    void describe(FILE *out);
+    // 
+    void action(FILE *out);
+};
+
+
+
+// 
+class expr: public object {
+    ast_type                        type;
+    
+public: 
+    // 
+    expr(): object(AST_EXPR) {
+        
+    }
+    ~expr() {
+        
+    }
+    
+    // 
+    void describe(FILE *out);
+    // 
+    void action(FILE *out);
+};
+
+
+
+// 
+class term: public object {
+    ast_type                        type;
+    
+public: 
+    // 
+    term(): object(AST_TERM) {
+        
+    }
+    ~term() {
+        
+    }
+    
+    // 
+    void describe(FILE *out);
+    // 
+    void action(FILE *out);
+};
+
+
+
+// 
+class primary: public object {
+    ast_type                        type;
+    
+public: 
+    // 
+    primary(): object(AST_PRIMARY) {
+        
+    }
+    ~primary() {
+        
+    }
+    
+    // 
+    void describe(FILE *out);
+    // 
+    void action(FILE *out);
+};
+
+
+

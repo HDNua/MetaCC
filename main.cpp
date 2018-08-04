@@ -720,8 +720,8 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "class ast::object *start;\n");
-        fprintf(out_lyc_y, "// class ast::library_text *start_library_text;\n");
-        fprintf(out_lyc_y, "// class ast::source_text *start_source_text;\n");
+        fprintf(out_lyc_y, "class ast::object *start_library_text;\n");
+        fprintf(out_lyc_y, "class ast::object *start_source_text;\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");
         fprintf(out_lyc_y, "\n");

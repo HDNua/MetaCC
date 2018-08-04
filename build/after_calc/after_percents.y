@@ -9,14 +9,18 @@
 
 
 
-start
-	: library_text
-	{
-		start_library_text = $1;
-	}
-	| source_text
-	{
-		start_source_text = $1;
-	}
+start_calc
+	: line_list
 	;
+
+// start
+// 	: library_text
+// 	{
+// 		start_library_text = $1;
+// 	}
+// 	| source_text
+// 	{
+// 		start_source_text = $1;
+// 	}
+// 	;
 

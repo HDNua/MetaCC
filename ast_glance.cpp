@@ -314,7 +314,7 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 fprintf(out_lyc_y_list, "    {\n");
                 fprintf(out_lyc_y_list, "        ast::list<ast::object *> ");
                 fprintf(out_lyc_y_list, "*list = new ast::list<ast::object *>();\n");
-                fprintf(out_lyc_y_list, "        list->append($1);\n");
+                fprintf(out_lyc_y_list, "        // list->append($1);\n");
                 fprintf(out_lyc_y_list, "        $$ = list;\n");
                 fprintf(out_lyc_y_list, "    }\n");
 
@@ -335,7 +335,7 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 // 
                 fprintf(out_lyc_y_list, "\n");
                 fprintf(out_lyc_y_list, "    {\n");
-                fprintf(out_lyc_y_list, "        $1->append($2);\n");
+                fprintf(out_lyc_y_list, "        // $1->append($2);\n");
                 fprintf(out_lyc_y_list, "        $$ = $1;\n");
                 fprintf(out_lyc_y_list, "    }\n");
             }
@@ -434,8 +434,9 @@ fprintf(stderr, "option_parameter >> invalid type [%s] \n", ast_str(node2->elem_
                 }
                 fprintf(out_lyc_y_option, "\n");
                 fprintf(out_lyc_y_option, "    {\n");
-                fprintf(out_lyc_y_option, "        ast::list *list = new ast::list();\n");
-                fprintf(out_lyc_y_option, "        list->append($1);\n");
+                fprintf(out_lyc_y_option, "        ast::list<ast::object *> *list \n");
+                fprintf(out_lyc_y_option, "= new ast::list<ast::object *>();\n");
+                fprintf(out_lyc_y_option, "        // list->append($1);\n");
                 fprintf(out_lyc_y_option, "        $$ = list;\n");
                 fprintf(out_lyc_y_option, "    }\n");
             }
@@ -517,7 +518,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                 fprintf(out_lyc_y_star, "    {\n");
                 fprintf(out_lyc_y_star, "        $$ = $1;\n");
                 fprintf(out_lyc_y_star, "    }\n");
-                fprintf(out_lyc_y_star, "\n");
+                // fprintf(out_lyc_y_star, "\n");
             }
             fprintf(out_lyc_y_star, "    ;\n");
         }
