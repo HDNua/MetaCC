@@ -68,11 +68,11 @@ static void tab_depth() {
 
 
 //==============================================================================
-// 
+/*
 void list_node::describe(FILE *out) {
     describe_begin();
 
-    /*
+    / *
     if (this->type == AST_LIST_NODE) {
         // tab_depth();
         // fprintf(out_jj, "%s \n", ast_str(this->type));
@@ -114,10 +114,11 @@ void list_node::describe(FILE *out) {
         fprintf(stderr, "invalid node \n");
         exit(1);
     }
-    */
+    * /
 
     describe_end();
 }
+*/
 
 
 

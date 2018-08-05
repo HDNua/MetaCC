@@ -44,16 +44,17 @@ extern FILE *out_lycpp;
 
 //==============================================================================
 // 
-void list::action(FILE *out, act_opt option) {
+template <class Type>
+void list<Type>::action(FILE *out, act_opt option) {
     static int depth = 0;
-    list_node *node;
+    auto node = this->first(); // list_node *node;
 
     // 
     if (out_lyc) {
+        /*
         if (this->elem_type() == AST_SYMBOL_VALUE) {
             ++depth;
             for (node=this->first(); node; node=node->next()) {
-                // list_node::action(out, node, option);
                 node->action(out, option);
 
                 if (this->elem_type() == AST_SYMBOL_VALUE) {
@@ -68,13 +69,17 @@ void list::action(FILE *out, act_opt option) {
         }
         else {
             for (node=this->first(); node; node=node->next()) {
-                // list_node::action(out, node, option);
                 node->action(out, option);
             }
         }
+        */
+
+        for (node = this->first(); node != this->end(); ++node) {
+            (*node)->action(out, option);
+        }
     }
 }
-// 
+/*
 void list_node::action(FILE *out, act_opt option) {
     if (this->type() == AST_LIST_NODE) {
         this->ast_elem()->action(out, option);
@@ -84,6 +89,7 @@ void list_node::action(FILE *out, act_opt option) {
         exit(1);
     }
 }
+*/
 
 
 
@@ -180,155 +186,29 @@ void symbol_definition::action(FILE *out, act_opt option) {
         // 
         ast_symbol_value_list->set_symbol_name(symbol_name);
         ast_symbol_value_list->action(out, option);
-
-        /*
-        // gather syntax list.
-        {
-            list *ast_list = ast_symbol_value_list;
-            list_node *node;
-            int elem_list_flag = 0;
-
-            // fprintf(out_lyc, "    %c", (value_list_flag ? '|' : (value_list_flag=1, ':')));
-            for (node = ast_list->first(); node; node = node->next()) {
-                symbol_value *ast_symbol_value 
-                    = dynamic_cast<symbol_value *>(node->ast_elem());
-                list *ast_elem_list = ast_symbol_value->ast_symbol_value_element_list();
-                list_node *node2;
-
-                // 
-                fprintf(out_lyc, "    %c ", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
-                for (node2 = ast_elem_list->first(); node2; node2 = node2->next()) {
-                    symbol_value_element *ast_elem 
-                        = dynamic_cast<symbol_value_element *>(node2->ast_elem());
-                    // mcc_symbol *new_elem = nullptr;
-
-                    if (ast_elem == nullptr) {
-                        fprintf(out_lyc, "/""* empty *""/ ");
-                        continue;
-                    }
-
-                    switch (ast_elem->elem_type()) {
-                        case AST_MCC_STRING:
-                        case AST_MCC_SYMBOL:
-                        case AST_TOKEN_DEFINITION:
-                            ast_elem->glance(out, option);
-                            ast_elem->action(out, option);
-                            break;
-                        case AST_LIST_PARAMETER:
-                        case AST_OPTION_PARAMETER:
-                        case AST_STAR_PARAMETER:
-                            ast_elem->glance(out, option);
-                            ast_elem->action(out, option);
-                            break;
-
-                        default:
-                            fprintf(stderr, "symbol_definition_action >> invalid type [%s] \n", 
-                                    ast_str(ast_elem->elem_type()));
-                            exit(1);
-                    }
-                }
-                fprintf(out_lyc, "\n    {\n");
-                if (islower(symbol_name[0])) {
-                    fprintf(out_lyc, "        ast::%s *ret = new ast::%s;\n", symbol_name, symbol_name);
-                    fprintf(out_lyc, "        $$ = ret;\n");
-                }
-                fprintf(out_lyc, "    }\n");
-            }
-        }
-
-        // 
-        fprintf(out_lyc, "    ;\n\n");
-        */
     }
 }
 // 
 void symbol_key::action(FILE *out, act_opt option) {
     if (out_lyc) {
-        // describe_begin();
-        // tab_depth();
-        // fprintf(out_jj, "%s \n", ast_str(this->type));
-        // tab_depth();
-        // fprintf(out_jj, ": %s \n", this->symbol_name);
-        // fprintf(out_lyc, "%s: \n", this->symbol_name);
         // 
-        // if (this->ast_key_attributes) {
-        //    key_attributes::action(this->ast_key_attributes);
-        // }
-        // describe_end();
     }
 }
 // 
 void key_attributes::action(FILE *out, act_opt option) {
-    // describe_begin();
-    // tab_depth();
-    // fprintf(out_jj, "%s \n", ast_str(this->type));
-    // describe_end();
-}
-// 
-void symbol_value_list::action(FILE *out, act_opt option) {
-    // gather syntax list.
-    list *ast_list = this;
-    list_node *node;
-    int elem_list_flag = 0;
-
-    // fprintf(out_lyc, "    %c", (value_list_flag ? '|' : (value_list_flag=1, ':')));
-    for (node = ast_list->first(); node; node = node->next()) {
-        symbol_value *ast_symbol_value 
-            = dynamic_cast<symbol_value *>(node->ast_elem());
-        list *ast_elem_list = ast_symbol_value->ast_symbol_value_element_list();
-        list_node *node2;
-
-        // 
-        fprintf(out_lyc, "    %c ", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
-        for (node2 = ast_elem_list->first(); node2; node2 = node2->next()) {
-            symbol_value_element *ast_elem 
-                = dynamic_cast<symbol_value_element *>(node2->ast_elem());
-            // mcc_symbol *new_elem = nullptr;
-
-            if (ast_elem == nullptr) {
-                fprintf(out_lyc, "/""* empty *""/ ");
-                continue;
-            }
-
-            switch (ast_elem->elem_type()) {
-                case AST_MCC_STRING:
-                case AST_MCC_SYMBOL:
-                case AST_TOKEN_DEFINITION:
-                    ast_elem->glance(out, option);
-                    ast_elem->action(out, option);
-                    break;
-                case AST_LIST_PARAMETER:
-                case AST_OPTION_PARAMETER:
-                case AST_STAR_PARAMETER:
-                    ast_elem->glance(out, option);
-                    ast_elem->action(out, option);
-                    break;
-
-                default:
-                    fprintf(stderr, "symbol_definition_action >> invalid type [%s] \n", 
-                            ast_str(ast_elem->elem_type()));
-                    exit(1);
-            }
-        }
-        fprintf(out_lyc, "\n    {\n");
-        if (islower(symbol_name()[0])) {
-            fprintf(out_lyc, "        ast::%s *ret = new ast::%s;\n", 
-                    symbol_name().c_str(), symbol_name().c_str());
-            fprintf(out_lyc, "        $$ = ret;\n");
-        }
-        fprintf(out_lyc, "    }\n");
-    }
-
     // 
-    fprintf(out_lyc, "    ;\n\n");
 }
 // 
 void symbol_value::action(FILE *out, act_opt option) {
-    list *ast_symbol_value_element_list = this->ast_symbol_value_element_list();
-    for (list_node *node=ast_symbol_value_element_list->first(); node; node=node->next()) {
-        symbol_value_element *elem = dynamic_cast<symbol_value_element *>(node->ast_elem());
+    symbol_value_element_list *ast_symbol_value_element_list 
+        = this->ast_symbol_value_element_list();
+    for (auto node = ast_symbol_value_element_list->first(); 
+            node != ast_symbol_value_element_list->end();
+            ++node) {
+        symbol_value_element *elem = dynamic_cast<symbol_value_element *>(*node);
+        elem->action(out, option);
         
-        // 
+        /*
         switch (elem->elem_type()) {
             case AST_MCC_STRING:
                 elem->action(out, option);
@@ -358,6 +238,7 @@ void symbol_value::action(FILE *out, act_opt option) {
 fprintf(stderr, "symbol_value_action >> invalid type [%s] \n", ast_str(elem->elem_type()));
                 break;
         }
+        */
     }
 }
 void symbol_value_element::action(FILE *out, act_opt option) {
@@ -411,7 +292,6 @@ void mcc_string::action(FILE *out, act_opt option) {
         //  you have to initialize all of C string buffer with 0.
         char key_name[256] = "";
         int index = string_tokens_value_index(_value.c_str());
-
         if (index < 0) {
 fprintf(stderr, "mcc_string_action >> cannot find token [%s] \n", _value.c_str());
             exit(1);
@@ -419,7 +299,7 @@ fprintf(stderr, "mcc_string_action >> cannot find token [%s] \n", _value.c_str()
 
         // 
         //// sprintf(key_name, "TOKEN_%d", index);
-        sprintf(key_name, "%s", string_token_keys.list[index]);
+        sprintf(key_name, "%s", ast::string_tokens[index].first.c_str());
         // fprintf(out, "%s /* %s */ ", key_name, _value.c_str());
         fprintf(out, "%s ", key_name);
     }
@@ -591,4 +471,71 @@ void ast_symbol_value_list_traverse(FILE *out, act_opt option) {
     }
 }
 */
+
+
+
+// 
+void symbol_value_list::action(FILE *out, act_opt option) {
+    // gather syntax list.
+    symbol_value_list *ast_list = this;
+    // list_node *node;
+    auto node = ast_list->first(); // list_node *node;
+    int elem_list_flag = 0;
+
+    // 
+    for (node = ast_list->first(); node != ast_list->end(); ++node) {
+        symbol_value *ast_symbol_value = dynamic_cast<symbol_value *>(*node);
+        symbol_value_element_list *ast_elem_list 
+            = ast_symbol_value->ast_symbol_value_element_list();
+        auto node2 = ast_elem_list->first();
+
+        // 
+        fprintf(out_lyc, "    %c ", (elem_list_flag ? '|' : (elem_list_flag=1, ':')));
+        for (node2 = ast_elem_list->first(); 
+                node2 != ast_elem_list->end(); 
+                ++node2) {
+            symbol_value_element *ast_elem = dynamic_cast<symbol_value_element *>(*node2);
+
+            if (ast_elem == nullptr) {
+                fprintf(out_lyc, "/""* empty *""/ ");
+                continue;
+            }
+
+            /*
+            switch (ast_elem->elem_type()) {
+                case AST_MCC_STRING:
+                case AST_MCC_SYMBOL:
+                case AST_TOKEN_DEFINITION:
+                    ast_elem->glance(out, option);
+                    ast_elem->action(out, option);
+                    break;
+                case AST_LIST_PARAMETER:
+                case AST_OPTION_PARAMETER:
+                case AST_STAR_PARAMETER:
+                    ast_elem->glance(out, option);
+                    ast_elem->action(out, option);
+                    break;
+
+                default:
+                    fprintf(stderr, "symbol_definition_action >> invalid type [%s] \n", 
+                            ast_str(ast_elem->elem_type()));
+                    exit(1);
+            }
+            */
+
+            ast_elem->glance(out, option);
+            ast_elem->action(out, option);
+        }
+        fprintf(out_lyc, "\n    {\n");
+        if (islower(symbol_name()[0])) {
+            fprintf(out_lyc, "        ast::%s *ret = new ast::%s;\n", 
+                    symbol_name().c_str(), symbol_name().c_str());
+            fprintf(out_lyc, "        $$ = ret;\n");
+        }
+        fprintf(out_lyc, "    }\n");
+    }
+
+    // 
+    fprintf(out_lyc, "    ;\n\n");
+}
 

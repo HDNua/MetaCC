@@ -74,7 +74,7 @@ union YYSTYPE
 
     char                                    token_str[MAX_TOKEN_LEN];
 											
-    class ast::list                         *ast_list;
+    class ast::list<ast::object *>          *ast_list;
     class ast::symbol_value_list            *ast_symbol_value_list;
 
     class ast::symbol_definition            *ast_symbol_definition;

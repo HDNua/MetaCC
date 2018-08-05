@@ -1,4 +1,5 @@
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-register")
+set (CMAKE_CXX_STANDARD 11)
 
 project(metacc CXX)
 

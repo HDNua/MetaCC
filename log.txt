@@ -1,3 +1,19 @@
+MetaCC - Meta Compiler Compiler v0.5.3.0
+----
+
+- 리스트 재작성 시작.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+- 리스트 처리... 골때리네 이거.
+
+
+- temporary commit.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.5.2.2
 ----
 

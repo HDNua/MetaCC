@@ -11,7 +11,7 @@
 #define MAX_TOKEN_LEN 2048
 
 
-ast::list *symbol_definition_list;
+ast::list<ast::symbol_definition *> *symbol_definition_list;
 
 
 
@@ -22,8 +22,10 @@ int yyerror(char const *str);
 %union {
     char                                    token_str[MAX_TOKEN_LEN];
 											
-    class ast::list                         *ast_list;
+    class ast::list<ast::object *>          *ast_list;
+    class ast::symbol_definition_list       *ast_symbol_definition_list;
     class ast::symbol_value_list            *ast_symbol_value_list;
+    class ast::symbol_value_element_list    *ast_symbol_value_element_list;
 
     class ast::symbol_definition            *ast_symbol_definition;
     class ast::symbol_key                   *ast_symbol_key;
@@ -54,9 +56,9 @@ int yyerror(char const *str);
 %type <token_str> list_parameter_delim
 %type <token_str> SKIP TERMINAL TOKEN
 
+%type <ast_symbol_definition_list> symbol_definition_list
 %type <ast_symbol_value_list> symbol_value_list 
-%type <ast_list> symbol_definition_list
-%type <ast_list> symbol_value_element_list
+%type <ast_symbol_value_element_list> symbol_value_element_list
 
 %type <ast_symbol_definition> symbol_definition
 %type <ast_symbol_key> symbol_key
@@ -142,11 +144,6 @@ symbol_value_list
 symbol_value
 	: symbol_value_element_list
 	{
-		// struct ast_symbol_value *ret = 
-		//     (struct ast_symbol_value *)malloc(sizeof(struct ast_symbol_value));
-		// ret->type = AST_SYMBOL_VALUE;
-		// ret->ast_symbol_value_element_list = $1;
-		// $$ = ret;
 		ast::symbol_value *ret = new ast::symbol_value($1);
 		$$ = ret;
 	}
@@ -154,9 +151,6 @@ symbol_value
 symbol_value_element_list
 	: symbol_value_element
 	{
-		// struct ast_list *list = ast_list_new(AST_SYMBOL_VALUE_ELEMENT);
-		// ast_list_append(list, $1, AST_SYMBOL_VALUE_ELEMENT);
-		// $$ = list;
 		ast::list *list = new ast::list(ast::AST_SYMBOL_VALUE_ELEMENT);
 		if ($1 == nullptr) { puts("5"); }
 		list->append($1, ast::AST_SYMBOL_VALUE_ELEMENT);
@@ -164,8 +158,6 @@ symbol_value_element_list
 	}
 	| symbol_value_element_list symbol_value_element
 	{
-		// ast_list_append($1, $2, AST_SYMBOL_VALUE_ELEMENT);
-		// $$ = $1;
 		if ($2 == nullptr) { puts("6"); }
 		$1->append($2, ast::AST_SYMBOL_VALUE_ELEMENT);
 		$$ = $1;
@@ -174,87 +166,38 @@ symbol_value_element_list
 symbol_value_element
 	: MCC_STRING
 	{
-		// struct ast_symbol_value_element *ret = 
-		//     (struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		// ret->type = AST_SYMBOL_VALUE_ELEMENT;
-		// ret->elem_type = AST_MCC_STRING;
-		// ret->u.mcc_string = strdup($1);
-		// $$ = ret;
 		ast::mcc_string *ret = new ast::mcc_string($1);
 		$$ = ret;
 	}
 	| MCC_SYMBOL
 	{
-		// struct ast_symbol_value_element *ret = 
-		//     (struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		// ret->type = AST_SYMBOL_VALUE_ELEMENT;
-		// ret->elem_type = AST_MCC_SYMBOL;
-		// ret->u.mcc_symbol = strdup($1);
-		// $$ = ret;
 		ast::mcc_symbol *ret = new ast::mcc_symbol($1);
 		$$ = ret;
 	}
 	| LIST LP list_parameter RP
 	{
-		// struct ast_symbol_value_element *ret = 
-		//     (struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		// ret->type = AST_SYMBOL_VALUE_ELEMENT;
-		// ret->elem_type = AST_LIST_PARAMETER;
-		// ret->u.ast_list_parameter = $3;
-		// $$ = ret;
 		$$ = $3;
 	}
 	| OPTION LP option_parameter RP
 	{
-		// struct ast_symbol_value_element *ret = 
-		//     (struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		// ret->type = AST_SYMBOL_VALUE_ELEMENT;
-		// ret->elem_type = AST_OPTION_PARAMETER;
-		// ret->u.ast_option_parameter = $3;
-		// $$ = ret;
 		$$ = $3;
 	}
 	| STAR LP star_parameter RP
 	{
-		// struct ast_symbol_value_element *ret = 
-		//     (struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		// ret->type = AST_SYMBOL_VALUE_ELEMENT;
-		// ret->elem_type = AST_STAR_PARAMETER;
-		// ret->u.ast_star_parameter = $3;
-		// $$ = ret;
 		$$ = $3;
 	}
 	| NULL_
 	{
-		// struct ast_symbol_value_element *ret = 
-		//     (struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		// ret->type = AST_SYMBOL_VALUE_ELEMENT;
-		// ret->elem_type = AST_NULL;
-		// ret->u.null_ = NULL; // strdup($1);
-		// $$ = ret;
 		$$ = nullptr;
 	}
 	| token_definition
 	{
-		// struct ast_symbol_value_element *ret = 
-		//     (struct ast_symbol_value_element *)malloc(sizeof(struct ast_symbol_value_element));
-		// ret->type = AST_SYMBOL_VALUE_ELEMENT;
-		// ret->elem_type = AST_TOKEN_DEFINITION;
-		// ret->u.ast_token_definition = $1;
-		// $$ = ret;
 		$$ = $1;
 	}
 	;
 list_parameter
 	: list_parameter_value COMMA list_parameter_delim
 	{
-		// struct ast_list_parameter *ret = 
-		//     (struct ast_list_parameter *)malloc(sizeof(struct ast_list_parameter));
-		// ret->type = AST_LIST_PARAMETER;
-		// ret->ast_list_parameter_value = $1;
-		// ret->list_parameter_delim = strdup($3);
-		// $$ = ret;
-
 		ast::list_parameter *ret = new ast::list_parameter($1, $3);
 		$$ = ret;
 	}
@@ -262,11 +205,6 @@ list_parameter
 option_parameter
 	: option_parameter_value
 	{
-		// struct ast_option_parameter *ret = 
-		//     (struct ast_option_parameter *)malloc(sizeof(struct ast_option_parameter));
-		// ret->type = AST_OPTION_PARAMETER;
-		// ret->ast_option_parameter_value = $1;
-		// $$ = ret;
 		ast::option_parameter *ret = new ast::option_parameter($1);
 		$$ = ret;
 	}
@@ -274,11 +212,6 @@ option_parameter
 star_parameter
 	: star_parameter_value
 	{
-		// struct ast_star_parameter *ret = (struct ast_star_parameter *)
-		//     malloc(sizeof(struct ast_star_parameter));
-		// ret->type = AST_STAR_PARAMETER;
-		// ret->ast_star_parameter_value = $1;
-		// $$ = ret;
 		ast::star_parameter *ret = new ast::star_parameter($1);
 		$$ = ret;
 	}
@@ -286,11 +219,6 @@ star_parameter
 list_parameter_value
 	: symbol_value_list
 	{
-		// struct ast_list_parameter_value *ret = (struct ast_list_parameter_value *)
-		//     malloc(sizeof(struct ast_list_parameter_value));
-		// ret->type = AST_LIST_PARAMETER_VALUE;
-		// ret->ast_symbol_value_list = $1;
-		// $$ = ret;
 		ast::list_parameter_value *ret = new ast::list_parameter_value($1);
 		$$ = ret;
 	}
@@ -301,11 +229,6 @@ list_parameter_delim
 option_parameter_value
 	: symbol_value_list
 	{
-		// struct ast_option_parameter_value *ret = (struct ast_option_parameter_value *)
-		// 	malloc(sizeof(struct ast_option_parameter_value));
-		// ret->type = AST_OPTION_PARAMETER_VALUE;
-		// ret->ast_symbol_value_list = $1;
-		// $$ = ret;
 		ast::option_parameter_value *ret = new ast::option_parameter_value($1);
 		$$ = ret;
 	}
@@ -313,11 +236,6 @@ option_parameter_value
 star_parameter_value
 	: list_parameter_value // symbol_value_list
 	{
-		// struct ast_star_parameter_value *ret = (struct ast_star_parameter_value *)
-		//     malloc(sizeof(struct ast_star_parameter_value));
-		// ret->type = AST_STAR_PARAMETER_VALUE;
-		// ret->ast_symbol_value_list = $1;
-		// $$ = ret;
 		ast::list_parameter *lp = new ast::list_parameter($1, "");
 		ast::star_parameter_value *ret = new ast::star_parameter_value(lp);
 		$$ = ret;
@@ -326,12 +244,6 @@ star_parameter_value
 token_definition
 	: TOKEN LP MCC_STRING RP
 	{
-		// struct ast_token_definition *ret = (struct ast_token_definition *)
-		//     malloc(sizeof(struct ast_token_definition));
-		// ret->type = AST_TOKEN_DEFINITION;
-		// ret->token_key = strdup($3);
-		//     // ret->token_value = strdup($5);
-		// $$ = ret;
 		ast::token_definition *ret = new ast::token_definition($3, "");
 		$$ = ret;
 	}

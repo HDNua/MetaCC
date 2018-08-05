@@ -11,6 +11,10 @@ string
 -
 vector
 -
+map
+-
+typeinfo
+-
 cstdio
 -
 cstring
@@ -20,6 +24,10 @@ cstring
 string
 -
 vector
+-
+map
+-
+typeinfo
 -
 cstdio
 -

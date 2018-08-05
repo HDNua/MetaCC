@@ -85,8 +85,8 @@ void paste_s2f_slice(FILE *out, const char *srcname, int head_ignore) {
 // 
 void load_predefined_tokens() {
     // 
-    extern struct table string_token_keys;
-    extern struct table string_token_values;
+    //// extern struct table string_token_keys;
+    //// extern struct table string_token_values;
     char buf[ast::MAX_TOKEN_LEN] = "";
     char key[ast::MAX_TOKEN_LEN] = "";
     char value[ast::MAX_TOKEN_LEN] = "";
@@ -197,7 +197,7 @@ int metacc_main(int argc, const char *argv[]) {
 
     // templates
     if (out_jj) {
-        extern class ast::list *symbol_definition_list;
+        extern class ast::symbol_definition_list *symbol_definition_list;
         const char *parser_name = "SVParser";
 
         // 
@@ -272,7 +272,7 @@ int metacc_main(int argc, const char *argv[]) {
     }
     // 
     else if (out_lyc) {
-        extern class ast::list *symbol_definition_list;
+        extern class ast::symbol_definition_list *symbol_definition_list;
         FILE *out;
 
         // 
@@ -474,11 +474,11 @@ int metacc_main(int argc, const char *argv[]) {
         // 
         {
             char fmt[ast::MAX_TOKEN_LEN] = "";
-            extern struct table symbols;
+            //// extern struct table symbols;
             out = out_lyc_y_union;
 
-            for (int i=0, len=symbols.count; i<len; ++i) {
-                const char *symbol_name = symbols.list[i];
+            for (int i=0, len=ast::symbols.size(); i<len; ++i) {
+                const char *symbol_name = ast::symbols[i].c_str();
 
                 // 
                 sprintf(fmt, "    ast::%%-%ds *ast_%%s;\n", ::longest_symbol_length);
@@ -505,16 +505,16 @@ int metacc_main(int argc, const char *argv[]) {
         {
             char fmt[ast::MAX_TOKEN_LEN] = "";
             char type_left[ast::MAX_TOKEN_LEN] = "";
-            extern struct table symbols;
-            extern struct table table_LIST_keys;
-            extern struct table table_OPT_keys;
-            extern struct table table_STAR_keys;
-            extern struct table string_token_keys;
+            //// extern struct table symbols;
+            //// extern struct table table_LIST_keys;
+            //// extern struct table table_OPT_keys;
+            //// extern struct table table_STAR_keys;
+            //// extern struct table string_token_keys;
             out = out_lyc_y_type;
 
             // 
-            for (int i=0, len=symbols.count; i < len; ++i) {
-                const char *symbol_name = symbols.list[i];
+            for (int i=0, len=ast::symbols.size(); i < len; ++i) {
+                const char *symbol_name = ast::symbols[i].c_str();
 
                 // 
                 sprintf(fmt, "%%%%type %%-%ds %%s\n", ::longest_symbol_length+8);
@@ -522,39 +522,96 @@ int metacc_main(int argc, const char *argv[]) {
                 fprintf(out, fmt, type_left, symbol_name);
             }
 
+            /*
+            for (int i=0, len=ast::table_LIST_keys.size(); i<len; ++i) {
+                // fprintf(out, "%%type <ast_list> %s\n", table_LIST_keys.list[i]);
+                const char *s = ast::ast_table_LIST.at(i).first;
+                fprintf(out, "%%type <ast_list> %s\n", ast::ast_table_LIST_keys.list[i]);
+            }
+            for (int i=0, len=ast::table_OPT_keys.size(); i<len; ++i) {
+                // fprintf(out, "%%type <ast_list> %s\n", table_OPT_keys.list[i]);
+                const char *s;
+                fprintf(out, "%%type <ast_list> %s\n", ast::table_OPT_keys.list[i]);
+            }
+            for (int i=0, len=ast::table_STAR_keys.size(); i<len; ++i) {
+                // fprintf(out, "%%type <ast_list> %s\n", table_STAR_keys.list[i]);
+                const char *s;
+                fprintf(out, "%%type <ast_list> %s\n", ast::table_STAR_keys.list[i]);
+            }
+            for (int i=0, len=ast::string_token_keys.size(); i<len; ++i) {
+                // fprintf(out, "%%type <token_str> %s\n", string_token_keys.list[i]);
+                const char *s;
+                fprintf(out, "%%type <token_str> %s\n", ast::string_token_keys.list[i]);
+            }
+            */
+
             // 
-            for (int i=0, len=table_LIST_keys.count; i<len; ++i) {
-                fprintf(out, "%%type <ast_list> %s\n", table_LIST_keys.list[i]);
+            for (auto it = ast::ast_table_LIST.begin(); 
+                    it != ast::ast_table_LIST.end();
+                    ++it)
+            {
+                const char *s = it->first.c_str();
+                fprintf(out, "%%type <ast_list> %s\n", s);
             }
-            for (int i=0, len=table_OPT_keys.count; i<len; ++i) {
-                fprintf(out, "%%type <ast_list> %s\n", table_OPT_keys.list[i]);
+            // 
+            for (auto it = ast::ast_table_OPT.begin(); 
+                    it != ast::ast_table_OPT.end();
+                    ++it)
+            {
+                const char *s = it->first.c_str();
+                fprintf(out, "%%type <ast_list> %s\n", s);
+
             }
-            for (int i=0, len=table_STAR_keys.count; i<len; ++i) {
-                fprintf(out, "%%type <ast_list> %s\n", table_STAR_keys.list[i]);
+            // 
+            for (auto it = ast::ast_table_STAR.begin(); 
+                    it != ast::ast_table_STAR.end();
+                    ++it)
+            {
+                const char *s = it->first.c_str();
+                fprintf(out, "%%type <ast_list> %s\n", s);
             }
-            for (int i=0, len=string_token_keys.count; i<len; ++i) {
-                fprintf(out, "%%type <token_str> %s\n", string_token_keys.list[i]);
+            // 
+            for (auto it = ast::string_tokens.begin(); 
+                    it != ast::string_tokens.end();
+                    ++it)
+            {
+                const char *s = it->first.c_str();
+                fprintf(out, "%%type <token_str> %s\n", s);
             }
         }
         // 
         {
             int i, len;
-            extern struct table tokens;
-            extern struct table string_token_keys;
-            extern struct table string_token_values;
+            //////// extern struct table tokens;
+            //////// extern struct table string_token_keys;
+            //////// extern struct table string_token_values;
             out = out_lyc_y_token;
 
+            /*
             // define string tokens list.
             for (i=0, len=string_token_keys.count; i < len; ++i) {
-                // fprintf(out, "%%token TOKEN_%-5d /*%s*/\n", i, string_token_values.list[i]);
                 fprintf(out, "%%token %s ", string_token_keys.list[i]);
-                fprintf(out, "/* %s */\n", string_token_values.list[i]);
+                fprintf(out, "/""* %s *""/\n", string_token_values.list[i]);
             }
-
             // define extended tokens list.
             for (i=0, len=tokens.count; i < len; ++i) {
-                fprintf(out, "%%token %-12s /* %s */\n", tokens.list[i], tokens.list[i]);
+                fprintf(out, "%%token %-12s /""* %s *""/\n", tokens.list[i], tokens.list[i]);
                 fprintf(out_lyc_y_type, "%%type <token_str> %s\n", tokens.list[i]);
+            }
+            */
+
+            // define string tokens list.
+            for (auto it = ast::string_tokens.begin(); it != ast::string_tokens.end(); ++it) {
+                const char *first = it->first.c_str();
+                const char *second = it->second.c_str();
+                fprintf(out, "%%token %s ", first);
+                fprintf(out, "/""* %s *""/\n", second);
+            }
+            // define extended tokens list.
+            for (auto it = ast::tokens.begin(); it != ast::tokens.end(); ++it) {
+                const char *s = it->c_str();
+                fprintf(out, "%%token %-12s /""* %s *""/\n", s, s);
+                fprintf(out_lyc_y_type, "%%type <token_str> %s\n", s);
             }
 
             //
