@@ -83,15 +83,17 @@ source_text
 symbol_definition_list
 	: symbol_definition
 	{
-		ast::list *list = new ast::list(ast::AST_SYMBOL_DEFINITION);
+		ast::symbol_definition_list *list = new ast::symbol_definition_list();
 		if ($1 == nullptr) { puts("1"); }
-		list->append($1, ast::AST_SYMBOL_DEFINITION);
+		// list->append($1, ast::AST_SYMBOL_DEFINITION);
+		list->append($1);
 		$$ = list;
 	}
 	| symbol_definition_list symbol_definition
 	{
 		if ($2 == nullptr) { puts("2"); }
-		$1->append($2, ast::AST_SYMBOL_DEFINITION);
+		// $1->append($2, ast::AST_SYMBOL_DEFINITION);
+		$1->append($2);
 		$$ = $1;
 	}
 	;
@@ -131,13 +133,15 @@ symbol_value_list
 	{
 		ast::symbol_value_list *list = new ast::symbol_value_list();
 		if ($1 == nullptr) { puts("symbol_value_list found nullptr parameter $1;"); }
-		list->append($1, ast::AST_SYMBOL_VALUE);
+		// list->append($1, ast::AST_SYMBOL_VALUE);
+		list->append($1);
 		$$ = list;
 	}
 	| symbol_value_list VBAR symbol_value
 	{
 		if ($3 == nullptr) { puts("symbol_value_list found nullptr parameter $3;"); }
-		$1->append($3, ast::AST_SYMBOL_VALUE);
+		// $1->append($3, ast::AST_SYMBOL_VALUE);
+		$1->append($3);
 		$$ = $1;
 	}
 	;
@@ -151,15 +155,18 @@ symbol_value
 symbol_value_element_list
 	: symbol_value_element
 	{
-		ast::list *list = new ast::list(ast::AST_SYMBOL_VALUE_ELEMENT);
+		// ast::list *list = new ast::list(ast::AST_SYMBOL_VALUE_ELEMENT);
+		ast::symbol_value_element_list *list = new ast::symbol_value_element_list();
 		if ($1 == nullptr) { puts("5"); }
-		list->append($1, ast::AST_SYMBOL_VALUE_ELEMENT);
+		// list->append($1, ast::AST_SYMBOL_VALUE_ELEMENT);
+		list->append($1);
 		$$ = list;
 	}
 	| symbol_value_element_list symbol_value_element
 	{
 		if ($2 == nullptr) { puts("6"); }
-		$1->append($2, ast::AST_SYMBOL_VALUE_ELEMENT);
+		// $1->append($2, ast::AST_SYMBOL_VALUE_ELEMENT);
+		$1->append($2);
 		$$ = $1;
 	}
 	;

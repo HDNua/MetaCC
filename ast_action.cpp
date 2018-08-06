@@ -46,7 +46,7 @@ extern FILE *out_lycpp;
 // 
 template <class Type>
 void list<Type>::action(FILE *out, act_opt option) {
-    static int depth = 0;
+    // static int depth = 0;
     auto node = this->first(); // list_node *node;
 
     // 

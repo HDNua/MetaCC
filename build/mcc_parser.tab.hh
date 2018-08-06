@@ -75,7 +75,9 @@ union YYSTYPE
     char                                    token_str[MAX_TOKEN_LEN];
 											
     class ast::list<ast::object *>          *ast_list;
+    class ast::symbol_definition_list       *ast_symbol_definition_list;
     class ast::symbol_value_list            *ast_symbol_value_list;
+    class ast::symbol_value_element_list    *ast_symbol_value_element_list;
 
     class ast::symbol_definition            *ast_symbol_definition;
     class ast::symbol_key                   *ast_symbol_key;
@@ -90,7 +92,7 @@ union YYSTYPE
     class ast::star_parameter_value         *ast_star_parameter_value;
     class ast::token_definition             *ast_token_definition;
 
-#line 94 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.hh" /* yacc.c:1909  */
+#line 96 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.hh" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

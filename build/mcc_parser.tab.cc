@@ -149,7 +149,9 @@ union YYSTYPE
     char                                    token_str[MAX_TOKEN_LEN];
 											
     class ast::list<ast::object *>          *ast_list;
+    class ast::symbol_definition_list       *ast_symbol_definition_list;
     class ast::symbol_value_list            *ast_symbol_value_list;
+    class ast::symbol_value_element_list    *ast_symbol_value_element_list;
 
     class ast::symbol_definition            *ast_symbol_definition;
     class ast::symbol_key                   *ast_symbol_key;
@@ -164,7 +166,7 @@ union YYSTYPE
     class ast::star_parameter_value         *ast_star_parameter_value;
     class ast::token_definition             *ast_token_definition;
 
-#line 168 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:355  */
+#line 170 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -181,7 +183,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 185 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:358  */
+#line 187 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -480,9 +482,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    76,    76,    82,    89,    97,   104,   109,   116,   121,
-     128,   135,   143,   150,   157,   165,   170,   175,   179,   183,
-     187,   191,   197,   204,   211,   218,   225,   228,   235,   243
+       0,    78,    78,    84,    92,   101,   108,   113,   120,   125,
+     132,   140,   149,   156,   165,   174,   179,   184,   188,   192,
+     196,   200,   206,   213,   220,   227,   234,   237,   244,   252
 };
 #endif
 
@@ -1280,254 +1282,261 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 77 "mcc_parser.yy" /* yacc.c:1646  */
+#line 79 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		symbol_definition_list = (yyvsp[0].ast_list);
+		symbol_definition_list = (yyvsp[0].ast_symbol_definition_list);
 	}
-#line 1288 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1290 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 83 "mcc_parser.yy" /* yacc.c:1646  */
+#line 85 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::list *list = new ast::list(ast::AST_SYMBOL_DEFINITION);
+		ast::symbol_definition_list *list = new ast::symbol_definition_list();
 		if ((yyvsp[0].ast_symbol_definition) == nullptr) { puts("1"); }
-		list->append((yyvsp[0].ast_symbol_definition), ast::AST_SYMBOL_DEFINITION);
-		(yyval.ast_list) = list;
+		// list->append($1, ast::AST_SYMBOL_DEFINITION);
+		list->append((yyvsp[0].ast_symbol_definition));
+		(yyval.ast_symbol_definition_list) = list;
 	}
-#line 1299 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1302 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 90 "mcc_parser.yy" /* yacc.c:1646  */
+#line 93 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		if ((yyvsp[0].ast_symbol_definition) == nullptr) { puts("2"); }
-		(yyvsp[-1].ast_list)->append((yyvsp[0].ast_symbol_definition), ast::AST_SYMBOL_DEFINITION);
-		(yyval.ast_list) = (yyvsp[-1].ast_list);
+		// $1->append($2, ast::AST_SYMBOL_DEFINITION);
+		(yyvsp[-1].ast_symbol_definition_list)->append((yyvsp[0].ast_symbol_definition));
+		(yyval.ast_symbol_definition_list) = (yyvsp[-1].ast_symbol_definition_list);
 	}
-#line 1309 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1313 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 98 "mcc_parser.yy" /* yacc.c:1646  */
+#line 102 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::symbol_definition *ret = new ast::symbol_definition((yyvsp[-3].ast_symbol_key), (yyvsp[-1].ast_symbol_value_list));
 		(yyval.ast_symbol_definition) = ret;
 	}
-#line 1318 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1322 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 105 "mcc_parser.yy" /* yacc.c:1646  */
+#line 109 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::symbol_key *ret = new ast::symbol_key((yyvsp[0].token_str), nullptr);
 		(yyval.ast_symbol_key) = ret;
 	}
-#line 1327 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1331 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 110 "mcc_parser.yy" /* yacc.c:1646  */
+#line 114 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::symbol_key *ret = new ast::symbol_key((yyvsp[-1].token_str), (yyvsp[0].ast_key_attributes));
 		(yyval.ast_symbol_key) = ret;
 	}
-#line 1336 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1340 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 117 "mcc_parser.yy" /* yacc.c:1646  */
+#line 121 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::key_attributes *ret = new ast::key_attributes((yyvsp[0].token_str));
 		(yyval.ast_key_attributes) = ret;
 	}
-#line 1345 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1349 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 122 "mcc_parser.yy" /* yacc.c:1646  */
+#line 126 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::key_attributes *ret = new ast::key_attributes((yyvsp[0].token_str));
 		(yyval.ast_key_attributes) = ret;
 	}
-#line 1354 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1358 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 129 "mcc_parser.yy" /* yacc.c:1646  */
+#line 133 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::symbol_value_list *list = new ast::symbol_value_list();
 		if ((yyvsp[0].ast_symbol_value) == nullptr) { puts("symbol_value_list found nullptr parameter $1;"); }
-		list->append((yyvsp[0].ast_symbol_value), ast::AST_SYMBOL_VALUE);
+		// list->append($1, ast::AST_SYMBOL_VALUE);
+		list->append((yyvsp[0].ast_symbol_value));
 		(yyval.ast_symbol_value_list) = list;
 	}
-#line 1365 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1370 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 136 "mcc_parser.yy" /* yacc.c:1646  */
+#line 141 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		if ((yyvsp[0].ast_symbol_value) == nullptr) { puts("symbol_value_list found nullptr parameter $3;"); }
-		(yyvsp[-2].ast_symbol_value_list)->append((yyvsp[0].ast_symbol_value), ast::AST_SYMBOL_VALUE);
+		// $1->append($3, ast::AST_SYMBOL_VALUE);
+		(yyvsp[-2].ast_symbol_value_list)->append((yyvsp[0].ast_symbol_value));
 		(yyval.ast_symbol_value_list) = (yyvsp[-2].ast_symbol_value_list);
 	}
-#line 1375 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1381 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 144 "mcc_parser.yy" /* yacc.c:1646  */
+#line 150 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::symbol_value *ret = new ast::symbol_value((yyvsp[0].ast_list));
+		ast::symbol_value *ret = new ast::symbol_value((yyvsp[0].ast_symbol_value_element_list));
 		(yyval.ast_symbol_value) = ret;
 	}
-#line 1384 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1390 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 151 "mcc_parser.yy" /* yacc.c:1646  */
+#line 157 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::list *list = new ast::list(ast::AST_SYMBOL_VALUE_ELEMENT);
+		// ast::list *list = new ast::list(ast::AST_SYMBOL_VALUE_ELEMENT);
+		ast::symbol_value_element_list *list = new ast::symbol_value_element_list();
 		if ((yyvsp[0].ast_symbol_value_element) == nullptr) { puts("5"); }
-		list->append((yyvsp[0].ast_symbol_value_element), ast::AST_SYMBOL_VALUE_ELEMENT);
-		(yyval.ast_list) = list;
+		// list->append($1, ast::AST_SYMBOL_VALUE_ELEMENT);
+		list->append((yyvsp[0].ast_symbol_value_element));
+		(yyval.ast_symbol_value_element_list) = list;
 	}
-#line 1395 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1403 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 158 "mcc_parser.yy" /* yacc.c:1646  */
-    {
-		if ((yyvsp[0].ast_symbol_value_element) == nullptr) { puts("6"); }
-		(yyvsp[-1].ast_list)->append((yyvsp[0].ast_symbol_value_element), ast::AST_SYMBOL_VALUE_ELEMENT);
-		(yyval.ast_list) = (yyvsp[-1].ast_list);
-	}
-#line 1405 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 15:
 #line 166 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::mcc_string *ret = new ast::mcc_string((yyvsp[0].token_str));
-		(yyval.ast_symbol_value_element) = ret;
+		if ((yyvsp[0].ast_symbol_value_element) == nullptr) { puts("6"); }
+		// $1->append($2, ast::AST_SYMBOL_VALUE_ELEMENT);
+		(yyvsp[-1].ast_symbol_value_element_list)->append((yyvsp[0].ast_symbol_value_element));
+		(yyval.ast_symbol_value_element_list) = (yyvsp[-1].ast_symbol_value_element_list);
 	}
 #line 1414 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 16:
-#line 171 "mcc_parser.yy" /* yacc.c:1646  */
+  case 15:
+#line 175 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::mcc_symbol *ret = new ast::mcc_symbol((yyvsp[0].token_str));
+		ast::mcc_string *ret = new ast::mcc_string((yyvsp[0].token_str));
 		(yyval.ast_symbol_value_element) = ret;
 	}
 #line 1423 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
+  case 16:
+#line 180 "mcc_parser.yy" /* yacc.c:1646  */
+    {
+		ast::mcc_symbol *ret = new ast::mcc_symbol((yyvsp[0].token_str));
+		(yyval.ast_symbol_value_element) = ret;
+	}
+#line 1432 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+    break;
+
   case 17:
-#line 176 "mcc_parser.yy" /* yacc.c:1646  */
+#line 185 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		(yyval.ast_symbol_value_element) = (yyvsp[-1].ast_list_parameter);
 	}
-#line 1431 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1440 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 180 "mcc_parser.yy" /* yacc.c:1646  */
+#line 189 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		(yyval.ast_symbol_value_element) = (yyvsp[-1].ast_option_parameter);
 	}
-#line 1439 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1448 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 184 "mcc_parser.yy" /* yacc.c:1646  */
+#line 193 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		(yyval.ast_symbol_value_element) = (yyvsp[-1].ast_star_parameter);
 	}
-#line 1447 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1456 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 188 "mcc_parser.yy" /* yacc.c:1646  */
+#line 197 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		(yyval.ast_symbol_value_element) = nullptr;
 	}
-#line 1455 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1464 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 192 "mcc_parser.yy" /* yacc.c:1646  */
+#line 201 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		(yyval.ast_symbol_value_element) = (yyvsp[0].ast_token_definition);
-	}
-#line 1463 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
-    break;
-
-  case 22:
-#line 198 "mcc_parser.yy" /* yacc.c:1646  */
-    {
-		ast::list_parameter *ret = new ast::list_parameter((yyvsp[-2].ast_list_parameter_value), (yyvsp[0].token_str));
-		(yyval.ast_list_parameter) = ret;
 	}
 #line 1472 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 205 "mcc_parser.yy" /* yacc.c:1646  */
+  case 22:
+#line 207 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::option_parameter *ret = new ast::option_parameter((yyvsp[0].ast_option_parameter_value));
-		(yyval.ast_option_parameter) = ret;
+		ast::list_parameter *ret = new ast::list_parameter((yyvsp[-2].ast_list_parameter_value), (yyvsp[0].token_str));
+		(yyval.ast_list_parameter) = ret;
 	}
 #line 1481 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 212 "mcc_parser.yy" /* yacc.c:1646  */
+  case 23:
+#line 214 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::star_parameter *ret = new ast::star_parameter((yyvsp[0].ast_star_parameter_value));
-		(yyval.ast_star_parameter) = ret;
+		ast::option_parameter *ret = new ast::option_parameter((yyvsp[0].ast_option_parameter_value));
+		(yyval.ast_option_parameter) = ret;
 	}
 #line 1490 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 219 "mcc_parser.yy" /* yacc.c:1646  */
+  case 24:
+#line 221 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::list_parameter_value *ret = new ast::list_parameter_value((yyvsp[0].ast_symbol_value_list));
-		(yyval.ast_list_parameter_value) = ret;
+		ast::star_parameter *ret = new ast::star_parameter((yyvsp[0].ast_star_parameter_value));
+		(yyval.ast_star_parameter) = ret;
 	}
 #line 1499 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
-  case 27:
-#line 229 "mcc_parser.yy" /* yacc.c:1646  */
+  case 25:
+#line 228 "mcc_parser.yy" /* yacc.c:1646  */
     {
-		ast::option_parameter_value *ret = new ast::option_parameter_value((yyvsp[0].ast_symbol_value_list));
-		(yyval.ast_option_parameter_value) = ret;
+		ast::list_parameter_value *ret = new ast::list_parameter_value((yyvsp[0].ast_symbol_value_list));
+		(yyval.ast_list_parameter_value) = ret;
 	}
 #line 1508 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
+  case 27:
+#line 238 "mcc_parser.yy" /* yacc.c:1646  */
+    {
+		ast::option_parameter_value *ret = new ast::option_parameter_value((yyvsp[0].ast_symbol_value_list));
+		(yyval.ast_option_parameter_value) = ret;
+	}
+#line 1517 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+    break;
+
   case 28:
-#line 236 "mcc_parser.yy" /* yacc.c:1646  */
+#line 245 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::list_parameter *lp = new ast::list_parameter((yyvsp[0].ast_list_parameter_value), "");
 		ast::star_parameter_value *ret = new ast::star_parameter_value(lp);
 		(yyval.ast_star_parameter_value) = ret;
 	}
-#line 1518 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1527 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 244 "mcc_parser.yy" /* yacc.c:1646  */
+#line 253 "mcc_parser.yy" /* yacc.c:1646  */
     {
 		ast::token_definition *ret = new ast::token_definition((yyvsp[-1].token_str), "");
 		(yyval.ast_token_definition) = ret;
 	}
-#line 1527 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1536 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
     break;
 
 
-#line 1531 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
+#line 1540 "/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1755,7 +1764,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 252 "mcc_parser.yy" /* yacc.c:1906  */
+#line 261 "mcc_parser.yy" /* yacc.c:1906  */
 
 int line_count = 0;
 

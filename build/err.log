@@ -1,0 +1,137 @@
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.bss+0x0): multiple definition of `ast::symbols[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:(.bss+0x0): first defined here
+CMakeFiles/metacc.dir/ast_common.cpp.o: In function `__gnu_cxx::new_allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> >::deallocate(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>*, unsigned long)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_common.cpp:134: multiple definition of `ast::string_tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/ast_common.cpp.o: In function `std::vector<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~vector()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_common.cpp:136: multiple definition of `ast::tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:45: first defined here
+CMakeFiles/metacc.dir/ast_common.cpp.o: In function `std::_Vector_base<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~_Vector_base()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_common.cpp:137: multiple definition of `ast::ast_table_LIST[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:46: first defined here
+CMakeFiles/metacc.dir/ast_common.cpp.o: In function `symbols_index(char const*)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_common.cpp:138: multiple definition of `ast::ast_table_OPT[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:47: first defined here
+CMakeFiles/metacc.dir/ast_common.cpp.o: In function `symbols_index(char const*)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_common.cpp:143: multiple definition of `ast::ast_table_STAR[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:48: first defined here
+CMakeFiles/metacc.dir/ast_describe.cpp.o:(.bss+0x0): multiple definition of `ast::symbols[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/ast_describe.cpp.o: In function `describe_end':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_describe.cpp:54: multiple definition of `ast::string_tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/ast_describe.cpp.o: In function `indent_depth':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_describe.cpp:57: multiple definition of `ast::tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:45: first defined here
+CMakeFiles/metacc.dir/ast_describe.cpp.o: In function `indent_depth':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_describe.cpp:60: multiple definition of `ast::ast_table_LIST[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:46: first defined here
+CMakeFiles/metacc.dir/ast_describe.cpp.o: In function `tab_depth':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_describe.cpp:65: multiple definition of `ast::ast_table_OPT[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:47: first defined here
+CMakeFiles/metacc.dir/ast_describe.cpp.o: In function `ast_symbol_definition_describe(_IO_FILE*)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_describe.cpp:137: multiple definition of `ast::ast_table_STAR[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:48: first defined here
+CMakeFiles/metacc.dir/ast_glance.cpp.o:(.bss+0x0): multiple definition of `ast::symbols[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/ast_glance.cpp.o: In function `__gnu_cxx::new_allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> >::deallocate(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>*, unsigned long)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_glance.cpp:117: multiple definition of `ast::string_tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/ast_glance.cpp.o: In function `std::vector<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~vector()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_glance.cpp:119: multiple definition of `ast::tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:45: first defined here
+CMakeFiles/metacc.dir/ast_glance.cpp.o: In function `std::_Vector_base<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~_Vector_base()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_glance.cpp:134: multiple definition of `ast::ast_table_LIST[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:46: first defined here
+CMakeFiles/metacc.dir/ast_glance.cpp.o: In function `ast::symbol_definition::glance[abi:cxx11](_IO_FILE*, ast::action_option)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_glance.cpp:141: multiple definition of `ast::ast_table_OPT[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:47: first defined here
+CMakeFiles/metacc.dir/ast_glance.cpp.o: In function `ast::symbol_definition::glance[abi:cxx11](_IO_FILE*, ast::action_option)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_glance.cpp:141: multiple definition of `ast::ast_table_STAR[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:48: first defined here
+CMakeFiles/metacc.dir/ast_action.cpp.o:(.bss+0x0): multiple definition of `ast::symbols[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/ast_action.cpp.o: In function `__gnu_cxx::new_allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> >::deallocate(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>*, unsigned long)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_action.cpp:97: multiple definition of `ast::string_tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/ast_action.cpp.o: In function `std::vector<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~vector()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_action.cpp:98: multiple definition of `ast::tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:45: first defined here
+CMakeFiles/metacc.dir/ast_action.cpp.o: In function `std::_Vector_base<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~_Vector_base()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_action.cpp:100: multiple definition of `ast::ast_table_LIST[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:46: first defined here
+CMakeFiles/metacc.dir/ast_action.cpp.o: In function `ast::symbol_definition::action(_IO_FILE*, ast::action_option)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_action.cpp:101: multiple definition of `ast::ast_table_OPT[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:47: first defined here
+CMakeFiles/metacc.dir/ast_action.cpp.o: In function `ast::symbol_definition::action(_IO_FILE*, ast::action_option)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_action.cpp:127: multiple definition of `ast::ast_table_STAR[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:48: first defined here
+CMakeFiles/metacc.dir/mcc_parser.yy.cc.o:(.bss+0x30): multiple definition of `ast::symbols[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/mcc_parser.yy.cc.o: In function `std::_Vector_base<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~_Vector_base()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.yy.cc:748: multiple definition of `ast::string_tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/mcc_parser.yy.cc.o: In function `yylex()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.yy.cc:751: multiple definition of `ast::tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:45: first defined here
+CMakeFiles/metacc.dir/mcc_parser.yy.cc.o: In function `yylex()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.yy.cc:753: multiple definition of `ast::ast_table_LIST[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:46: first defined here
+CMakeFiles/metacc.dir/mcc_parser.yy.cc.o: In function `yylex()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.yy.cc:755: multiple definition of `ast::ast_table_OPT[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:47: first defined here
+CMakeFiles/metacc.dir/mcc_parser.yy.cc.o: In function `yylex()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.yy.cc:759: multiple definition of `ast::ast_table_STAR[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:48: first defined here
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o:(.bss+0x0): multiple definition of `ast::symbols[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: In function `std::vector<ast::symbol_value_element*, std::allocator<ast::symbol_value_element*> >::max_size() const':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc:685: multiple definition of `ast::string_tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:44: first defined here
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: In function `__gnu_cxx::new_allocator<ast::symbol_value_element*>::allocate(unsigned long, void const*)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc:695: multiple definition of `ast::tokens[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:45: first defined here
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: In function `std::_Vector_base<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, ast::star_parameter*> > >::~_Vector_base()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc:706: multiple definition of `ast::ast_table_LIST[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:46: first defined here
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: In function `yy_symbol_print':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc:706: multiple definition of `ast::ast_table_OPT[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:47: first defined here
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: In function `yy_symbol_print':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc:708: multiple definition of `ast::ast_table_STAR[abi:cxx11]'
+CMakeFiles/metacc.dir/main.cpp.o:/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp:48: first defined here
+CMakeFiles/metacc.dir/ast_common.cpp.o: In function `string_tokens_add(char const*, char const*)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_common.cpp:195: undefined reference to `string_tokens_key_index(char const*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o: In function `ast::symbol_value_element_list::symbol_value_element_list()':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h:1052: undefined reference to `vtable for ast::symbol_value_element_list'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast14star_parameterE[_ZTVN3ast14star_parameterE]+0x20): undefined reference to `ast::star_parameter::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast16option_parameterE[_ZTVN3ast16option_parameterE]+0x20): undefined reference to `ast::option_parameter::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast10mcc_symbolE[_ZTVN3ast10mcc_symbolE]+0x20): undefined reference to `ast::mcc_symbol::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast10mcc_stringE[_ZTVN3ast10mcc_stringE]+0x20): undefined reference to `ast::mcc_string::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast20symbol_value_elementE[_ZTVN3ast20symbol_value_elementE]+0x20): undefined reference to `ast::symbol_value_element::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast12symbol_valueE[_ZTVN3ast12symbol_valueE]+0x20): undefined reference to `ast::symbol_value::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast14key_attributesE[_ZTVN3ast14key_attributesE]+0x20): undefined reference to `ast::key_attributes::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast10symbol_keyE[_ZTVN3ast10symbol_keyE]+0x20): undefined reference to `ast::symbol_key::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast17symbol_definitionE[_ZTVN3ast17symbol_definitionE]+0x20): undefined reference to `ast::symbol_definition::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast4listIPNS_20symbol_value_elementEEE[_ZTVN3ast4listIPNS_20symbol_value_elementEEE]+0x20): undefined reference to `ast::list<ast::symbol_value_element*>::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast4listIPNS_20symbol_value_elementEEE[_ZTVN3ast4listIPNS_20symbol_value_elementEEE]+0x28): undefined reference to `ast::list<ast::symbol_value_element*>::glance(_IO_FILE*, ast::action_option)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast4listIPNS_20symbol_value_elementEEE[_ZTVN3ast4listIPNS_20symbol_value_elementEEE]+0x30): undefined reference to `ast::list<ast::symbol_value_element*>::action(_IO_FILE*, ast::action_option)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast4listIPNS_12symbol_valueEEE[_ZTVN3ast4listIPNS_12symbol_valueEEE]+0x20): undefined reference to `ast::list<ast::symbol_value*>::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast4listIPNS_12symbol_valueEEE[_ZTVN3ast4listIPNS_12symbol_valueEEE]+0x28): undefined reference to `ast::list<ast::symbol_value*>::glance(_IO_FILE*, ast::action_option)'
+CMakeFiles/metacc.dir/ast_common.cpp.o:(.rodata._ZTVN3ast4listIPNS_12symbol_valueEEE[_ZTVN3ast4listIPNS_12symbol_valueEEE]+0x30): undefined reference to `ast::list<ast::symbol_value*>::action(_IO_FILE*, ast::action_option)'
+CMakeFiles/metacc.dir/ast_glance.cpp.o: In function `ast::star_parameter::glance[abi:cxx11](_IO_FILE*, ast::action_option)':
+/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_glance.cpp:520: undefined reference to `ast_table_LIST_index(std::vector<ast::object*, std::allocator<ast::object*> > const&)'
+CMakeFiles/metacc.dir/ast_glance.cpp.o:(.rodata._ZTVN3ast17symbol_value_listE[_ZTVN3ast17symbol_value_listE]+0x20): undefined reference to `ast::list<ast::symbol_value*>::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: In function `ast::symbol_definition_list::symbol_definition_list()':
+mcc_parser.tab.cc:(.text._ZN3ast22symbol_definition_listC2Ev[_ZN3ast22symbol_definition_listC5Ev]+0x19): undefined reference to `vtable for ast::symbol_definition_list'
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o:(.rodata._ZTVN3ast4listIPNS_17symbol_definitionEEE[_ZTVN3ast4listIPNS_17symbol_definitionEEE]+0x10): undefined reference to `ast::list<ast::symbol_definition*>::~list()'
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o:(.rodata._ZTVN3ast4listIPNS_17symbol_definitionEEE[_ZTVN3ast4listIPNS_17symbol_definitionEEE]+0x18): undefined reference to `ast::list<ast::symbol_definition*>::~list()'
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o:(.rodata._ZTVN3ast4listIPNS_17symbol_definitionEEE[_ZTVN3ast4listIPNS_17symbol_definitionEEE]+0x20): undefined reference to `ast::list<ast::symbol_definition*>::describe(_IO_FILE*)'
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o:(.rodata._ZTVN3ast4listIPNS_17symbol_definitionEEE[_ZTVN3ast4listIPNS_17symbol_definitionEEE]+0x28): undefined reference to `ast::list<ast::symbol_definition*>::glance(_IO_FILE*, ast::action_option)'
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o:(.rodata._ZTVN3ast4listIPNS_17symbol_definitionEEE[_ZTVN3ast4listIPNS_17symbol_definitionEEE]+0x30): undefined reference to `ast::list<ast::symbol_definition*>::action(_IO_FILE*, ast::action_option)'
+CMakeFiles/metacc.dir/mcc_parser.tab.cc.o: In function `ast::list<ast::symbol_definition*>::compare(ast::object const*) const':
+mcc_parser.tab.cc:(.text._ZNK3ast4listIPNS_17symbol_definitionEE7compareEPKNS_6objectE[_ZNK3ast4listIPNS_17symbol_definitionEE7compareEPKNS_6objectE]+0x45): undefined reference to `ast::list<ast::symbol_definition*>::compare(ast::list<ast::symbol_definition*> const*) const'
+collect2: error: ld returned 1 exit status
+make[2]: *** [metacc] 오류 1
+make[1]: *** [CMakeFiles/metacc.dir/all] 오류 2
+make: *** [all] 오류 2

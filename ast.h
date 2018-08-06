@@ -36,6 +36,11 @@ namespace ast {
     class list_parameter_value;
     class option_parameter_value;
     class star_parameter_value;
+
+    // 
+    class symbol_definition_list;
+    class symbol_value_list;
+    class symbol_value_element_list;
 }
 
 

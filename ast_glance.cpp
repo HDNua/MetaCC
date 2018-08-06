@@ -62,7 +62,7 @@ extern FILE *out_lycpp;
 // 
 template <class Type>
 std::string list<Type>::glance(FILE *out, act_opt option) {
-    static int depth = 0;
+    // static int depth = 0;
     auto node = this->first(); // list_node *node;
 
     // 
@@ -134,8 +134,7 @@ std::string symbol_definition::glance(FILE *out, act_opt option) {
     if (out_lyc)
     {
         // gather syntax list.
-        {
-        }
+        return ast_symbol_value_list->glance(out, option);
 
         // add current list
         throw std::string("INVALID CASE");
@@ -600,4 +599,5 @@ std::string symbol_value_list::glance(FILE *out, act_opt option) {
         }
         // fprintf(out_lyc, "\n    {\n        $$ = 0;\n    }\n");
     }
+    return std::string("symbol_value_list");
 }

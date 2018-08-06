@@ -58,7 +58,7 @@ include CMakeFiles/metacc.dir/progress.make
 include CMakeFiles/metacc.dir/flags.make
 
 mcc_parser.yy.cc: ../mcc_lexer.l
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "[FLEX][mcc_lexer] Building scanner with flex 2.6.0"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "[FLEX][mcc_lexer] Building scanner with flex /usr/bin/flex 버전 2.5.4"
 	cd /home/handy/Dropbox/linux/work/yacc/metacc/latest && /usr/bin/flex -o/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.yy.cc mcc_lexer.l
 
 mcc_parser.tab.cc: ../mcc_parser.yy
