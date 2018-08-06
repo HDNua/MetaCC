@@ -44,75 +44,10 @@ extern FILE *out_lycpp;
 
 //------------------------------------------------------------------------------
 // 
-//////// extern struct table string_token_keys;
-//////// extern struct table string_token_values;
-//////// 
-//////// extern struct table tokens;
-//////// 
-//////// extern struct table table_LIST_keys;
-//////// extern struct table table_OPT_keys;
-//////// extern struct table table_STAR_keys;
-//////// extern struct ast_table table_LIST_values;
-//////// extern struct ast_table table_OPT_values;
-//////// extern struct ast_table table_STAR_values;
 
 
 
 //==============================================================================
-// 
-template <class Type>
-std::string list<Type>::glance(FILE *out, act_opt option) {
-    // static int depth = 0;
-    auto node = this->first(); // list_node *node;
-
-    // 
-    if (out_lyc) {
-        /*
-        if (this->elem_type() == AST_SYMBOL_VALUE) {
-            ++depth;
-            for (node=this->first(); node; node=node->next()) {
-                node->glance(out, option);
-
-                if (this->elem_type() == AST_SYMBOL_VALUE) {
-                    if (node->next()) {
-                        if (depth == 0) {
-                            fprintf(out_lyc, ":");
-                        }
-                    }
-                }
-            }
-            --depth;
-        }
-        else {
-            for (node=this->first(); node; node=node->next()) {
-                node->glance(out, option);
-            }
-        }
-        */
-
-        // 
-        for (node = this->first(); node != this->end(); ++node) {
-            (*node)->glance(out, option);
-        }
-    }
-
-    // 
-    return std::string("");
-}
-/*
-std::string list_node::glance(FILE *out, act_opt option) {
-    if (this->type() == AST_LIST_NODE) {
-        return this->ast_elem()->glance(out, option);
-    }
-    else {
-        fprintf(stderr, "invalid node \n");
-        exit(1);
-    }
-}
-*/
-
-
-
 // 
 std::string symbol_definition::glance(FILE *out, act_opt option) {
     symbol_key *ast_symbol_key = this->ast_symbol_key();
@@ -145,18 +80,6 @@ std::string symbol_definition::glance(FILE *out, act_opt option) {
 // 
 std::string symbol_key::glance(FILE *out, act_opt option) {
     if (out_lyc) {
-        // describe_begin();
-        // tab_depth();
-        // fprintf(out_jj, "%s \n", ast_str(this->type));
-        // tab_depth();
-        // fprintf(out_jj, ": %s \n", this->symbol_name);
-        // fprintf(out_lyc, "%s: \n", this->symbol_name);
-        // 
-        // if (this->ast_key_attributes) {
-        //    key_attributes::glance(this->ast_key_attributes);
-        // }
-        // describe_end();
-
         return symbol_name();
     }
     return "null";
@@ -189,7 +112,6 @@ std::string mcc_string::glance(FILE *out, act_opt option) {
         int index = string_tokens_value_index(_value.c_str());
 
         // 
-        //// sprintf(key_name, "TOKEN_%d", index);
         if (index < 0) {
             index = string_tokens.size(); //_keys.count;
             sprintf(key_name, "TOKEN_%d", index);
@@ -197,7 +119,6 @@ std::string mcc_string::glance(FILE *out, act_opt option) {
             fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
         }
         else {
-            // sprintf(key_name, "%s", string_token_keys.list[index]);
             sprintf(key_name, "%s", string_tokens[index].first.c_str());
         }
 
@@ -233,7 +154,6 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
             // 
             symbol_value_element_list *ast_elem_list 
                 = elem1->ast_symbol_value_element_list();
-            // std::vector< std::string> symbol_list;
             std::vector<ast::object *> object_list;
             for (auto node2 = ast_elem_list->first(); 
                     node2 != ast_elem_list->end(); 
@@ -241,23 +161,6 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
                 symbol_value_element *elem2 
                     = dynamic_cast<symbol_value_element *>(*node2);
                 std::string symbol2 = elem2->glance(out, option);
-
-                /*
-                switch (elem2->elem_type()) {
-                    case AST_MCC_STRING:
-                    case AST_MCC_SYMBOL:
-                    case AST_TOKEN_DEFINITION:
-                        break;
-                    case AST_LIST_PARAMETER:
-                    case AST_OPTION_PARAMETER:
-                    case AST_STAR_PARAMETER:
-                        break;
-                    default:
-fprintf(stderr, "list_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
-                        // exit(1);
-                        break;
-                }
-                */
 
                 // 
                 object_list.push_back(elem2);
@@ -360,23 +263,6 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                     = dynamic_cast<symbol_value_element *>(*node2);
                 std::string symbol2 = elem2->glance(out, option);
 
-                /*
-                switch (elem2->elem_type()) {
-                    case AST_MCC_STRING:
-                    case AST_MCC_SYMBOL:
-                    case AST_TOKEN_DEFINITION:
-                        break;
-                    case AST_LIST_PARAMETER:
-                    case AST_OPTION_PARAMETER:
-                    case AST_STAR_PARAMETER:
-                        break;
-                    default:
-fprintf(stderr, "option_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
-                        // exit(1);
-                        break;
-                }
-                */
-
                 // 
                 object_list.push_back(elem2);
             }
@@ -452,8 +338,7 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             = ast_list_parameter_value->ast_symbol_value_list();
 
         // 
-        std::vector< std::vector<ast::object *> > object_list_list;
-        // for (list_node *node1=ast_symbol_value_list->first(); node1; node1=node1->next()) {
+        std::vector< std::vector<ast::symbol_value_element *> > object_list_list;
         for (auto node1 = ast_symbol_value_list->first(); 
                 node1 != ast_symbol_value_list->end(); 
                 ++node1) {
@@ -463,31 +348,12 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             // 
             symbol_value_element_list *ast_elem_list 
                 = elem1->ast_symbol_value_element_list();
-            std::vector<ast::object *> object_list;
-            // for (list_node *node2=ast_elem_list->first(); node2; node2=node2->next()) {
+            std::vector<ast::symbol_value_element *> object_list;
             for (auto node2 = ast_elem_list->first(); 
                     node2 != ast_elem_list->end(); 
                     ++node2) {
-                symbol_value_element *elem2 
-                    = dynamic_cast<symbol_value_element *>(*node2);
+                symbol_value_element *elem2 = dynamic_cast<symbol_value_element *>(*node2);
                 std::string symbol2 = elem2->glance(out, option);
-
-                /*
-                switch (elem2->elem_type()) {
-                    case AST_MCC_STRING:
-                    case AST_MCC_SYMBOL:
-                    case AST_TOKEN_DEFINITION:
-                        break;
-                    case AST_LIST_PARAMETER:
-                    case AST_OPTION_PARAMETER:
-                    case AST_STAR_PARAMETER:
-                        break;
-                    default:
-    fprintf(stderr, "star_parameter >> invalid type [%s] \n", ast_str(node2->elem_type()));
-                        // exit(1);
-                        break;
-                }
-                */
 
                 // 
                 object_list.push_back(elem2);
@@ -505,17 +371,13 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
             ast_table_STAR_add(key_name, this);
 
             // 
-            // bool first = true;
             fprintf(out_lyc_y_star, "STAR_%d\n", index);
             fprintf(out_lyc_y_star, "    : /""* empty *""/\n");
             fprintf(out_lyc_y_star, "    {\n");
             fprintf(out_lyc_y_star, "        $$ = NULL;\n");
             fprintf(out_lyc_y_star, "    }\n");
-            for (std::vector< std::vector<ast::object *> >::iterator it1 
-                    = object_list_list.begin(); 
-                    it1 != object_list_list.end();
-                    ++it1) {
-                std::vector<ast::object *> &objects = *it1;
+            for (auto it1 = object_list_list.begin(); it1 != object_list_list.end(); ++it1) {
+                std::vector<ast::symbol_value_element *> &objects = *it1;
                 fprintf(out_lyc_y_star, "    | LIST_%d \n", ast_table_LIST_index(objects));
                 fprintf(out_lyc_y_star, "    {\n");
                 fprintf(out_lyc_y_star, "        $$ = $1;\n");
@@ -572,6 +434,10 @@ std::string token_definition::glance(FILE *out, act_opt option) {
 
 
 // 
+std::string symbol_definition_list::glance(FILE *out, act_opt option) {
+    return std::string("");
+}
+// 
 std::string symbol_value_list::glance(FILE *out, act_opt option) {
     symbol_value_list *ast_list = this;
     auto node = ast_list->first();
@@ -600,4 +466,8 @@ std::string symbol_value_list::glance(FILE *out, act_opt option) {
         // fprintf(out_lyc, "\n    {\n        $$ = 0;\n    }\n");
     }
     return std::string("symbol_value_list");
+}
+// 
+std::string symbol_value_element_list::glance(FILE *out, act_opt option) {
+    return std::string("");
 }

@@ -51,38 +51,6 @@ namespace ast {
     // 
     const int MAX_TOKEN_LEN = 2048;
 
-    /*
-    typedef enum ast_type {
-        AST_UNTYPED,                    // 0
-        AST_LIST,                       // 1
-        AST_SYMBOL_DEFINITION,          // 2
-        AST_SYMBOL_KEY,                 // 3
-        AST_KEY_ATTRIBUTES,             // 4
-        AST_SYMBOL_VALUE,               // 5
-        AST_SYMBOL_VALUE_ELEMENT,       // 6
-        AST_LIST_PARAMETER,             // 7
-        AST_OPTION_PARAMETER,           // 8
-        AST_STAR_PARAMETER,             // 9
-        AST_TOKEN_DEFINITION,           // 10
-
-        // 
-        AST_LIST_NODE,                  // 11
-
-        // 
-        AST_MCC_STRING,                 // 12
-        AST_MCC_SYMBOL,                 // 13
-        AST_CSTRING,                    // 14
-        AST_NULL,                       // 15
-        AST_TOKEN,                      // 16
-
-        // 
-        AST_LIST_PARAMETER_VALUE,
-        AST_OPTION_PARAMETER_VALUE,
-        AST_STAR_PARAMETER_VALUE,
-
-    } ast_type;
-    */
-
     // 
     typedef const std::type_info& ast_type;
 
@@ -154,81 +122,66 @@ namespace ast {
 
 
 
-    /*
-    class list_node: public object {
-        ast_type                            _elem_type;
-        object                              *_elem;
-        list_node                           *_next;
-
-    public:
-        list_node(object *elem, ast_type elem_type)
-            : object(AST_LIST_NODE), _elem_type(elem_type), _elem(elem), _next(nullptr)
-        {
-        }
-        ~list_node();
-
-        ast_type elem_type() const { return _elem_type; }
-        object *ast_elem() { return _elem; }
-        const object *ast_elem() const { return _elem; }
-        void set_ast_elem(object *value) { _elem = value; }
-        list_node *next() { return _next; }
-        const list_node *next() const { return _next; }
-        void set_next(list_node *value) { _next = value; }
-
-        void describe(FILE *out);
-        std::string glance(FILE *out, act_opt option);
-        void action(FILE *out, act_opt option);
-        int compare(const list_node *p2) const;
-        virtual int compare(const object *p2) const {
-            return compare(dynamic_cast<const list_node *>(p2));
-        }
-        static int compare(const list_node *p1, const list_node *p2) {
-            return p1->compare(p2);
-        }
-    };
-    */
-
-
-
     // 
     template <class Type>
     class list: public object {
-        // ast_type                            _elem_type;
-        // class list_node                     _head;
-        // class list_node                     *_tail;
-        // int                                 _count;
         std::vector<Type>                   _vector;
 
     public:
-        /*
-        list(ast_type _elem_type)
-            : object(AST_LIST)
-            , _elem_type(_elem_type)
-            , _head(nullptr, _elem_type), _count(0)
-        {
-            _tail = &_head;
-        }
-        */
         // 
         list(): object() {
 
         }
         // 
-        ~list();
+        virtual ~list() {
+            for (auto it = _vector.begin(); it != _vector.end(); ++it) {
+                delete *it;
+            }
+            fprintf(stderr, "~list(%p) \n", this);
+        }
         
-        // 
-        //// ast_type elem_type() const { return _elem_type; }
         // 
         int count() const { return _vector.size(); }
 
         // 
-        void describe(FILE *out);
+        void describe(FILE *out) {
+            ;
+        }
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(FILE *out, act_opt option) {
+            for (auto node = this->first(); node != this->end(); ++node) {
+                (*node)->glance(out, option);
+            }
+            return std::string("list");
+        }
         // 
-        void action(FILE *out, act_opt option);
+        void action(FILE *out, act_opt option) {
+            // 
+            for (auto node = this->first(); node != this->end(); ++node) {
+                (*node)->action(out, option);
+            }
+        }
         // 
-        int compare(const list *p2) const;
+        int compare(const list *p2) const {
+            if (this != p2) {
+                if (this->count() != p2->count()) {
+                    return 1;
+                }
+                else {
+                    auto n1 = this->first();
+                    auto n2 = p2->first();
+
+                    while (n1 != _vector.end()) {
+                        if ((*n1)->compare(*n2)) {
+                            return 1;
+                        }
+                        ++n1;
+                        ++n2;
+                    }
+                }
+            }
+            return 0;
+        }
         // 
         virtual int compare(const object *p2) const { 
             return compare(dynamic_cast<const list *>(p2));
@@ -239,18 +192,7 @@ namespace ast {
         }
 
         // 
-        //// void append(object *o, ast_type elem_type) {
-        ////     list_node *node = new list_node(o, elem_type);
-        ////     _tail->set_next(node);
-        ////     _tail = node;
-        ////     _count += 1;
-        //// }
-        // 
         void append(Type &o) {
-            // list_node *node = new list_node(o, elem_type);
-            // _tail->set_next(node);
-            // _tail = node;
-            // _count += 1;
             _vector.push_back(o);
         }
         // 
@@ -258,13 +200,9 @@ namespace ast {
             _vector.push_back(o);
         }
         // 
-        //// list_node *first() { return _head.next(); }
-        // 
         typename std::vector<Type>::iterator first() {
             return _vector.begin(); // _head.next();
         }
-        // 
-        //// const list_node *first() const { return _head.next(); }
         // 
         typename std::vector<Type>::const_iterator first() const {
             return _vector.begin(); // _head.next();
@@ -415,7 +353,6 @@ namespace ast {
 
     // 
     class symbol_value: public object {
-        // class list                          *_symbol_value_element_list;
         class symbol_value_element_list     *_symbol_value_element_list;
 
     public:
@@ -460,26 +397,15 @@ namespace ast {
 
     // 
     class symbol_value_element: public object {
-        // ast_type                            _elem_type;
 
     public:
         // 
-        //// symbol_value_element(ast_type elem_type)
-        ////     : object() // object(AST_SYMBOL_VALUE_ELEMENT)
-        ////     , _elem_type(elem_type)
-        //// {
-        //// }
-        // 
         symbol_value_element()
             : object() // object(AST_SYMBOL_VALUE_ELEMENT)
-            // , _elem_type(elem_type)
         {
         }
         // 
         ~symbol_value_element();
-
-        // 
-        //// ast_type elem_type() const { return _elem_type; }
 
         // 
         void describe(FILE *out);
@@ -657,7 +583,6 @@ namespace ast {
                 list_parameter_value *_list_parameter_value, 
                 const char *list_parameter_delim
                 )
-            // : symbol_value_element(AST_LIST_PARAMETER)
             : symbol_value_element() // symbol_value_element(AST_LIST_PARAMETER)
             , _list_parameter_value(_list_parameter_value)
         {
@@ -761,7 +686,6 @@ namespace ast {
     public:
         // 
         star_parameter(star_parameter_value *_star_parameter_value)
-            // : symbol_value_element(AST_STAR_PARAMETER)
             : symbol_value_element() // symbol_value_element(AST_STAR_PARAMETER)
             , _star_parameter_value(_star_parameter_value)
         {
@@ -806,13 +730,11 @@ namespace ast {
 
     // 
     class list_parameter_value: public object {
-        // class list                          *_symbol_value_list;
         class symbol_value_list             *_symbol_value_list;
 
     public:
         // 
         list_parameter_value(symbol_value_list *_symbol_value_list)
-            // : object(AST_LIST_PARAMETER_VALUE)
             : object() // object(AST_LIST_PARAMETER_VALUE)
             , _symbol_value_list(_symbol_value_list)
         {
@@ -856,13 +778,11 @@ namespace ast {
 
     // 
     class option_parameter_value: public object {
-        // class list                          *_symbol_value_list;
         class symbol_value_list             *_symbol_value_list;
 
     public:
         // 
         option_parameter_value(symbol_value_list *_symbol_value_list)
-            // : object(AST_OPTION_PARAMETER_VALUE)
             : object() // object(AST_OPTION_PARAMETER_VALUE)
             , _symbol_value_list(_symbol_value_list)
         {
@@ -911,7 +831,6 @@ namespace ast {
     public:
         // 
         star_parameter_value(list_parameter *_list_parameter)
-            // : object(AST_STAR_PARAMETER_VALUE)
             : object() // object(AST_STAR_PARAMETER_VALUE)
             , _list_parameter(_list_parameter)
         {
@@ -957,7 +876,6 @@ namespace ast {
     public:
         // 
         token_definition(const char *token_key, const char *token_value)
-            // : symbol_value_element(AST_TOKEN_DEFINITION),
             : symbol_value_element() // symbol_value_element(AST_TOKEN_DEFINITION),
             , _token_key(token_key)
             , _token_value(token_value)
@@ -1007,8 +925,6 @@ namespace ast {
 
     public:
         // 
-        //// symbol_value_list(): list(AST_SYMBOL_VALUE) { }
-        // 
         symbol_definition_list(): list<symbol_definition *>() { }
         // 
         ~symbol_definition_list() { }
@@ -1021,15 +937,20 @@ namespace ast {
         void set_symbol_name(const std::string &value) { _symbol_name = value; }
 
         // 
+        void describe(FILE *out);
+        // 
+        std::string glance(FILE *out, act_opt option);
+        // 
         void action(FILE *out, act_opt option);
     };
+
+
+
     // 
     class symbol_value_list: public list<symbol_value *> {
         std::string _symbol_name;
 
     public:
-        // 
-        //// symbol_value_list(): list(AST_SYMBOL_VALUE) { }
         // 
         symbol_value_list(): list<symbol_value *>() { }
         // 
@@ -1043,22 +964,27 @@ namespace ast {
         void set_symbol_name(const std::string &value) { _symbol_name = value; }
 
         // 
+        void describe(FILE *out);
+        // 
         std::string glance(FILE *out, act_opt option);
         // 
         void action(FILE *out, act_opt option);
     };
+
+
+     
     // 
     class symbol_value_element_list: public list<symbol_value_element *> {
 
     public:
-        // 
-        //// symbol_value_list(): list(AST_SYMBOL_VALUE) { }
         // 
         symbol_value_element_list(): list<symbol_value_element *>() { }
         // 
         ~symbol_value_element_list() { }
 
         // 
+        void describe(FILE *out);
+        // 
         std::string glance(FILE *out, act_opt option);
         // 
         void action(FILE *out, act_opt option);
@@ -1067,12 +993,12 @@ namespace ast {
 
 
     // 
-    std::vector< std::string >                                      symbols;
-    std::vector< std::pair<std::string, std::string> >              string_tokens;
-    std::vector< std::string >                                      tokens;
-    std::vector< std::pair<std::string, ast::list_parameter *> >    ast_table_LIST;
-    std::vector< std::pair<std::string, ast::option_parameter *> >  ast_table_OPT;
-    std::vector< std::pair<std::string, ast::star_parameter *> >    ast_table_STAR;
+    extern std::vector< std::string >                                      symbols;
+    extern std::vector< std::pair<std::string, std::string> >              string_tokens;
+    extern std::vector< std::string >                                      tokens;
+    extern std::vector< std::pair<std::string, ast::list_parameter *> >    ast_table_LIST;
+    extern std::vector< std::pair<std::string, ast::option_parameter *> >  ast_table_OPT;
+    extern std::vector< std::pair<std::string, ast::star_parameter *> >    ast_table_STAR;
 }
 
 
@@ -1104,22 +1030,6 @@ extern FILE *out_lycpp;
 
 
 //==============================================================================
-// tables.
-//////// struct _table {
-////////     char *list[1024];
-////////     int count;
-//////// };
-//////// struct _ast_table {
-////////     ast::symbol_value_element *list[1024];
-////////     int count;
-//////// };
-//////// // 
-//////// void table_init(struct table *table);
-//////// // 
-//////// int table_index(struct table *table, const char *key);
-//////// // 
-//////// void table_add(struct table *table, const char *key);
-
 // 
 extern int longest_symbol_length;
 // 
@@ -1129,9 +1039,6 @@ int symbols_index(const char *symbol_name);
 // 
 int symbols_add(const char *symbol_name);
 
-//////// // 
-//////// extern struct table string_token_keys;
-//////// extern struct table string_token_values;
 // 
 void string_tokens_init();
 // 
@@ -1150,21 +1057,12 @@ int tokens_index(const char *symbol_name);
 // 
 void tokens_add(const char *token_name);
 
-//////// // 
-//////// void ast_table_init(struct ast_table *table);
-//////// // 
-//////// int ast_table_index(struct ast_table *table, ast::symbol_value_element *elem);
-//////// // 
-//////// void ast_table_add(struct ast_table *table, ast::symbol_value_element *elem);
-//////// 
 // 
 void ast_table_LIST_init();
 // 
 int ast_table_LIST_index(ast::list_parameter *elem);
 // 
-//////// int ast_table_LIST_index(const std::vector<std::string> &sve_list);
-// 
-int ast_table_LIST_index(const std::vector<ast::object *> &obj_list);
+int ast_table_LIST_index(const std::vector<ast::symbol_value_element *> &obj_list);
 // 
 void ast_table_LIST_add(const char *key, ast::list_parameter *elem);
 // 
@@ -1179,7 +1077,6 @@ void ast_table_STAR_init();
 int ast_table_STAR_index(ast::star_parameter *elem);
 // 
 void ast_table_STAR_add(const char *key, ast::star_parameter *elem);
-
 
 
 

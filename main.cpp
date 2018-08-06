@@ -581,24 +581,7 @@ int metacc_main(int argc, const char *argv[]) {
         }
         // 
         {
-            int i, len;
-            //////// extern struct table tokens;
-            //////// extern struct table string_token_keys;
-            //////// extern struct table string_token_values;
             out = out_lyc_y_token;
-
-            /*
-            // define string tokens list.
-            for (i=0, len=string_token_keys.count; i < len; ++i) {
-                fprintf(out, "%%token %s ", string_token_keys.list[i]);
-                fprintf(out, "/""* %s *""/\n", string_token_values.list[i]);
-            }
-            // define extended tokens list.
-            for (i=0, len=tokens.count; i < len; ++i) {
-                fprintf(out, "%%token %-12s /""* %s *""/\n", tokens.list[i], tokens.list[i]);
-                fprintf(out_lyc_y_type, "%%type <token_str> %s\n", tokens.list[i]);
-            }
-            */
 
             // define string tokens list.
             for (auto it = ast::string_tokens.begin(); it != ast::string_tokens.end(); ++it) {

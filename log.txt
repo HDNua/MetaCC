@@ -1,3 +1,15 @@
+MetaCC - Meta Compiler Compiler v0.5.3.2
+----
+
+- 일단 컴파일 가능하게는 변환 완료.
+> 아직 이전 기능을 복구하려면 시간이 걸린다.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.5.3.1
 ----
 

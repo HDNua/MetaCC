@@ -17,6 +17,14 @@
 //==============================================================================
 // 
 using namespace ast;
+namespace ast {
+    std::vector< std::string >                                      symbols;
+    std::vector< std::pair<std::string, std::string> >              string_tokens;
+    std::vector< std::string >                                      tokens;
+    std::vector< std::pair<std::string, ast::list_parameter *> >    ast_table_LIST;
+    std::vector< std::pair<std::string, ast::option_parameter *> >  ast_table_OPT;
+    std::vector< std::pair<std::string, ast::star_parameter *> >    ast_table_STAR;
+}
 
 // 
 // const int MAX_TOKEN_LEN = 2048;
@@ -46,96 +54,25 @@ FILE *out_lyc_ast_c_templates;
 //------------------------------------------------------------------------------
 FILE *out_lycpp;
 
-//==============================================================================
-/*
-const char *ast::ast_str(ast::ast_type type) {
-    static std::map<ast_type, std::string> *_dict = nullptr;
-    if (_dict == nullptr) {
-        _dict = new std::map<ast_type, std::string>();
-        _dict.insert(typeid(ast::object), "object");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-        _dict.insert(typeid(ast::), "");
-    }
 
-
-    static const char *ast_str_[] = {
-        "untyped",                  // 0
-        "list",                     // 1
-        "symbol_definition",        // 2
-        "symbol_key",               // 3
-        "key_attributes",           // 4
-        "symbol_value",             // 5
-        "symbol_value_element",     // 6
-        "list_parameter",           // 7
-        "option_parameter",         // 8
-        "star_parameter",           // 9
-        "token_definition",         // 10
-        
-        // 
-        "list_node",                // 11
-        
-        // 
-        "mcc_string",               // 12
-        "mcc_symbol",               // 13
-        "cstring",                  // 14
-        "null",                     // 15
-        "token",                    // 16
-    };
-    return ast_str_[type];
-}
-*/
 
 //==============================================================================
-// tables.
-/*
-void table_init(struct table *table) {
-    table->count = 0;
-}
 // 
-int table_index(struct table *table, const char *key) {
-    int i, len;
-    const char **list = (const char **)table->list;
 
-    // 
-    for (i=0, len=table->count; i < len; ++i) {
-        if (strcmp(list[i], key) == 0) {
-            return i;
-        }
-    }
-    return -1;
-}
-// 
-void table_add(struct table *table, const char *key) {
-    table->list[table->count++] = strdup(key);
-}
-*/
 
 
 //------------------------------------------------------------------------------
 // 
 int longest_symbol_length = 0;
 // 
-//// struct table symbols;
-// 
 void symbols_init() {
     // table_init(&symbols);
 }
 // 
 int symbols_index(const char *symbol_name) {
-    // return table_index(&symbols, symbol_name);
-    auto it = std::find(symbols.begin(), symbols.end(), symbol_name);
-    if (it != symbols.end()) {
-        return it - symbols.end();
+    auto it = std::find(ast::symbols.begin(), ast::symbols.end(), symbol_name);
+    if (it != ast::symbols.end()) {
+        return it - ast::symbols.end();
     }
     else {
         return -1;
@@ -144,8 +81,7 @@ int symbols_index(const char *symbol_name) {
 // 
 int symbols_add(const char *symbol_name) {
     if (symbols_index(symbol_name) < 0) {
-        // table_add(&symbols, symbol_name);
-        symbols.push_back(symbol_name);
+        ast::symbols.push_back(symbol_name);
         
         // 
         int symbol_length = (int)strlen(symbol_name);
@@ -159,33 +95,28 @@ int symbols_add(const char *symbol_name) {
     }
 }
 
+
+
 //------------------------------------------------------------------------------
-//
-//////// struct table string_token_keys;
-//////// struct table string_token_values;
 // 
 void string_tokens_init() {
     // table_init(&string_token_keys);
     // table_init(&string_token_values);
 }
-/*
-int string_tokens_key_index(const char *key) {
-    // return table_index(&string_token_keys, key);
-    auto it = ast::string_tokens.find(key);
-    if (it != ast::string_tokens.end()) {
-        return it - ast::string_tokens.begin();
+// 
+int string_tokens_key_index(const char *value) {
+    for (auto it = ast::string_tokens.begin(); it != ast::string_tokens.end(); ++it) {
+        if (it->first == value) {
+            return it - ast::string_tokens.begin();
+        }
     }
-    else {
-        return -1;
-    }
+    return -1;
 }
-*/
 // 
 int string_tokens_value_index(const char *value) {
-    // return table_index(&string_token_values, value);
-    for (auto it = string_tokens.begin(); it != string_tokens.end(); ++it) {
+    for (auto it = ast::string_tokens.begin(); it != ast::string_tokens.end(); ++it) {
         if (it->second == value) {
-            return it - string_tokens.begin();
+            return it - ast::string_tokens.begin();
         }
     }
     return -1;
@@ -193,9 +124,7 @@ int string_tokens_value_index(const char *value) {
 // 
 int string_tokens_add(const char *key, const char *value) {
     if (string_tokens_key_index(key) < 0) {
-        // table_add(&string_token_keys, key);
-        // table_add(&string_token_values, value);
-        string_tokens.push_back(std::pair<std::string, std::string>(key, value));
+        ast::string_tokens.push_back(std::pair<std::string, std::string>(key, value));
         return 0;
     }
     else {
@@ -203,19 +132,18 @@ int string_tokens_add(const char *key, const char *value) {
     }
 }
 
+
+
 //------------------------------------------------------------------------------
-//////// struct table tokens;
 // 
 void tokens_init() {
     // table_init(&tokens);
 }
 // 
 int tokens_index(const char *symbol_name) {
-    // return table_index(&tokens, symbol_name);
-    auto it = std::find(tokens.begin(), tokens.end(), symbol_name); 
-        // tokens.find(symbol_name);
-    if (it != tokens.end()) {
-        return it - tokens.begin();
+    auto it = std::find(ast::tokens.begin(), ast::tokens.end(), symbol_name); 
+    if (it != ast::tokens.end()) {
+        return it - ast::tokens.begin();
     }
     else {
         return -1;
@@ -223,83 +151,13 @@ int tokens_index(const char *symbol_name) {
 }
 // 
 void tokens_add(const char *token_name) {
-    // table_add(&tokens, token_name);
-    tokens.push_back(token_name);
+    ast::tokens.push_back(token_name);
 }
 
 
 
 //==============================================================================
-/*
-void ast_table_init(struct ast_table *table) {
-    table->count = 0;
-}
-int ast_table_index(struct ast_table *table, symbol_value_element *elem) {
-    // / *
-    int i, len;
-    symbol_value_element **list = table->list;
-    for (i=0, len=table->count; i<len; ++i) {
-
-        / *
-        int ret = 0;
-
-        // 
-        switch (elem->elem_type()) {
-            case AST_LIST_PARAMETER:
-                if (0) {
-                    ret = dynamic_cast<list_parameter *>(elem)->compare(
-                            dynamic_cast<list_parameter *>(list[i]));
-                }
-                else {
-                    list_parameter *elem_ = (list_parameter *)elem;
-                    ret = elem_->compare(list[i]);
-                }
-                break;
-            case AST_OPTION_PARAMETER:
-                if (0) {
-                    ret = dynamic_cast<option_parameter *>(elem)->compare(
-                            dynamic_cast<option_parameter *>(list[i]));
-                }
-                else {
-                    option_parameter *elem_ = (option_parameter *)elem;
-                    ret = elem_->compare(list[i]);
-                }
-                break;
-            case AST_STAR_PARAMETER:
-                if (0) {
-                    ret = dynamic_cast<star_parameter *>(elem)->compare(
-                            dynamic_cast<star_parameter *>(list[i]));
-                }
-                else {
-                    star_parameter *elem_ = (star_parameter *)elem;
-                    ret = elem_->compare(list[i]);
-                }
-                break;
-            default:
-                // fprintf(stderr, "weird parameter [%s] \n", ast_str(elem->elem_type()));
-                fprintf(stderr, "weird parameter [%s] \n", ast_str(elem->elem_type()));
-                break;
-        }
-
-        // 
-        if (ret == 0)
-            return i;
-        * /
-    }
-    // * /
-    return -1;
-}
-void ast_table_add(struct ast_table *table, symbol_value_element *elem) {
-    // table->list[table->count++] = elem;
-}
-*/
 //------------------------------------------------------------------------------
-//////// struct table table_LIST_keys;
-//////// struct table table_OPT_keys;
-//////// struct table table_STAR_keys;
-//////// struct ast_table table_LIST_values;
-//////// struct ast_table table_OPT_values;
-//////// struct ast_table table_STAR_values;
 // 
 void ast_table_LIST_init() {
     // table_init(&table_LIST_keys);
@@ -307,53 +165,14 @@ void ast_table_LIST_init() {
 }
 // 
 int ast_table_LIST_index(list_parameter *elem) {
-    // return ast_table_index(&table_LIST_values, elem, (int(*)(const void *, const void *))list_parameter::compare);
-    // return ast_table_index(&table_LIST_values, elem);
-    auto it = ast_table_LIST.begin();
-    while (it != ast_table_LIST.end()) {
+    auto it = ast::ast_table_LIST.begin();
+    while (it != ast::ast_table_LIST.end()) {
         if (it->second->compare(elem) == 0) {
-            return it - ast_table_LIST.begin();
+            return it - ast::ast_table_LIST.begin();
         }
     }
     return -1;
 }
-/*
-int ast_table_LIST_index(const std::vector<std::string> &sve_list) {
-    symbol_value_element_list *ast_symbol_value_element_list 
-        = new symbol_value_element_list(); // list(AST_MCC_SYMBOL);
-    for (auto it = sve_list.begin(); it != sve_list.end(); ++it) {
-        ast_symbol_value_element_list->append(new mcc_symbol(*it));
-    }
-
-    // 
-    symbol_value *ast_symbol_value = new symbol_value(ast_symbol_value_element_list);
-
-    // 
-    //// list *ast_symbol_value_list = new list(AST_SYMBOL_VALUE);
-    symbol_value_list *ast_symbol_value_list = new symbol_value_list();
-    ast_symbol_value_list->append(ast_symbol_value);
-
-    // 
-    list_parameter_value *ast_list_param_value 
-        = new list_parameter_value(ast_symbol_value_list);
-
-    // 
-    list_parameter *ast_list_parameter = new list_parameter(ast_list_param_value, "");
-
-    // 
-    std::string key_name = ast_list_parameter->glance(out_lyc_y_list, ACTOPT_NONE);
-    //////// int index = ast_table_index(&table_LIST_values, ast_list_parameter);
-    auto it = std::find(ast_list_parameter);
-    if (it == ast_table_LIST.end()) { // index < 0) {
-        // fprintf(stderr, "cannot find defined LIST [%d] \n", index);
-        exit(1);
-    }
-    else {
-        // delete ast_list_parameter;
-    }
-    return std::distance(it, ast_table_LIST.begin());
-}
-*/
 // 
 int ast_table_LIST_index(const std::vector<ast::symbol_value_element *> &obj_list) {
     symbol_value_element_list *ast_symbol_value_element_list 
@@ -378,7 +197,6 @@ int ast_table_LIST_index(const std::vector<ast::symbol_value_element *> &obj_lis
 
     // 
     std::string key_name = ast_list_parameter->glance(out_lyc_y_list, ACTOPT_NONE);
-    // int index = ast_table_index(&table_LIST_values, ast_list_parameter);
     int index = ast_table_LIST_index(ast_list_parameter);
     if (index < 0) {
         fprintf(stderr, "cannot find defined LIST [%d] \n", index);
@@ -391,8 +209,6 @@ int ast_table_LIST_index(const std::vector<ast::symbol_value_element *> &obj_lis
 }
 // 
 void ast_table_LIST_add(const char *key, list_parameter *elem) {
-    // table_add(&table_LIST_keys, key);
-    // ast_table_add(&table_LIST_values, elem);
     ast_table_LIST.push_back(std::pair<std::string, list_parameter *>(key, elem));
 }
 // 
@@ -402,8 +218,6 @@ void ast_table_OPT_init() {
 }
 // 
 int ast_table_OPT_index(option_parameter *elem) {
-    // return ast_table_index(&table_OPT_values, elem, (int(*)(const void *, const void *))ast_option_parameter_compare);
-    // return ast_table_index(&table_OPT_values, elem);
     auto it = ast_table_OPT.begin();
     while (it != ast_table_OPT.end()) {
         if (it->second->compare(elem) == 0) {
@@ -414,8 +228,6 @@ int ast_table_OPT_index(option_parameter *elem) {
 }
 // 
 void ast_table_OPT_add(const char *key, option_parameter *elem) {
-    // table_add(&table_OPT_keys, key);
-    // ast_table_add(&table_OPT_values, elem);
     ast_table_OPT.push_back(std::pair<std::string, option_parameter *>(key, elem));
 }
 // 
@@ -425,8 +237,6 @@ void ast_table_STAR_init() {
 }
 // 
 int ast_table_STAR_index(star_parameter *elem) {
-    // return ast_table_index(&table_STAR_values, elem, (int(*)(const void *, const void *))ast_star_parameter_compare);
-    // return ast_table_index(&table_STAR_values, elem);
     auto it = ast_table_STAR.begin();
     while (it != ast_table_STAR.end()) {
         if (it->second->compare(elem) == 0) {
@@ -438,8 +248,6 @@ int ast_table_STAR_index(star_parameter *elem) {
 }
 // 
 void ast_table_STAR_add(const char *key, star_parameter *elem) {
-    // table_add(&table_STAR_keys, key);
-    // ast_table_add(&table_STAR_values, elem);
     ast_table_STAR.push_back(std::pair<std::string, star_parameter *>(key, elem));
 }
 
@@ -450,79 +258,83 @@ void ast_table_STAR_add(const char *key, star_parameter *elem) {
 object::~object() {
 
 }
-/*
-list_node::~list_node() {
-    delete _elem;
-    fprintf(stderr, "~list_node(%p) \n", this);
-}
-*/
-template <class Type>
-list<Type>::~list() {
-    for (auto it=_vector.begin(); it != _vector.end(); ++it) {
-        delete *it;
-    }
-    /// while (_tail) {
-    ///     list_node *target = _tail;
-    ///     _tail = _tail->next();
-    ///     delete target;
-    /// }
-    fprintf(stderr, "~list(%p) \n", this);
-}
+// 
+//////// template <class Type>
+//////// list<Type>::~list() {
+////////     for (auto it=_vector.begin(); it != _vector.end(); ++it) {
+////////         delete *it;
+////////     }
+////////     fprintf(stderr, "~list(%p) \n", this);
+//////// }
+// 
 symbol_definition::~symbol_definition() {
     delete _symbol_key;
     delete _symbol_value_list;
     fprintf(stderr, "~symbol_definition(%p) \n", this);
 }
+// 
 symbol_key::~symbol_key() {
     delete _key_attributes;
     fprintf(stderr, "~symbol_key(%p) \n", this);
 }
+// 
 key_attributes::~key_attributes() {
 
     fprintf(stderr, "~key_attributes(%p) \n", this);
 }
+// 
 symbol_value::~symbol_value() {
     delete _symbol_value_element_list;
     fprintf(stderr, "~symbol_value(%p) \n", this);
 }
+// 
 symbol_value_element::~symbol_value_element() {
 
     fprintf(stderr, "~symbol_value_element(%p) \n", this);
 }
+// 
 mcc_string::~mcc_string() {
 
     fprintf(stderr, "~mcc_string(%p) \n", this);
 }
+// 
 mcc_symbol::~mcc_symbol() {
 
     fprintf(stderr, "~mcc_symbol(%p) \n", this);
 }
+// 
 list_parameter::~list_parameter() {
     delete _list_parameter_value;
     delete _list_parameter_delim;
     fprintf(stderr, "~list_parameter(%p) \n", this);
 }
+// 
 option_parameter::~option_parameter() {
     delete _option_parameter_value;
     fprintf(stderr, "~option_parameter(%p) \n", this);
 }
+// 
 star_parameter::~star_parameter() {
     delete _star_parameter_value;
     fprintf(stderr, "~star_parameter(%p) \n", this);
 }
+// 
 list_parameter_value::~list_parameter_value() {
     delete _symbol_value_list;
     fprintf(stderr, "~list_parameter_value(%p) \n", this);
 }
+// 
 option_parameter_value::~option_parameter_value() {
     delete _symbol_value_list;
     fprintf(stderr, "~option_parameter_value(%p) \n", this);
 }
+// 
 star_parameter_value::~star_parameter_value() {
     // delete _symbol_value_list;
     delete _list_parameter;
     fprintf(stderr, "~star_parameter_value(%p) \n", this);
 }
+// 
 token_definition::~token_definition() {
 
     fprintf(stderr, "~token_definition(%p) \n", this);
@@ -693,47 +505,32 @@ int list_node::compare(const list_node *p2) const {
 }
 */
 // 
-template <class Type>
-int list<Type>::compare(const list<Type> *p2) const {
-    if (this != p2) {
-        if (this->type() != p2->type()) {
-            fprintf(stderr, ">> super weird situation occurred \n");
-            return -1;
-        }
-//         else if (this->elem_type() != p2->elem_type()) {
-//             return 1;
-//         }
-        else if (this->count() != p2->count()) {
-            return 1;
-        }
-        else {
-            // int i, len;
-            auto n1 = this->first();
-            auto n2 = p2->first();
-
-            /*
-            for (i=0, len=this->count(); i<len; ++i) {
-                if (n1->compare(n2)) {
-                    return 1;
-                }
-
-                n1 = n1->next();
-                n2 = n2->next();
-            }
-            */
-
-            while (n1 != _vector.end()) {
-                if ((*n1)->compare(*n2)) {
-                    return 1;
-                }
-
-                ++n1;
-                ++n2;
-            }
-        }
-    }
-    return 0;
-}
+//////// template <class Type>
+//////// int list<Type>::compare(const list<Type> *p2) const {
+////////     if (this != p2) {
+////////         if (this->type() != p2->type()) {
+////////             fprintf(stderr, ">> super weird situation occurred \n");
+////////             return -1;
+////////         }
+////////         else if (this->count() != p2->count()) {
+////////             return 1;
+////////         }
+////////         else {
+////////             auto n1 = this->first();
+////////             auto n2 = p2->first();
+//////// 
+////////             while (n1 != _vector.end()) {
+////////                 if ((*n1)->compare(*n2)) {
+////////                     return 1;
+////////                 }
+//////// 
+////////                 ++n1;
+////////                 ++n2;
+////////             }
+////////         }
+////////     }
+////////     return 0;
+//////// }
 // 
 int symbol_definition::compare(const symbol_definition *p2) const {
     if (this != p2) {

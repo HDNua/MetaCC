@@ -119,11 +119,16 @@ void list_node::describe(FILE *out) {
     describe_end();
 }
 */
+// 
+//////// template <class Type>
+//////// void list<Type>::describe(FILE *out) {
+//////// 
+//////// }
 
 
 
 // 
-void ast_symbol_definition_describe(FILE *out) {
+void symbol_definition::describe(FILE *out) {
     describe_begin();
     tab_depth();
 
@@ -136,7 +141,7 @@ void ast_symbol_definition_describe(FILE *out) {
     describe_end();
 }
 // 
-void ast_symbol_key_describe(FILE *out) {
+void symbol_key::describe(FILE *out) {
     /*
     // describe_begin();
     // tab_depth();
@@ -154,7 +159,7 @@ void ast_symbol_key_describe(FILE *out) {
     */
 }
 // 
-void ast_key_attributes_describe(FILE *out) {
+void key_attributes::describe(FILE *out) {
     /*
     describe_begin();
     tab_depth();
@@ -164,7 +169,7 @@ void ast_key_attributes_describe(FILE *out) {
     */
 }
 // 
-void ast_symbol_value_describe(FILE *out) {
+void symbol_value::describe(FILE *out) {
     /*
     describe_begin();
     // tab_depth();
@@ -176,7 +181,7 @@ void ast_symbol_value_describe(FILE *out) {
     */
 }
 // 
-void ast_symbol_value_element_describe(FILE *out) {
+void symbol_value_element::describe(FILE *out) {
     /*
     // describe_begin();
     // tab_depth();
@@ -223,6 +228,14 @@ void ast_symbol_value_element_describe(FILE *out) {
     */
 }
 // 
+void mcc_string::describe(FILE *out) {
+    ;
+}
+// 
+void mcc_symbol::describe(FILE *out) {
+    ;
+}
+// 
 void list_parameter::describe(FILE *out) {
     /*
     describe_begin();
@@ -233,7 +246,7 @@ void list_parameter::describe(FILE *out) {
     */
 }
 // 
-void ast_option_parameter_describe(FILE *out) {
+void option_parameter::describe(FILE *out) {
     /*
     describe_begin();
     tab_depth();
@@ -243,7 +256,7 @@ void ast_option_parameter_describe(FILE *out) {
     */
 }
 // 
-void ast_star_parameter_describe(FILE *out) {
+void star_parameter::describe(FILE *out) {
     /*
     describe_begin();
     tab_depth();
@@ -293,3 +306,17 @@ void token_definition::describe(FILE *out) {
     */
 }
 
+
+
+// 
+void symbol_definition_list::describe(FILE *out) {
+
+}
+// 
+void symbol_value_list::describe(FILE *out) {
+
+}
+// 
+void symbol_value_element_list::describe(FILE *out) {
+
+}
