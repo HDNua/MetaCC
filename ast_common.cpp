@@ -230,7 +230,7 @@ int ast_table_OPT_index(option_parameter *elem) {
 }
 // 
 void ast_table_OPT_add(const char *key, option_parameter *elem) {
-    fprintf(stderr, "add OPTION [%s/%p] \n", key, elem);
+    /////// fprintf(stderr, "add OPTION [%s/%p] \n", key, elem);
     ast_table_OPT.push_back(std::pair<std::string, option_parameter *>(key, elem));
 }
 // 

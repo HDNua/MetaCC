@@ -314,8 +314,10 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                         case 'T': // TOKEN in string_tokens
                             {
                                 int token_index = string_tokens_value_index(symbol.c_str());
-                                fprintf(out_lyc_y_option, "/""* %s *""/ ", 
+                                if (token_index >= 0) {
+                                    fprintf(out_lyc_y_option, "/""* %s *""/ ", 
                                         string_tokens[token_index].second.c_str());
+                                }
                             }
                             break;
                         default:

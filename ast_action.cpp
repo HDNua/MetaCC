@@ -257,7 +257,7 @@ fprintf(stderr, "%p \n", this);
         }
 
         // 
-        printf("OPT_%d fetched successfully. \n", index);
+        //////// printf("OPT_%d fetched successfully. \n", index);
         fprintf(out, "OPT_%d ", index);
     }
 }
