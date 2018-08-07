@@ -170,6 +170,7 @@ int ast_table_LIST_index(list_parameter *elem) {
         if (it->second->compare(elem) == 0) {
             return it - ast::ast_table_LIST.begin();
         }
+        ++it;
     }
     return -1;
 }
@@ -223,11 +224,13 @@ int ast_table_OPT_index(option_parameter *elem) {
         if (it->second->compare(elem) == 0) {
             return it - ast_table_OPT.begin();
         }
+        ++it;
     }
     return -1;
 }
 // 
 void ast_table_OPT_add(const char *key, option_parameter *elem) {
+    fprintf(stderr, "add OPTION [%s/%p] \n", key, elem);
     ast_table_OPT.push_back(std::pair<std::string, option_parameter *>(key, elem));
 }
 // 
@@ -242,6 +245,7 @@ int ast_table_STAR_index(star_parameter *elem) {
         if (it->second->compare(elem) == 0) {
             return it - ast_table_STAR.begin();
         }
+        ++it;
     }
     return -1;
 
@@ -531,8 +535,12 @@ int list_node::compare(const list_node *p2) const {
 ////////     }
 ////////     return 0;
 //////// }
+
+
+
 // 
 int symbol_definition::compare(const symbol_definition *p2) const {
+    compare_header();
     if (this != p2) {
         if (this->type() != p2->type()) {
             fprintf(stderr, ">> super weird situation occurred \n");
@@ -548,6 +556,7 @@ int symbol_definition::compare(const symbol_definition *p2) const {
 }
 // 
 int symbol_key::compare(const symbol_key *p2) const {
+    compare_header();
     if (this != p2) {
         if (this->type() != p2->type()) {
             fprintf(stderr, ">> super weird situation occurred \n");
@@ -563,6 +572,7 @@ int symbol_key::compare(const symbol_key *p2) const {
 }
 // 
 int key_attributes::compare(const key_attributes *p2) const {
+    compare_header();
     if (this != p2) {
         if (this->type() != p2->type()) {
             fprintf(stderr, ">> super weird situation occurred \n");
@@ -575,6 +585,7 @@ int key_attributes::compare(const key_attributes *p2) const {
 }
 // 
 int symbol_value::compare(const symbol_value *p2) const {
+    compare_header();
     if (this != p2) {
         // return list::compare(this->ast_symbol_value_element_list(), p2->ast_symbol_value_element_list());
         return ast_symbol_value_element_list()->compare(p2->ast_symbol_value_element_list());
@@ -583,6 +594,7 @@ int symbol_value::compare(const symbol_value *p2) const {
 }
 // 
 int list_parameter::compare(const list_parameter *p2) const {
+    compare_header();
     if (this != p2) {
         if (this->type() != p2->type()) {
             return -1;
@@ -605,6 +617,7 @@ int list_parameter::compare(const list_parameter *p2) const {
 }
 // 
 int option_parameter::compare(const option_parameter *p2) const {
+    compare_header();
     if (this != p2) {
         return option_parameter_value::compare(this->ast_option_parameter_value(), p2->ast_option_parameter_value());
     }
@@ -612,6 +625,7 @@ int option_parameter::compare(const option_parameter *p2) const {
 }
 // 
 int star_parameter::compare(const star_parameter *p2) const {
+    compare_header();
     if (this != p2) {
         return star_parameter_value::compare(this->ast_star_parameter_value(), p2->ast_star_parameter_value());
     }
@@ -619,6 +633,7 @@ int star_parameter::compare(const star_parameter *p2) const {
 }
 // 
 int list_parameter_value::compare(const list_parameter_value *p2) const {
+    compare_header();
     if (this != p2) {
         // return list::compare(this->ast_symbol_value_list(), p2->ast_symbol_value_list());
         return ast_symbol_value_list()->compare(p2->ast_symbol_value_list());
@@ -627,6 +642,7 @@ int list_parameter_value::compare(const list_parameter_value *p2) const {
 }
 // 
 int option_parameter_value::compare(const option_parameter_value *p2) const {
+    compare_header();
     if (this != p2) {
         // return list::compare(this->ast_symbol_value_list(), p2->ast_symbol_value_list());
         return ast_symbol_value_list()->compare(p2->ast_symbol_value_list());
@@ -635,6 +651,7 @@ int option_parameter_value::compare(const option_parameter_value *p2) const {
 }
 // 
 int star_parameter_value::compare(const star_parameter_value *p2) const {
+    compare_header();
     if (this != p2) {
         // return list::compare(this->ast_symbol_value_list(), p2->ast_symbol_value_list());
         return this->ast_list_parameter()->compare(p2->ast_list_parameter());
@@ -643,6 +660,7 @@ int star_parameter_value::compare(const star_parameter_value *p2) const {
 }
 // 
 int token_definition::compare(const token_definition *p2) const {
+    compare_header();
     if (this != p2) {
         if (this->token_key() != p2->token_key()) {
             return 1;
@@ -653,3 +671,102 @@ int token_definition::compare(const token_definition *p2) const {
     }
     return 0;
 }
+// 
+int symbol_definition_list::compare(const symbol_definition_list *p2) const {
+    compare_header();
+    if (this != p2) {
+        if (this->count() != p2->count()) {
+            return 1;
+        }
+        else {
+            auto n1 = this->first();
+            auto n2 = p2->first();
+
+            while (n1 != this->end()) {
+                if ((*n1)->compare(*n2)) {
+                    return 1;
+                }
+                ++n1;
+                ++n2;
+            }
+        }
+    }
+
+    return 0;
+}
+// 
+int symbol_value_list::compare(const symbol_value_list *p2) const {
+    compare_header();
+    if (this != p2) {
+        if (this->count() != p2->count()) {
+            return 1;
+        }
+        else {
+            auto n1 = this->first();
+            auto n2 = p2->first();
+
+            while (n1 != this->end()) {
+                if ((*n1)->compare(*n2)) {
+                    return 1;
+                }
+                ++n1;
+                ++n2;
+            }
+        }
+    }
+
+    return 0;
+}
+// 
+int symbol_value_element_list::compare(const symbol_value_element_list *p2) const {
+    compare_header();
+
+    if (this != p2) {
+        if (this->count() != p2->count()) {
+            return 1;
+        }
+        else {
+            auto n1 = this->first();
+            auto n2 = p2->first();
+
+            while (n1 != this->end()) {
+                if ((*n1)->compare(*n2)) {
+                    return 1;
+                }
+                ++n1;
+                ++n2;
+            }
+        }
+    }
+
+    return 0;
+}
+
+
+
+// 
+void object::compare_header() const {
+//    std::cout << "compare " << type().name() << std::endl;
+}
+// 
+void object::glance_header() const {
+//    std::cout << "glance " << type().name() << std::endl;
+}
+// 
+void object::action_header() const {
+//    std::cout << "action " << type().name() << std::endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

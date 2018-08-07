@@ -28,3 +28,7 @@ primary
     | TOKEN( "SV_IDENTIFIER" )
     | "(" expr ")"
     ;
+
+attribute
+    : TOKEN( "SV_IDENTIFIER" )
+    ;

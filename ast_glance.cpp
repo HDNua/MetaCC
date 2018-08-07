@@ -42,18 +42,14 @@ extern FILE *out_lycpp;
 
 
 
-//------------------------------------------------------------------------------
-// 
-
-
-
 //==============================================================================
 // 
 std::string symbol_definition::glance(FILE *out, act_opt option) {
+    glance_header();
+
     symbol_key *ast_symbol_key = this->ast_symbol_key();
     key_attributes *ast_key_attr = ast_symbol_key->ast_key_attributes();
     symbol_value_list *ast_symbol_value_list = this->ast_symbol_value_list();
-    // const char *symbol_name = ast_symbol_key->symbol_name().c_str();
 
     // 
     if (ast_key_attr) {
@@ -79,6 +75,8 @@ std::string symbol_definition::glance(FILE *out, act_opt option) {
 }
 // 
 std::string symbol_key::glance(FILE *out, act_opt option) {
+    glance_header();
+
     if (out_lyc) {
         return symbol_name();
     }
@@ -86,15 +84,21 @@ std::string symbol_key::glance(FILE *out, act_opt option) {
 }
 // 
 std::string key_attributes::glance(FILE *out, act_opt option) {
+    glance_header();
+
     return attributes();
 }
 
 // 
 std::string symbol_value::glance(FILE *out, act_opt option) {
+    glance_header();
+
     return this->ast_symbol_value_element_list()->glance(out, option);
 }
 // 
 std::string symbol_value_element::glance(FILE *out, act_opt option) {
+    glance_header();
+
     // 
     if (out_lyc) {
         // 
@@ -104,6 +108,8 @@ std::string symbol_value_element::glance(FILE *out, act_opt option) {
 }
 // 
 std::string mcc_string::glance(FILE *out, act_opt option) {
+    glance_header();
+
     if (_value != "") {
         // IMPORTANT
         // C++ std::string does not ensure that entered C character string ends with NULL;
@@ -129,11 +135,15 @@ std::string mcc_string::glance(FILE *out, act_opt option) {
 }
 // 
 std::string mcc_symbol::glance(FILE *out, act_opt option) {
+    glance_header();
+
     return value();
 }
 
 // 
 std::string list_parameter::glance(FILE *out, act_opt option) {
+    glance_header();
+
     // 
     if (out_lyc) {
         char key_name[256] = "";
@@ -141,9 +151,8 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
         list_parameter_value *ast_list_parameter_value = this->ast_list_parameter_value();
         symbol_value_list *ast_symbol_value_list 
             = ast_list_parameter_value->ast_symbol_value_list();
-        // mcc_symbol *new_elem = nullptr;
 
-        // std::vector< std::vector<std::string> > symbol_list_list;
+        // 
         std::vector< std::vector<ast::object *> > object_list_list;
         for (auto node1 = ast_symbol_value_list->first(); 
                 node1 != ast_symbol_value_list->end(); 
@@ -230,12 +239,15 @@ std::string list_parameter::glance(FILE *out, act_opt option) {
             fprintf(out_lyc_y_list, "    ;\n");
         }
 
+        // 
         return std::string(key_name);
     }
     return "null";
 }
 // 
 std::string option_parameter::glance(FILE *out, act_opt option) {
+    glance_header();
+
     //
     if (out_lyc) {
         char key_name[256] = "";
@@ -270,6 +282,7 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
             // 
             object_list_list.push_back(object_list);
         }
+
         // 
         int index = ast_table_OPT_index(this);
         sprintf(key_name, "OPT_%d", index);
@@ -280,7 +293,6 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
 
             // 
             fprintf(out_lyc_y_option, "OPT_%d\n", index);
-            // fprintf(out_lyc_y_option, "    %c ", (first) ? (first=false, ':') : ('|'));
             fprintf(out_lyc_y_option, "    : /""* empty *""/\n");
             fprintf(out_lyc_y_option, "    {\n");
             fprintf(out_lyc_y_option, "        $$ = NULL;\n");
@@ -321,12 +333,15 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
             fprintf(out_lyc_y_option, "    ;\n");
         }
 
+        // 
         return std::string(key_name);
     }
     return "null";
 }
 // 
 std::string star_parameter::glance(FILE *out, act_opt option) {
+    glance_header();
+
     // 
     if (out_lyc) {
         char key_name[256] = "";
@@ -382,7 +397,6 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
                 fprintf(out_lyc_y_star, "    {\n");
                 fprintf(out_lyc_y_star, "        $$ = $1;\n");
                 fprintf(out_lyc_y_star, "    }\n");
-                // fprintf(out_lyc_y_star, "\n");
             }
             fprintf(out_lyc_y_star, "    ;\n");
         }
@@ -393,6 +407,8 @@ std::string star_parameter::glance(FILE *out, act_opt option) {
 }
 // 
 std::string list_parameter_value::glance(FILE *out, act_opt option) {
+    glance_header();
+
     if (out_lyc) {
         return this->ast_symbol_value_list()->glance(out, option);
     }
@@ -400,6 +416,8 @@ std::string list_parameter_value::glance(FILE *out, act_opt option) {
 }
 // 
 std::string option_parameter_value::glance(FILE *out, act_opt option) {
+    glance_header();
+
     if (out_lyc) {
         return this->ast_symbol_value_list()->glance(out, option);
     }
@@ -407,6 +425,8 @@ std::string option_parameter_value::glance(FILE *out, act_opt option) {
 }
 // 
 std::string star_parameter_value::glance(FILE *out, act_opt option) {
+    glance_header();
+
     if (out_lyc) {
         return this->ast_list_parameter()->glance(out, option);
     }
@@ -414,6 +434,8 @@ std::string star_parameter_value::glance(FILE *out, act_opt option) {
 }
 // 
 std::string token_definition::glance(FILE *out, act_opt option) {
+    glance_header();
+
     // 
     if (out_lyc) {
         if (tokens_index(this->token_key().c_str()) < 0) {
@@ -435,20 +457,26 @@ std::string token_definition::glance(FILE *out, act_opt option) {
 
 // 
 std::string symbol_definition_list::glance(FILE *out, act_opt option) {
-    return std::string("");
+    glance_header();
+
+    for (auto node = this->first(); node != this->end(); ++node) {
+        (*node)->glance(out, option);
+    }
+    return std::string("symbol_definition_list");
 }
 // 
 std::string symbol_value_list::glance(FILE *out, act_opt option) {
+    glance_header();
+
     symbol_value_list *ast_list = this;
     auto node = ast_list->first();
     int elem_list_flag = 0;
 
-    // fprintf(out_lyc, "    %c", (value_list_flag ? '|' : (value_list_flag=1, ':')));
+    // 
     for (node = ast_list->first(); node != ast_list->end(); ++node) {
         symbol_value *ast_symbol_value = dynamic_cast<symbol_value *>(*node);
         symbol_value_element_list *ast_elem_list 
             = ast_symbol_value->ast_symbol_value_element_list();
-        // list_node *node2;
         auto node2 = ast_elem_list->first();
 
         // 
@@ -457,17 +485,28 @@ std::string symbol_value_list::glance(FILE *out, act_opt option) {
             symbol_value_element *ast_elem = dynamic_cast<symbol_value_element *>(*node2);
             if (ast_elem != nullptr) {
                 mcc_symbol *new_elem = new mcc_symbol(ast_elem->glance(out, option));
-                // delete ast_elem;
-                //////// node->set_ast_elem(new_elem);
                 *node2 = new_elem;
                 new_elem->action(out, option);
             }
         }
-        // fprintf(out_lyc, "\n    {\n        $$ = 0;\n    }\n");
     }
     return std::string("symbol_value_list");
 }
 // 
 std::string symbol_value_element_list::glance(FILE *out, act_opt option) {
-    return std::string("");
+    glance_header();
+
+    for (auto node = this->first(); node != this->end(); ++node) {
+        (*node)->glance(out, option);
+    }
+    return std::string("symbol_value_element_list");
 }
+
+
+
+
+
+
+
+
+

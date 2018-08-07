@@ -19,6 +19,8 @@ cstdio
 -
 cstring
 -
+iostream
+-
 
 /home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h
 string
@@ -32,6 +34,8 @@ typeinfo
 cstdio
 -
 cstring
+-
+iostream
 -
 
 /home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_action.cpp

@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include <iostream>
 
 
 namespace ast {
@@ -112,12 +113,20 @@ namespace ast {
         }
         // 
         virtual int compare(const object *p2) const {
-            return this == p2;
+            return (this == p2) ? 0 : 1;
         }
         // 
         static int compare(const object *p1, const object *p2) {
             return p1->compare(p2);
         }
+
+
+        // 
+        void compare_header() const;
+        // 
+        void glance_header() const;
+        // 
+        void action_header() const;
     };
 
 
@@ -184,7 +193,12 @@ namespace ast {
         }
         // 
         virtual int compare(const object *p2) const { 
-            return compare(dynamic_cast<const list *>(p2));
+            const list *child = dynamic_cast<const list *>(p2);
+            if (child) {
+                // return compare(dynamic_cast<const list *>(p2));
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const list *p1, const list *p2) {
@@ -255,7 +269,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const symbol_definition *child = (const symbol_definition *)p2;
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const symbol_definition *p1, const symbol_definition *p2) {
@@ -301,7 +318,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const symbol_key *child = (const symbol_key *)p2;
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const symbol_key *p1, const symbol_key *p2) {
@@ -341,7 +361,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const key_attributes *child = (const key_attributes *)p2;
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const key_attributes *p1, const key_attributes *p2) {
@@ -385,7 +408,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const symbol_value *child = dynamic_cast<const symbol_value *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const symbol_value *p1, const symbol_value *p2) {
@@ -419,7 +445,10 @@ namespace ast {
         virtual int compare(const object *p2) const { 
             const symbol_value_element *child 
                 = dynamic_cast<const symbol_value_element *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const symbol_value_element *p1, const symbol_value_element *p2) {
@@ -468,7 +497,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const mcc_string *child = dynamic_cast<const mcc_string *>(p2);
-            return compare(*child);
+            if (child) {
+                return compare(*child);
+            }
+            return 1;
         }
         // 
         static int compare(const mcc_string *p1, const mcc_string *p2) {
@@ -477,7 +509,10 @@ namespace ast {
         // 
         virtual int compare(const symbol_value_element *p2) const {
             const mcc_string *child = dynamic_cast<const mcc_string *>(p2);
-            return compare(*child);
+            if (child) {
+                return compare(*child);
+            }
+            return 1;
         }
 
         // 
@@ -557,7 +592,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const mcc_symbol *child = dynamic_cast<const mcc_symbol *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const mcc_symbol *p1, const mcc_symbol *p2) {
@@ -566,7 +604,10 @@ namespace ast {
         // 
         virtual int compare(const symbol_value_element *p2) const {
             const mcc_symbol *child = dynamic_cast<const mcc_symbol *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
     };
 
@@ -615,7 +656,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const list_parameter *child = dynamic_cast<const list_parameter *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const list_parameter *p1, const list_parameter *p2) {
@@ -624,7 +668,10 @@ namespace ast {
         // 
         virtual int compare(const symbol_value_element *p2) const {
             const list_parameter *child = dynamic_cast<const list_parameter *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
     };
 
@@ -664,7 +711,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const option_parameter *child = dynamic_cast<const option_parameter *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const option_parameter *p1, const option_parameter *p2) {
@@ -673,7 +723,10 @@ namespace ast {
         // 
         virtual int compare(const symbol_value_element *p2) const {
             const option_parameter *child = dynamic_cast<const option_parameter *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
     };
 
@@ -713,7 +766,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const star_parameter *child = dynamic_cast<const star_parameter *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const star_parameter *p1, const star_parameter *p2) {
@@ -722,7 +778,10 @@ namespace ast {
         // 
         virtual int compare(const symbol_value_element *p2) const {
             const star_parameter *child = dynamic_cast<const star_parameter *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
     };
 
@@ -763,7 +822,10 @@ namespace ast {
         virtual int compare(const object *p2) const { 
             const list_parameter_value *child 
                 = dynamic_cast<const list_parameter_value *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(
@@ -811,7 +873,10 @@ namespace ast {
         virtual int compare(const object *p2) const { 
             const option_parameter_value *child 
                 = dynamic_cast<const option_parameter_value *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(
@@ -853,9 +918,11 @@ namespace ast {
         int compare(const star_parameter_value *p2) const;
         // 
         virtual int compare(const object *p2) const { 
-            const star_parameter_value *child 
-                = dynamic_cast<const star_parameter_value *>(p2);
-            return compare(child);
+            const star_parameter_value *child = dynamic_cast<const star_parameter_value *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(
@@ -904,7 +971,10 @@ namespace ast {
         // 
         virtual int compare(const object *p2) const { 
             const token_definition *child = dynamic_cast<const token_definition *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
         // 
         static int compare(const token_definition *p1, const token_definition *p2) {
@@ -913,7 +983,10 @@ namespace ast {
         // 
         virtual int compare(const symbol_value_element *p2) const {
             const token_definition *child = dynamic_cast<const token_definition *>(p2);
-            return compare(child);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
         }
     };
 
@@ -942,6 +1015,20 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         // 
         void action(FILE *out, act_opt option);
+        // 
+        int compare(const symbol_definition_list *p2) const;
+        // 
+        virtual int compare(const object *p2) const { 
+            const symbol_definition_list *child = dynamic_cast<const symbol_definition_list *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
+        }
+        // 
+        static int compare(const symbol_definition_list *p1, const symbol_definition_list *p2) {
+            return p1->compare(p2);
+        }
     };
 
 
@@ -969,6 +1056,20 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         // 
         void action(FILE *out, act_opt option);
+        // 
+        int compare(const symbol_value_list *p2) const;
+        // 
+        virtual int compare(const object *p2) const { 
+            const symbol_value_list *child = dynamic_cast<const symbol_value_list *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
+        }
+        // 
+        static int compare(const symbol_value_list *p1, const symbol_value_list *p2) {
+            return p1->compare(p2);
+        }
     };
 
 
@@ -988,6 +1089,21 @@ namespace ast {
         std::string glance(FILE *out, act_opt option);
         // 
         void action(FILE *out, act_opt option);
+
+        // 
+        int compare(const symbol_value_element_list *p2) const;
+        // 
+        virtual int compare(const object *p2) const { 
+            const symbol_value_element_list *child = dynamic_cast<const symbol_value_element_list *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
+        }
+        // 
+        static int compare(const symbol_value_element_list *p1, const symbol_value_element_list *p2) {
+            return p1->compare(p2);
+        }
     };
 
 

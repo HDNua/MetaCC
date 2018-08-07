@@ -195,6 +195,9 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(stderr, "compilation has failed. \n");
     }
 
+    // 
+    printf("WOW \n");
+
     // templates
     if (out_jj) {
         extern class ast::symbol_definition_list *symbol_definition_list;
@@ -274,6 +277,8 @@ int metacc_main(int argc, const char *argv[]) {
     else if (out_lyc) {
         extern class ast::symbol_definition_list *symbol_definition_list;
         FILE *out;
+
+        printf("TEST\n"); 
 
         // 
         {
@@ -448,7 +453,13 @@ int metacc_main(int argc, const char *argv[]) {
         }
 
         // 
+        printf("TEST begin; \n"); 
+
+        // 
         symbol_definition_list->action(out_lyc, ast::ACTOPT_NONE);
+
+        // 
+        printf("TEST end; \n"); 
 
         // 
         {

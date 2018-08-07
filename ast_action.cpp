@@ -43,48 +43,9 @@ extern FILE *out_lycpp;
 
 
 //==============================================================================
-/*
-template <class Type>
-void list<Type>::action(FILE *out, act_opt option) {
-    // static int depth = 0;
-    auto node = this->first(); // list_node *node;
-
-    // 
-    if (out_lyc) {
-        / *
-        if (this->elem_type() == AST_SYMBOL_VALUE) {
-            ++depth;
-            for (node=this->first(); node; node=node->next()) {
-                node->action(out, option);
-
-                if (this->elem_type() == AST_SYMBOL_VALUE) {
-                    if (node->next()) {
-                        if (depth == 0) {
-                            fprintf(out_lyc, ":");
-                        }
-                    }
-                }
-            }
-            --depth;
-        }
-        else {
-            for (node=this->first(); node; node=node->next()) {
-                node->action(out, option);
-            }
-        }
-        * /
-
-        for (node = this->first(); node != this->end(); ++node) {
-            (*node)->action(out, option);
-        }
-    }
-}
-*/
-
-
-
 // 
 void symbol_definition::action(FILE *out, act_opt option) {
+    action_header();
     symbol_key *ast_symbol_key = this->ast_symbol_key();
     key_attributes *ast_key_attr = ast_symbol_key->ast_key_attributes();
     symbol_value_list *ast_symbol_value_list = this->ast_symbol_value_list();
@@ -180,16 +141,19 @@ void symbol_definition::action(FILE *out, act_opt option) {
 }
 // 
 void symbol_key::action(FILE *out, act_opt option) {
+    action_header();
     if (out_lyc) {
         // 
     }
 }
 // 
 void key_attributes::action(FILE *out, act_opt option) {
+    action_header();
     // 
 }
 // 
 void symbol_value::action(FILE *out, act_opt option) {
+    action_header();
     symbol_value_element_list *ast_symbol_value_element_list 
         = this->ast_symbol_value_element_list();
     for (auto node = ast_symbol_value_element_list->first(); 
@@ -200,6 +164,7 @@ void symbol_value::action(FILE *out, act_opt option) {
     }
 }
 void symbol_value_element::action(FILE *out, act_opt option) {
+    action_header();
     // 
     if (out_lyc) {
         throw std::string("INVALID CASE");
@@ -207,6 +172,7 @@ void symbol_value_element::action(FILE *out, act_opt option) {
 }
 // 
 void mcc_string::action(FILE *out, act_opt option) {
+    action_header();
     if (_value != "") {
         // IMPORTANT
         // C++ std::string does not ensure that entered C character string ends with NULL;
@@ -225,166 +191,131 @@ fprintf(stderr, "mcc_string_action >> cannot find token [%s] \n", _value.c_str()
 }
 // 
 void mcc_symbol::action(FILE *out, act_opt option) {
+    action_header();
     // 
     fprintf(out, "%s ", this->value().c_str());
 }
 
 // 
 void list_parameter::action(FILE *out, act_opt option) {
+    action_header();
     // 
     if (out_lyc) {
-        this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
+        // this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
+        std::string ret = this->glance(out_lyc_y_list, option);
         int index = ast_table_LIST_index(this);
         if (index < 0) {
 fprintf(stderr, "list_parameter_action >> cannot find definition of LIST[%d] \n", index);
             exit(1);
         }
+
         // 
         fprintf(out, "LIST_%d ", index);
     }
 }
 // 
 void option_parameter::action(FILE *out, act_opt option) {
+    action_header();
     //
     if (out_lyc) {
-        // std::string ret = this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
-        this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
+        // this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
+        std::string ret = this->glance(out_lyc_y_option, option);
         int index = ast_table_OPT_index(this);
         if (index < 0) {
-            fprintf(stderr, 
-                    "option_parameter_action >> cannot find definition of OPTION[%d] \n", 
-                    index);
+            using ast::ast_table_OPT;
+fprintf(stderr, "option_parameter_action >> cannot find definition of OPTION[%d] \n", index);
+fprintf(stderr, "%p \n", this);
+
+            // 
+            for (auto it = ast::ast_table_LIST.begin(); it != ast::ast_table_LIST.end(); ++it) {
+                std::string key = it->first;
+                auto value = it->second;
+
+                // 
+                fprintf(stderr, "[%s/%p] \n", key.c_str(), value);
+            }
+            // 
+            for (auto it = ast::ast_table_OPT.begin(); it != ast::ast_table_OPT.end(); ++it) {
+                std::string key = it->first;
+                option_parameter *value = it->second;
+
+                // 
+                fprintf(stderr, "[%s/%p] \n", key.c_str(), value);
+            }
+            // 
+            for (auto it = ast::ast_table_STAR.begin(); it != ast::ast_table_STAR.end(); ++it) {
+                std::string key = it->first;
+                auto value = it->second;
+
+                // 
+                fprintf(stderr, "[%s/%p] \n", key.c_str(), value);
+            }
+
+
+            // 
             exit(1);
         }
+
         // 
-        // fprintf(out, "%s ", ret.c_str());
+        printf("OPT_%d fetched successfully. \n", index);
         fprintf(out, "OPT_%d ", index);
     }
 }
 // 
 void star_parameter::action(FILE *out, act_opt option) {
+    action_header();
     // 
     if (out_lyc) {
-        // std::string ret = this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
-        this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
+        // this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
+        std::string ret = this->glance(out_lyc_y_star, option);
         int index = ast_table_STAR_index(this);
         if (index < 0) {
-            fprintf(stderr, 
-                    "star_parameter_action >> cannot find definition of STAR[%d] \n", 
-                    index);
+fprintf(stderr, "star_parameter_action >> cannot find definition of STAR[%d] \n", index);
             exit(1);
         }
+        
         // 
-        // fprintf(out, "%s ", ret.c_str());
         fprintf(out, "STAR_%d ", index);
     }
 }
 // 
 void list_parameter_value::action(FILE *out, act_opt option) {
+    action_header();
     // 
     if (out_lyc) {
-        // fprintf(stderr, "/* LIST(%d) */\n", this->ast_symbol_value_list->count);
-        // ast_list_traverse(out, this->ast_symbol_value_list, option);
         this->ast_symbol_value_list()->action(out, option);
     }
 }
 // 
 void option_parameter_value::action(FILE *out, act_opt option) {
+    action_header();
     // 
     if (out_lyc) {
-        // fprintf(stderr, "/* OPTION(%d) */\n", this->ast_symbol_value_list->count);
-        // list::describe(out, this->ast_symbol_value_list, option);
         this->ast_symbol_value_list()->action(out, option);
     }
 }
 // 
 void star_parameter_value::action(FILE *out, act_opt option) {
-    //
-    if (out_jj) {
-        fprintf(out_jj, "6");
-    }
-
+    action_header();
     // 
     if (out_lyc) {
-        // fprintf(stderr, "/* STAR(%d) */\n", this->ast_symbol_value_list->count);
-        // ast_list_traverse(out, this->ast_symbol_value_list, option);
-        // this->ast_symbol_value_list()->action(out, option);
         this->ast_list_parameter()->action(out, option);
     }
 }
 // 
 void token_definition::action(FILE *out, act_opt option) {
+    action_header();
     // 
     if (out_lyc) {
-        // char token_key_buf[128];
-        // char token_value_buf[128];
-        // sprintf(token_key_buf, "\"%s\"", this->token_key);
-        // sprintf(token_value_buf, "%s", this->token_key);
-
-        // fprintf(out_lyc_l_tokendef, "%-40s return %s;\n", token_key_buf, token_value_buf);
-        
         // 
         if (tokens_index(this->token_key().c_str()) < 0) {
             tokens_add(this->token_key().c_str());
         }
-        // fprintf(out_lyc_y_token, "%%token %s\n", this->token_key);
         
         // 
         fprintf(out_lyc, "%s ", this->token_key().c_str());
     }
 }
-
-/*
-// 
-void ast_symbol_value_list_node_action(FILE *out, act_opt option) {
-    if (this->type == AST_LIST_NODE) {
-        switch (this->elem_type) {
-            case AST_LIST:
-                ast_list_traverse(out, this->elem, option);
-                break;
-            case AST_SYMBOL_DEFINITION:
-                symbol_definition::action(out, this->elem, option);
-                break;
-            case AST_SYMBOL_KEY:
-                symbol_key::action(out, this->elem, option);
-                break;
-            case AST_KEY_ATTRIBUTES:
-                key_attributes::action(out, this->elem, option);
-                break;
-            case AST_SYMBOL_VALUE:
-                symbol_value::action(out, this->elem, option);
-                break;
-            case AST_SYMBOL_VALUE_ELEMENT:
-                symbol_value_element::action(out, this->elem, option);
-                break;
-            case AST_LIST_PARAMETER:
-                list_parameter::action(out, this->elem, option);
-                break;
-            case AST_OPTION_PARAMETER:
-                option_parameter::action(out, this->elem, option);
-                break;
-            case AST_STAR_PARAMETER:
-                star_parameter::action(out, this->elem, option);
-                break;
-            default:
-                fprintf(stderr, "invalid node element type [%d] \n", this->elem_type);
-                exit(1);
-                break;
-        }
-    }
-    else {
-        fprintf(stderr, "invalid node \n");
-        exit(1);
-    }
-}
-// 
-void ast_symbol_value_list_traverse(FILE *out, act_opt option) {
-    list_node *node;
-    for (node=this->head.next; node; node=node->next) {
-        ast_symbol_value_list_node_action(out, node, option);
-    }
-}
-*/
 
 
 
@@ -398,6 +329,7 @@ void ast_symbol_value_list_traverse(FILE *out, act_opt option) {
 //==============================================================================
 // 
 void symbol_definition_list::action(FILE *out, act_opt option) {
+    action_header();
     // static int depth = 0;
     auto node = this->first(); // list_node *node;
 
@@ -405,11 +337,15 @@ void symbol_definition_list::action(FILE *out, act_opt option) {
     if (out_lyc) {
         for (node = this->first(); node != this->end(); ++node) {
             (*node)->action(out, option);
+            printf("=== [%s] \n", (*node)->ast_symbol_key()->symbol_name().c_str());
         }
     }
+
+    // 
 }
 // 
 void symbol_value_list::action(FILE *out, act_opt option) {
+    action_header();
     // gather syntax list.
     symbol_value_list *ast_list = this;
     auto node = ast_list->first();
@@ -452,5 +388,29 @@ void symbol_value_list::action(FILE *out, act_opt option) {
 }
 // 
 void symbol_value_element_list::action(FILE *out, act_opt option) {
-    throw exception("NOT IMPLEMENTED");
+    action_header();
+
+    auto node = this->first();
+
+    if (out_lyc) {
+        for (node = this->first(); node != this->end(); ++node) {
+            (*node)->action(out, option);
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

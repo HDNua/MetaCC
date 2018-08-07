@@ -70,7 +70,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 22 "mcc_parser.yy" /* yacc.c:1909  */
+#line 21 "mcc_parser.yy" /* yacc.c:1909  */
 
     char                                    token_str[MAX_TOKEN_LEN];
 											
