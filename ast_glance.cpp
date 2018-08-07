@@ -326,7 +326,7 @@ std::string option_parameter::glance(FILE *out, act_opt option) {
                 }
                 fprintf(out_lyc_y_option, "\n");
                 fprintf(out_lyc_y_option, "    {\n");
-                fprintf(out_lyc_y_option, "        ast::list<ast::object *> *list \n");
+                fprintf(out_lyc_y_option, "        ast::list<ast::object *> *list ");
                 fprintf(out_lyc_y_option, "= new ast::list<ast::object *>();\n");
                 fprintf(out_lyc_y_option, "        // list->append($1);\n");
                 fprintf(out_lyc_y_option, "        $$ = list;\n");

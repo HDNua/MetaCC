@@ -195,9 +195,6 @@ int metacc_main(int argc, const char *argv[]) {
         fprintf(stderr, "compilation has failed. \n");
     }
 
-    // 
-    printf("WOW \n");
-
     // templates
     if (out_jj) {
         extern class ast::symbol_definition_list *symbol_definition_list;
@@ -277,8 +274,6 @@ int metacc_main(int argc, const char *argv[]) {
     else if (out_lyc) {
         extern class ast::symbol_definition_list *symbol_definition_list;
         FILE *out;
-
-        printf("TEST\n"); 
 
         // 
         {
@@ -378,88 +373,10 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "\n");
             fprintf(out, "\n");
-            /*
-            fprintf(out, "//==============================================================================\n");
-            fprintf(out, "// \n");
-            fprintf(out, "static struct ast_list_node *ast_list_node_new(void *elem, ast_type type) {\n");
-            fprintf(out, "    struct ast_list_node *ret = (struct ast_list_node *)malloc(sizeof(struct ast_list_node));\n");
-            fprintf(out, "    ret->type = AST_LIST_NODE;\n");
-            fprintf(out, "    ret->elem_type = type;\n");
-            fprintf(out, "    ret->elem = elem;\n");
-            fprintf(out, "    ret->next = NULL;\n");
-            fprintf(out, "    return ret;\n");
-            fprintf(out, "}\n");
-            fprintf(out, "// \n");
-            fprintf(out, "struct ast_list *ast_list_new(ast_type type) {\n");
-            fprintf(out, "    struct ast_list *ret = (struct ast_list *)malloc(sizeof(struct ast_list));\n");
-            fprintf(out, "    ret->type = AST_LIST;\n");
-            fprintf(out, "    ret->elem_type = type;\n");
-            fprintf(out, "    ret->tail = &ret->head;\n");
-            fprintf(out, "    ret->count = 0;\n");
-            fprintf(out, "    return ret;\n");
-            fprintf(out, "};\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_append(struct ast_list *self, void *elem, ast_type type) {\n");
-            fprintf(out, "    struct ast_list_node *node = ast_list_node_new(elem, type);\n");
-            fprintf(out, "    self->tail->next = node;\n");
-            fprintf(out, "    self->tail = node;\n");
-            fprintf(out, "    self->count += 1;\n");
-            fprintf(out, "}\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_iterate(struct ast_list *self) {\n");
-            fprintf(out, "    struct ast_list_node *node;\n");
-            fprintf(out, "    for (node=self->head.next; node; node=node->next) {\n");
-            fprintf(out, "        ast_list_node_describe(node);\n");
-            fprintf(out, "    }\n");
-            fprintf(out, "}\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "// \n");
-            fprintf(out, "static int description_depth = 0;\n");
-            fprintf(out, "static int describe_begin() {\n");
-            fprintf(out, "    return ++description_depth;\n");
-            fprintf(out, "}\n");
-            fprintf(out, "static int describe_end() {\n");
-            fprintf(out, "    return --description_depth;\n");
-            fprintf(out, "}\n");
-            fprintf(out, "static void indent_depth(const char *s) {\n");
-            fprintf(out, "    int i;\n");
-            fprintf(out, "    for (i=0; i<description_depth; ++i) {\n");
-            fprintf(out, "        printf(\"%%s\", s);\n");
-            fprintf(out, "    }\n");
-            fprintf(out, "}\n");
-            fprintf(out, "static void tab_depth() {\n");
-            fprintf(out, "    indent_depth(\"    \");\n");
-            fprintf(out, "}\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_traverse(struct ast_list *list) {\n");
-            fprintf(out, "    \n");
-            fprintf(out, "}\n");
-            fprintf(out, "// \n");
-            fprintf(out, "void ast_list_node_describe(struct ast_list_node *node) {\n");
-            fprintf(out, "    \n");
-            fprintf(out, "}\n");
-            fprintf(out, "void ast_list_node_action(struct ast_list_node *node) {\n");
-            fprintf(out, "    \n");
-            fprintf(out, "}\n");
-            */
-            fprintf(out, "\n");
-            fprintf(out, "\n");
-            fprintf(out, "\n");
         }
 
         // 
-        printf("TEST begin; \n"); 
-
-        // 
         symbol_definition_list->action(out_lyc, ast::ACTOPT_NONE);
-
-        // 
-        printf("TEST end; \n"); 
 
         // 
         {
@@ -516,11 +433,6 @@ int metacc_main(int argc, const char *argv[]) {
         {
             char fmt[ast::MAX_TOKEN_LEN] = "";
             char type_left[ast::MAX_TOKEN_LEN] = "";
-            //// extern struct table symbols;
-            //// extern struct table table_LIST_keys;
-            //// extern struct table table_OPT_keys;
-            //// extern struct table table_STAR_keys;
-            //// extern struct table string_token_keys;
             out = out_lyc_y_type;
 
             // 
@@ -532,29 +444,6 @@ int metacc_main(int argc, const char *argv[]) {
                 sprintf(type_left, "<ast_%-s>", symbol_name);
                 fprintf(out, fmt, type_left, symbol_name);
             }
-
-            /*
-            for (int i=0, len=ast::table_LIST_keys.size(); i<len; ++i) {
-                // fprintf(out, "%%type <ast_list> %s\n", table_LIST_keys.list[i]);
-                const char *s = ast::ast_table_LIST.at(i).first;
-                fprintf(out, "%%type <ast_list> %s\n", ast::ast_table_LIST_keys.list[i]);
-            }
-            for (int i=0, len=ast::table_OPT_keys.size(); i<len; ++i) {
-                // fprintf(out, "%%type <ast_list> %s\n", table_OPT_keys.list[i]);
-                const char *s;
-                fprintf(out, "%%type <ast_list> %s\n", ast::table_OPT_keys.list[i]);
-            }
-            for (int i=0, len=ast::table_STAR_keys.size(); i<len; ++i) {
-                // fprintf(out, "%%type <ast_list> %s\n", table_STAR_keys.list[i]);
-                const char *s;
-                fprintf(out, "%%type <ast_list> %s\n", ast::table_STAR_keys.list[i]);
-            }
-            for (int i=0, len=ast::string_token_keys.size(); i<len; ++i) {
-                // fprintf(out, "%%type <token_str> %s\n", string_token_keys.list[i]);
-                const char *s;
-                fprintf(out, "%%type <token_str> %s\n", ast::string_token_keys.list[i]);
-            }
-            */
 
             // 
             for (auto it = ast::ast_table_LIST.begin(); 
@@ -707,7 +596,6 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "\n");
             fprintf(out, "public:\n");
             fprintf(out, "    list()\n");
-            // fprintf(out, "        : object(AST_LIST), _elem_type(elem_type)\n");
             fprintf(out, "        : object(AST_LIST)\n");
             fprintf(out, "    {\n");
             fprintf(out, "    }\n");
@@ -715,8 +603,6 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "        \n");
             fprintf(out, "    }\n");
             fprintf(out, "    \n");
-            // fprintf(out, "    // \n");
-            // fprintf(out, "    ast_type elem_type() const { return _elem_type; }\n");
             fprintf(out, "    // \n");
             fprintf(out, "    int count() const { return _vector.size(); }\n");
             fprintf(out, "    \n");
@@ -747,17 +633,14 @@ int metacc_main(int argc, const char *argv[]) {
             fprintf(out, "    }\n");
             fprintf(out, "    \n");
             fprintf(out, "    // \n");
-            // fprintf(out, "    void append(object *o, ast_type elem_type) {\n");
             fprintf(out, "    void append(object *o) {\n");
             fprintf(out, "        _vector.push_back(o);\n");
             fprintf(out, "    }\n");
             fprintf(out, "    typename ");
-            // fprintf(out, "    std::vector<object *>::iterator first() {\n");
             fprintf(out, "    std::vector<Type>::iterator first() {\n");
             fprintf(out, "        return _vector.begin();\n");
             fprintf(out, "    }\n");
             fprintf(out, "    typename ");
-            // fprintf(out, "    std::vector<object *>::const_iterator first() const {\n");
             fprintf(out, "    std::vector<Type>::const_iterator first() const {\n");
             fprintf(out, "        return _vector.begin();\n");
             fprintf(out, "    }\n");

@@ -1,3 +1,17 @@
+MetaCC - Meta Compiler Compiler v0.5.4.1
+----
+
+- 이전 얼추 완료.
+> C++에서 FLEX & BISON 컴파일 가능하게 만드려면... 훨씬 더 걸림.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+- 주석 약간 제거.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.5.4.0 (IMPORTANT)
 ----
 

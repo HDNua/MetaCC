@@ -337,7 +337,7 @@ void symbol_definition_list::action(FILE *out, act_opt option) {
     if (out_lyc) {
         for (node = this->first(); node != this->end(); ++node) {
             (*node)->action(out, option);
-            printf("=== [%s] \n", (*node)->ast_symbol_key()->symbol_name().c_str());
+            // printf("=== [%s] \n", (*node)->ast_symbol_key()->symbol_name().c_str());
         }
     }
 
