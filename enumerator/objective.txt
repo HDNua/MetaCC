@@ -1,0 +1,136 @@
+//==============================================================
+// Input:
+// 5
+// 3 a b c
+// 2 d f 
+// 4 g h i j
+// 1 k
+// 5 l m n o p
+//
+// Output: 
+// a d g k l
+// a d g k m
+// a d g k n
+// a d g k o
+// a d g k p
+// a d h k l
+// a d h k m
+// a d h k n
+// a d h k o
+// a d h k p
+// a d i k l
+// a d i k m
+// a d i k n
+// a d i k o
+// a d i k p
+// a d j k l
+// a d j k m
+// a d j k n
+// a d j k o
+// a d j k p
+// a f g k l
+// a f g k m
+// a f g k n
+// a f g k o
+// a f g k p
+// a f h k l
+// a f h k m
+// a f h k n
+// a f h k o
+// a f h k p
+// a f i k l
+// a f i k m
+// a f i k n
+// a f i k o
+// a f i k p
+// a f j k l
+// a f j k m
+// a f j k n
+// a f j k o
+// a f j k p
+// b d g k l
+// b d g k m
+// b d g k n
+// b d g k o
+// b d g k p
+// b d h k l
+// b d h k m
+// b d h k n
+// b d h k o
+// b d h k p
+// b d i k l
+// b d i k m
+// b d i k n
+// b d i k o
+// b d i k p
+// b d j k l
+// b d j k m
+// b d j k n
+// b d j k o
+// b d j k p
+// b f g k l
+// b f g k m
+// b f g k n
+// b f g k o
+// b f g k p
+// b f h k l
+// b f h k m
+// b f h k n
+// b f h k o
+// b f h k p
+// b f i k l
+// b f i k m
+// b f i k n
+// b f i k o
+// b f i k p
+// b f j k l
+// b f j k m
+// b f j k n
+// b f j k o
+// b f j k p
+// c d g k l
+// c d g k m
+// c d g k n
+// c d g k o
+// c d g k p
+// c d h k l
+// c d h k m
+// c d h k n
+// c d h k o
+// c d h k p
+// c d i k l
+// c d i k m
+// c d i k n
+// c d i k o
+// c d i k p
+// c d j k l
+// c d j k m
+// c d j k n
+// c d j k o
+// c d j k p
+// c f g k l
+// c f g k m
+// c f g k n
+// c f g k o
+// c f g k p
+// c f h k l
+// c f h k m
+// c f h k n
+// c f h k o
+// c f h k p
+// c f i k l
+// c f i k m
+// c f i k n
+// c f i k o
+// c f i k p
+// c f j k l
+// c f j k m
+// c f j k n
+// c f j k o
+// c f j k p
+//==============================================================
+
+
+
+
+

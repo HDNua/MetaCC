@@ -1,0 +1,17 @@
+token a was added 
+token b was added 
+token c was added 
+token d was added 
+token f was added 
+token g was added 
+token h was added 
+token i was added 
+token j was added 
+token k was added 
+token l was added 
+token m was added 
+token n was added 
+token o was added 
+token p was added 
+enumerator begins 
+it_stack initialized.
