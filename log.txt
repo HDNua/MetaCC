@@ -1,3 +1,11 @@
+MetaCC - Meta Compiler Compiler v0.6.0.0 - enumerator v0.0.0.0
+----
+
+- initial commit.
+
+
+end.
+
 MetaCC - Meta Compiler Compiler v0.6.0.0
 ----
 
