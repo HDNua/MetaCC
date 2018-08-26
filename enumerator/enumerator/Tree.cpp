@@ -18,8 +18,6 @@ namespace ast {
     struct object {
 
     public:
-        // 
-        virtual std::vector<object *> &emit(std::vector<object *> &v) = 0;
     };
 
     // 
@@ -27,60 +25,46 @@ namespace ast {
     struct list: public object {
         std::vector<Type> _list;
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) {
-            return v;
+        //
+        void push_back(const Type &value) {
+            _list.push_back(value);
         }
     };
-
-    /*
-    template <>
-    struct list<struct symbol_definition *>: public object {
-
-    public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
-    };
-    typedef list<symbol_definition *> symbol_definition_list;
-    */
+    //
     struct symbol_definition_list: public list<struct symbol_definition *> {
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) {
-            return v;
+        //
+        void push_back(struct symbol_definition *value) {
+            _list.push_back(value);
         }
     };
-
     // 
-    template <>
-    struct list<struct symbol_value *>: public object {
+    struct symbol_value_list: public list<struct symbol_value *> {
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
+        //
+        void push_back(struct symbol_value *value) {
+            _list.push_back(value);
         }
     };
-    typedef list<symbol_value *> symbol_value_list;
-
     //
-    template <>
-    struct list<struct symbol_value_element *>: public object {
+    struct symbol_value_element_list: public list<struct symbol_value_element *> {
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
+        //
+        void push_back(struct symbol_value_element *value) {
+            _list.push_back(value);
         }
     };
-    typedef list<symbol_value_element *> symbol_value_element_list;
+
 
     // 
     struct start: public object {
         symbol_definition_list *_symbol_definition_list;
     
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) {
-            return v;
-        }
+
     };
     // 
     struct symbol_definition: public object {
@@ -88,35 +72,27 @@ namespace ast {
         symbol_value_list *_symbol_value_list;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
+
     };
     // 
     struct symbol_key: public object {
         struct mcc_string *_value;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
+
     };
     // 
     struct symbol_value: public object {
         symbol_value_element_list *_symbol_value_element_list;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
+
     };
     // 
     struct symbol_value_element: public object {
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
+        virtual bool emit(std::vector<symbol_value_element *> &v) = 0;
     };
     // 
     struct mcc_symbol: public symbol_value_element {
@@ -126,8 +102,9 @@ namespace ast {
         //
         mcc_symbol(const std::string &value): _value(value) { }
         //
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
+        virtual bool emit(std::vector<symbol_value_element *> &v) {
+            v.push_back(this);
+            return true;
         }
     };
     // 
@@ -138,17 +115,21 @@ namespace ast {
         //
         mcc_string(const std::string &value): _value(value) { }
         //
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
+        virtual bool emit(std::vector<symbol_value_element *> &v) {
+            v.push_back(this);
+            return true;
         }
     };
     // 
     struct list_parameter: public symbol_value_element {
         struct list_parameter_value *_list_parameter_value;
+        struct mcc_string *_list_parameter_delim;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
+        //
+        virtual bool emit(std::vector<symbol_value_element *> &v) {
+            v.push_back(this);
+            return true;
         }
     };
     // 
@@ -156,17 +137,17 @@ namespace ast {
         symbol_value_list *_symbol_value_list;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
+
     };
     // 
     struct option_parameter: public symbol_value_element {
         struct option_parameter_value *_option_parameter_value;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
+        //
+        virtual bool emit(std::vector<symbol_value_element *> &v) {
+            v.push_back(this);
+            return true;
         }
     };
     // 
@@ -174,17 +155,17 @@ namespace ast {
         symbol_value_list *_symbol_value_list;
         
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
+
     };
     // 
     struct star_parameter: public symbol_value_element {
         struct star_parameter_value *_star_parameter_value;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
+        //
+        virtual bool emit(std::vector<symbol_value_element *> &v) {
+            v.push_back(this);
+            return true;
         }
     };
     // 
@@ -192,9 +173,7 @@ namespace ast {
         struct list_parameter *_list_parameter;
 
     public:
-        virtual std::vector<object *> &emit(std::vector<object *> &v) { 
-            return v;
-        }
+
     };
 }
 
