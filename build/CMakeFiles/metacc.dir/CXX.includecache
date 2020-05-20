@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -22,7 +22,7 @@ cstring
 iostream
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h
+/home/handy/work/project/metacc/dev/ast.h
 string
 -
 vector
@@ -38,9 +38,9 @@ cstring
 iostream
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_action.cpp
+/home/handy/work/project/metacc/dev/ast_action.cpp
 ast.h
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h
+/home/handy/work/project/metacc/dev/ast.h
 cstdio
 -
 cstdlib
@@ -52,9 +52,9 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_common.cpp
+/home/handy/work/project/metacc/dev/ast_common.cpp
 ast.h
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h
+/home/handy/work/project/metacc/dev/ast.h
 cstdio
 -
 cstdlib
@@ -66,9 +66,9 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_describe.cpp
+/home/handy/work/project/metacc/dev/ast_describe.cpp
 ast.h
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h
+/home/handy/work/project/metacc/dev/ast.h
 cstdio
 -
 cstdlib
@@ -80,9 +80,9 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast_glance.cpp
+/home/handy/work/project/metacc/dev/ast_glance.cpp
 ast.h
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h
+/home/handy/work/project/metacc/dev/ast.h
 cstdio
 -
 cstdlib
@@ -94,13 +94,13 @@ ctype.h
 boost/format.hpp
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.cc
+/home/handy/work/project/metacc/dev/build/mcc_parser.tab.cc
 cstdio
 -
 cstdlib
 -
 ast.h
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/ast.h
+/home/handy/work/project/metacc/dev/build/ast.h
 stddef.h
 -
 libintl.h
@@ -116,9 +116,9 @@ stdlib.h
 stdio.h
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.hh
+/home/handy/work/project/metacc/dev/build/mcc_parser.tab.hh
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.yy.cc
+/home/handy/work/project/metacc/dev/build/mcc_parser.yy.cc
 stdio.h
 -
 string.h
@@ -130,17 +130,17 @@ stdlib.h
 inttypes.h
 -
 ast.h
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/ast.h
+/home/handy/work/project/metacc/dev/build/ast.h
 stdio.h
 -
 string.h
 -
 mcc_parser.tab.hh
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/mcc_parser.tab.hh
+/home/handy/work/project/metacc/dev/build/mcc_parser.tab.hh
 unistd.h
 -
 
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/main.cpp
+/home/handy/work/project/metacc/dev/main.cpp
 stdio.h
 -
 stdlib.h
@@ -148,7 +148,7 @@ stdlib.h
 string.h
 -
 ast.h
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/ast.h
+/home/handy/work/project/metacc/dev/ast.h
 unistd.h
 -
 sys/stat.h

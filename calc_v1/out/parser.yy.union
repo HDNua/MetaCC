@@ -1,0 +1,13 @@
+%union {
+    char token_str[MAX_TOKEN_LEN];
+    class ast::list<class ast::object *> *ast_list;
+    
+    ast::line_list *ast_line_list;
+    ast::line      *ast_line;
+    ast::expr      *ast_expr;
+    ast::term      *ast_term;
+    ast::primary   *ast_primary;
+    ast::attribute *ast_attribute;
+}
+
+

@@ -1,3 +1,17 @@
+MetaCC - Meta Compiler Compiler v0.6.0.0
+----
+
+- 빔으로 한국어 쓰려니까 어렵기는 하네요.
+  로그 파일은 gedit 같은 것을 쓰는 것이 좋겠습니다.
+
+- 이것저것 많이 작성해두었습니다.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.5.4.1
 ----
 

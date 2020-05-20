@@ -1,9 +1,2 @@
 *~
 *.sw*
-out
-lex.yy.c
-y.tab.c
-y.tab.h
-y.output
-y.dot
-metacc
