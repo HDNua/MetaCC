@@ -1,3 +1,14 @@
+MetaCC - Meta Compiler Compiler v0.6.1.0 (201206-2251)
+----
+
+- calc가 제대로 돌 수 있게 수정중입니다. 계속 하다보면 metacc도 많이 발전하겠어요.
+
+- v0.4.2.0에서 논의되었던 문제는 반드시 해결해야 한다.
+
+
+end.
+
+
 Merging4...
 
 Merging2...

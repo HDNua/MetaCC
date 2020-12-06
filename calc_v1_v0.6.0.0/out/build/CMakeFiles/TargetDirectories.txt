@@ -1,6 +1,0 @@
-/home/handy/work/project/metacc/dev/calc_v1/out/build/CMakeFiles/edit_cache.dir
-/home/handy/work/project/metacc/dev/calc_v1/out/build/CMakeFiles/test.dir
-/home/handy/work/project/metacc/dev/calc_v1/out/build/CMakeFiles/rebuild_cache.dir
-/home/handy/work/project/metacc/dev/calc_v1/out/build/CMakeFiles/clean_all.dir
-/home/handy/work/project/metacc/dev/calc_v1/out/build/CMakeFiles/out.dir
-/home/handy/work/project/metacc/dev/calc_v1/out/build/CMakeFiles/debug.dir
