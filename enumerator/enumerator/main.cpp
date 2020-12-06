@@ -105,17 +105,17 @@ int main(void) {
                 printf("%s ", value.c_str());
             }
             else if (typeid(*elem) == typeid(list_parameter)) {
-                // mcc_string *casted = static_cast<mcc_string *>(elem);
+                list_parameter *casted = static_cast<list_parameter *>(elem);
                 // std::string value = casted->_value;
                 printf("LIST ");
             }
             else if (typeid(*elem) == typeid(option_parameter)) {
-                // mcc_string *casted = static_cast<mcc_string *>(elem);
+                option_parameter *casted = static_cast<option_parameter *>(elem);
                 // std::string value = casted->_value;
                 printf("OPTION ");
             }
             else if (typeid(*elem) == typeid(star_parameter)) {
-                // mcc_string *casted = static_cast<mcc_string *>(elem);
+                star_parameter *casted = static_cast<star_parameter *>(elem);
                 // std::string value = casted->_value;
                 printf("STAR ");
             }

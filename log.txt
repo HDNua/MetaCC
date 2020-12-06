@@ -1,3 +1,13 @@
+MetaCC - Meta Compiler Compiler v0.6.0.0 - enumerator v0.0.1.1
+----
+
+- 뭐하는 프로젝트였는지도 까먹었음.. 일단 수정한 내용은 커밋하자.
+
+
+end.
+
+
+
 MetaCC - Meta Compiler Compiler v0.6.0.0 - enumerator v0.0.1.0
 ----
 
