@@ -1,0 +1,30 @@
+# vim: expandtab ts=4 sw=4
+
+line_list
+    : LIST( line, "" )
+    // : line
+    // | line_list line
+    ;
+
+line
+    : expr ";"
+    ;
+
+expr
+    : expr "+" term
+    | expr "-" term
+    | term
+    ;
+
+term
+    : term "*" primary
+    | term "/" primary
+    | primary
+    ;
+
+primary
+    : TOKEN( "INTEGER" )
+    | TOKEN( "STRING" )
+    | TOKEN( "IDENTIFIER" )
+    | "(" expr ")"
+    ;
