@@ -178,6 +178,7 @@ void mcc_string::action(FILE *out, act_opt option) {
         // C++ std::string does not ensure that entered C character string ends with NULL;
         //  you have to initialize all of C string buffer with 0.
         char key_name[256] = "";
+        char sec_name[256] = "";
         int index = string_tokens_value_index(_value.c_str());
         if (index < 0) {
 fprintf(stderr, "mcc_string_action >> cannot find token [%s] \n", _value.c_str());
@@ -186,7 +187,9 @@ fprintf(stderr, "mcc_string_action >> cannot find token [%s] \n", _value.c_str()
 
         // 
         sprintf(key_name, "%s", ast::string_tokens[index].first.c_str());
-        fprintf(out, "%s ", key_name);
+        sprintf(sec_name, "%s", ast::string_tokens[index].second.c_str());
+        //fprintf(out, "%s ", key_name);
+        fprintf(out, "%s /""* %s *""/ ", key_name, sec_name);
     }
 }
 // 
