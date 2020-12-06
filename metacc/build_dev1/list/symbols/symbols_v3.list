@@ -1,0 +1,1443 @@
+# vim: expandtab ts=4 sw=4
+#================================================================================
+# NEW SECTION
+# 1. 
+#--------------------------------------------------------------------------------
+# 1.1) 
+# 1.2) 
+# 1.3) 
+# 1.4) 
+# 1.5) 
+# 1.6) 
+# 1.7) 
+# 1.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 2. 
+#--------------------------------------------------------------------------------
+# 2.1) 
+# 2.2) 
+# 2.3) 
+# 2.4) 
+# 2.5) 
+# 2.6) 
+# 2.7) 
+# 2.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 3. 
+#--------------------------------------------------------------------------------
+# 3.1) 
+# 3.2) 
+# 3.3) 
+# 3.4) 
+# 3.5) 
+# 3.6) 
+# 3.7) 
+# 3.8) 
+#================================================================================
+# 
+
+
+
+#================================================================================
+# NEW SECTION
+# 4. 
+#--------------------------------------------------------------------------------
+# 4.1) 
+# 4.2) 
+# 4.3) 
+# 4.4) 
+# 4.5) 
+# 4.6) 
+# 4.7) 
+# 4.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 5. 
+#--------------------------------------------------------------------------------
+# 5.1) 
+# 5.2) 
+# 5.3) 
+# 5.4) 
+# 5.5) 
+# 5.6) 
+# 5.7) 
+# 5.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 6. Behavioral statements
+#--------------------------------------------------------------------------------
+# 6.1) Continuous assignment and net alias statements
+# 6.2) Procedural blocks and assignments
+# 6.3) Parallel and sequential blocks
+# 6.4) Statements
+# 6.5) Timing control statements
+# 6.6) Conditional statements
+# 6.7) Case statements
+# 6.7.1) Patterns
+# 6.8) Looping statements
+#================================================================================
+# 6.1) Continuous assignment and net alias statements
+continuous_assign
+    : "assign" OPTION( drive_strength ) OPTION( delay3 ) list_of_net_assignments ";"
+    | "assign" OPTION( delay_control ) list_of_variable_assignments ";"
+    ;
+list_of_net_assignments
+    : LIST( net_assignment, "," )
+    ;
+list_of_variable_assignments
+    : LIST( variable_assignment, "," )
+    ;
+net_alias
+    : "alias" net_lvalue LIST( "=" net_lvalue, "" )
+    ;
+net_assignment
+    : net_lvalue "=" expression
+    ;
+
+# 6.2) Procedural blocks and assignments
+initial_construct
+    : "initial" statement_or_null
+    ;
+always_construct
+    : always_keyword statement
+    ;
+always_keyword
+    : "always" | "always_comb" | "always_latch" | "always_ff"
+    ;
+final_construct
+    : "final" function_statement
+    ;
+blocking_assignment
+    : variable_lvalue "=" delay_or_event_control expression
+    | nonrange_variable_lvalue "=" dynamic_array_new
+    | OPTION( implicit_class_handle "." | class_scope | package_scope )
+        hierarchical_variable_identifier
+        select "=" class_new
+    | operator_assignment
+    ;
+operator_assignment
+    : variable_lvalue assignment_operator expression
+    ;
+assignment_operator
+    : "="    | "+="   | "-="   | "*="   | "/="   | "%=" 
+    | "&="   | "|="   | "^="   | "<<="  | ">>="  | "<<<=" | ">>>="
+    ;
+nonblocking_assignment
+    : variable_lvalue "<=" OPTION( delay_or_event_control ) expression
+    ;
+procedural_continuous_assignment
+    : "assign" variable_assignment
+    | "deassign" variable_lvalue
+    | "force" variable_assignment
+    | "force" net_assignment
+    | "release" variable_lvalue
+    | "release" net_lvalue
+    ;
+variable_assignment
+    : variable_lvalue "=" expression
+    ;
+
+# 6.3) Parallel and sequential blocks
+action_block
+    : statement_or_null
+    | OPTION( statement) "else" statement_or_null
+    ;
+seq_block
+    : "begin" OPTION( ":" block_identifier ) STAR( block_item_declaration ) 
+        STAR( statement_or_null )
+        "end" OPTION( ":" block_identifier )
+    ;
+par_block
+    : "fork" OPTION( ":" block_identifier ) STAR( block_item_declaration )
+        STAR( statement_or_null )
+        join_keyword OPTION( ":" block_identifier )
+    ;
+join_keyword
+    : "join" | "join_any" | "join_none"
+    ;
+
+# 6.4) Statements
+statement_or_null
+    : statement
+    | STAR( attribute_instance ) ";"
+    ;
+statement
+    : OPTION( block_identifier ":" ) STAR( attribute_instance ) statement_item
+    ;
+statement_item
+    : blocking_assignment ";"
+    | nonblocking_assignment ";"
+    | procedural_continuous_assignment ";"
+    | case_statement
+    | conditional_statement
+    | inc_or_dec_expression ";"
+    | subroutine_call_statement
+    | disable_statement
+    | event_trigger
+    | loop_statement
+    | jump_statement
+    | par_block
+    | procedural_timing_control_statement
+    | seq_block
+    | wait_statement
+    | procedural_assertion_statement
+    | clocking_drive ";"
+    | randsequence_statement
+    | randcase_statement
+    | expect_property_statement
+    ;
+function_statement
+    : statement
+    ;
+function_statement_or_null
+    : function_statement
+    | STAR( attribute_instance ) ";"
+    ;
+variable_identifier_list
+    : LIST( variable_identifier, "," )
+    ;
+
+# 6.5) Timing control statements
+procedural_timing_control_statement
+    : procedural_timing_control statement_or_null
+    ;
+
+# 6.6) Conditional statements
+conditional_statement
+    : OPTION( unique_priority ) "if" "(" cond_predicate ")" statement_or_null
+        STAR( "else" "if" "(" cond_predicate ")" statement_or_null )
+        OPTION( "else" statement_or_null )
+    ;
+unique_priority
+    : "unique" | "unique0" | "priority"
+    ;
+cond_predicate
+    : LIST( expression_or_cond_pattern, "&&&" )
+    ;
+expression_or_cond_pattern
+    : expression
+    | cond_pattern
+    ;
+cond_pattern
+    : expression "matches" pattern
+    ;
+
+# 6.7) Case statements
+case_statement
+    : OPTION( unique_priority ) case_keyword "(" case_expression ")"
+        LIST( case_item, "" )
+        "endcase"
+    | OPTION( unique_priority ) case_keyword "(" case_expression ")" "matches"
+        LIST( case_pattern_item, "" )
+        "endcase"
+    | OPTION( unique_priority ) "case" "(" case_expression ")" "inside"
+        LIST( case_inside_item, "")
+        "endcase"
+    ;
+case_keyword
+    : "case" | "casex" | "casez"
+    ;
+case_expression
+    : expression
+    ;
+case_item
+    : LIST(case_item_expression, ",") ":" statement_or_null
+    | "default" OPTION( ":" ) statement_or_null
+    ;
+case_pattern_item
+    : pattern OPTION( "&&&" expression ) ":" statement_or_null
+    | "default" OPTION( ":" ) statement_or_null
+    ;
+case_inside_item
+    : open_range_list ":" statement_or_null
+    | "default" OPTION( ":" ) statement_or_null
+    ;
+case_item_expression
+    : expression
+    ;
+randcase_statement
+    : "randcase" LIST( randcase_item, "" ) "endcase"
+    ;
+randcase_item
+    : expression ":" statement_or_null
+    ;
+open_range_list
+    : LIST( open_value_range, "," )
+    ;
+open_value_range
+    : value_range
+    ;
+
+# 6.7.1) Patterns
+pattern
+    : "." variable_identifier
+    | "." "*"
+    | constant_expression
+    | "tagged" member_identifier OPTION( pattern )
+    | "'" "{" LIST( pattern, "," ) "}"
+    | "'" "{" LIST( member_identifier ":" pattern, "," ) "}"
+    ;
+assignment_pattern
+    : "'" "{" LIST( expression, "," ) "}"
+    | "'" "{" LIST( structure_pattern_key ":" expression, "," ) "}"
+    | "'" "{" LIST( array_pattern_key ":" expression, "," ) "}"
+    | "'" "{" constant_expression "{" LIST( expression, "," ) "}" "}"
+    ;
+structure_pattern_key
+    : member_identifier
+    | assignment_pattern_key
+    ;
+array_pattern_key
+    : constant_expression
+    | assignment_pattern_key
+    ;
+assignment_pattern_key
+    : simple_type
+    | "default"
+    ;
+assignment_pattern_expression
+    : OPTION( assignment_pattern_expression_type ) assignment_pattern
+    ;
+assignment_pattern_expression_type
+    : ps_type_identifier
+    | ps_parameter_identifier
+    | integer_atom_type
+    | type_reference
+    ;
+constant_assignment_pattern_expression
+    : assignment_pattern_expression
+    ;
+assignment_pattern_net_lvalue
+    : "'" "{" LIST( net_lvalue, "," ) "}"
+    ;
+assignment_pattern_variable_lvalue
+    : "'" "{" LIST( variable_lvalue, "," ) "}"
+    ;
+
+# 6.8) Looping statements
+
+
+
+#================================================================================
+# NEW SECTION
+# 7. Specify section
+#--------------------------------------------------------------------------------
+# 7.1) Specify block declaration
+# 7.2) Specify path declarations
+# 7.3) Specify block terminals
+# 7.4) Specify path delays
+# 7.5) System timing checks
+# 7.5.1) System timing check commands
+# 7.5.2) System timing check command arguments
+# 7.5.3) System timing check event definitions
+#================================================================================
+# 7.1) Specify block declaration
+specify_block
+    : "specify" STAR( specify_item ) "endspecify"
+    ;
+specify_item
+    : specparam_declaration
+    | pulsestyle_declaration
+    | showcancelled_declaration
+    | path_declaration
+    | system_timing_check
+    ;
+pulsestyle_declaration
+    : "pulsestyle_onevent" list_of_path_outputs ";"
+    | "pulsestyle_ondetect" list_of_path_outputs ";"
+    ;
+showcancelled_declaration
+    : "showcancelled" list_of_path_outputs ";"
+    | "noshowcancelled" list_of_path_outputs ";"
+    ;
+
+# 7.2) Specify path declarations
+path_declaration
+    : simple_path_declaration ";"
+    | edge_sensitive_path_declaration ";"
+    | state_dependent_path_declaration ";"
+    ;
+simple_path_declaration
+    : parallel_path_description "=" path_delay_value
+    | full_path_description "=" path_delay_value
+    ;
+parallel_path_description
+    : "(" specify_input_terminal_descriptor OPTION( polarity_operator )
+        "=>" specify_output_terminal_descriptor ")"
+    ;
+full_path_description
+    : "(" list_of_path_inputs OPTION( polarity_operator ) 
+        "*>" list_of_path_outputs ")"
+    ;
+list_of_path_inputs
+    : LIST( specify_input_terminal_descriptor, "," )
+    ;
+list_of_path_outputs
+    : LIST( specify_output_terminal_descriptor, "," )
+    ;
+
+# 7.3) Specify block terminals
+specify_input_terminal_descriptor
+    : input_identifier OPTION( "[" constant_range_expression "]" )
+    ;
+specify_output_terminal_descriptor
+    : output_identifier OPTION( "[" constant_range_expression "]" )
+    ;
+input_identifier
+    : input_port_identifier
+    | inout_port_identifier
+    | interface_identifier "." port_identifier
+    ;
+output_identifier
+    : output_port_identifier
+    | inout_port_identifier
+    | interface_identifier "." port_identifier
+    ;
+
+# 7.4) Specify path delays
+path_delay_value
+    : list_of_path_delay_expressions
+    | "(" list_of_path_delay_expressions ")"
+    ;
+list_of_path_delay_expression
+    : t_path_delay_expression
+    | trise_path_delay_expression "," tfall_path_delay_expression
+    | trise_path_delay_expression "," tfall_path_delay_expression "," tz_path_delay_expression
+    | t01_path_delay_expression "," t10_path_delay_expression "," t0z_path_delay_expression ","
+        tz1_path_delay_expression "," t1z_path_delay_expression "," tz0_path_delay_expression
+    | t01_path_delay_expression "," t10_path_delay_expression "," t0z_path_delay_expression ","
+        tz1_path_delay_expression "," t1z_path_delay_expression "," tz0_path_delay_expression ","
+        t0x_path_delay_expression "," tx1_path_delay_expression "," t1x_path_delay_expression ","
+        tx0_path_delay_expression "," txz_path_delay_expression "," tzx_path_delay_expression
+    ;
+t_path_delay_expression
+    : path_delay_expression
+    ;
+trise_path_delay_expression
+    : path_delay_expression
+    ;
+tfall_path_delay_expresison
+    : path_delay_expression
+    ;
+tz_path_delay_expression
+    : path_delay_expression
+    ;
+t01_path_delay_expression
+    : path_delay_expression
+    ;
+t10_path_delay_expression
+    : path_delay_expression
+    ;
+t0z_path_delay_expression
+    : path_delay_expression
+    ;
+tz1_path_delay_expression
+    : path_delay_expression
+    ;
+t1z_path_delay_expression
+    : path_delay_expression
+    ;
+tz0_path_delay_expression
+    : path_delay_expression
+    ;
+t0x_path_delay_expression
+    : path_delay_expression
+    ;
+tx1_path_delay_expression
+    : path_delay_expression
+    ;
+t1x_path_delay_expression
+    : path_delay_expression
+    ;
+tx0_path_delay_expression
+    : path_delay_expression
+    ;
+txz_path_delay_expression
+    : path_delay_expression
+    ;
+tzx_path_delay_expression
+    : path_delay_expression
+    ;
+path_delay_expression
+    : constant_mintypmax_expression
+    ;
+edge_sensitive_path_declaration
+    : parallel_edge_sensitive_path_description "=" path_delay_value
+    | full_edge_sensitive_path_description "=" path_delay_value
+    ;
+parallel_edge_sensitive_path_description
+    : "(" OPTION( edge_identifier ) 
+        specify_input_terminal_descriptor OPTION( polarity_operator ) 
+        "=>" 
+            "("
+                specify_output_terminal_descriptor OPTION( polarity_operator ) 
+                ":"
+                data_source_expression
+            ")"
+        ")"
+    ;
+full_edge_sensitive_path_description
+    : "(" OPTION( edge_identifier )
+        list_of_path_inputs OPTION( polarity_operator )
+        "*>"
+            "("
+                list_of_path_outputs OPTION( polarity_operator )
+                ":"
+                data_source_expression
+            ")"
+        ")"
+    ;
+data_source_expression
+    : expression
+    ;
+edge_identifier
+    : "posedge" | "negedge" | "edge"
+    ;
+state_dependent_path_declaration
+    : "if" "(" module_path_expression ")" simple_path_declaration
+    | "if" "(" module_path_expression ")" edge_sensitive_path_declaration
+    | "ifnone" simple_path_declaration
+    ;
+polarity_operator
+    : "+" | "-"
+    ;
+
+# 7.5) System timing checks
+# 7.5.1) System timing check commands
+system_timing_check
+    : $setup_timing_check
+    | $hold_timing_check
+    | $setuphold_timing_check
+    | $recovery_timing_check
+    | $removal_timing_check
+    | $recrem_timing_check
+    | $skew_timing_check
+    | $timeskew_timing_check
+    | $fullskew_timing_check
+    | $period_timing_check
+    | $width_timing_check
+    | $nochange_timing_check
+    ;
+$setup_timing_check
+    : "$setup" "(" data_event "," reference_event "," timing_check_limit
+        OPTION( "," OPTION( notifier ) )
+        ")" ";"
+    ;
+$hold_timing_check
+    : "$hold" "(" reference_event "," data_event "," timing_check_limit
+        OPTION( "," OPTION( notifier ) )
+        ")" ";"
+    ;
+$setuphold_timing_check
+    : "$setuphold" "("
+        reference_event "," data_event "," 
+        timing_check_limit "," timing_check_limit 
+        OPTION( "," OPTION( notifier )
+            OPTION( "," OPTION( timestamp_condition )
+                OPTION( "," OPTION( timecheck_condition )
+                    OPTION("," OPTION( delayed_reference )
+                        OPTION("," OPTION( delayed_data ) )
+                    )
+                )
+            )
+        )
+        ")" ";"
+    ;
+$recovery_timing_check
+    : "$recovery" "(" reference_event "," data_event ","
+        timing_check_limit
+        OPTION( "," OPTION( notifier ) )
+        ")" ";"
+    ;
+$removal_timing_check
+    : "$removal" "(" reference_event "," data_event ","
+        timing_check_limit
+        OPTION( "," OPTION( notifier ) )
+        ")" ";"
+    ;
+$recrem_timing_check
+    : "$recrem" "(" reference_event "," data_event ","
+        ")" ";"
+    ;
+$skew_timing_check
+    : "$skew" "(" reference_event "," data_event "," 
+        timing_check_limit
+        OPTION( "," OPTION ( notifier ) )
+        ")" ";"
+    ;
+$timeskew_timing_check
+    : "$timeskew" "(" reference_event "," data_event ","
+        timing_check_limit
+        OPTION( "," OPTION( notifier )
+            OPTION( "," OPTION( event_based_flag )
+                OPTION( "," OPTION( remain_active_flag ) )
+            )
+        )
+        ")" ";"
+    ;
+$fullskew_timing_check
+    : "$fullskew" "(" reference_event "," data_event "," 
+        timing_check_limit "," timing_check_limit 
+        OPTION( "," OPTION( notifier )
+            OPTION( "," OPTION( event_based_flag )
+                OPTION( "," OPTION( remain_active_flag ) )
+            )
+        )
+        ")" ";"
+    ;
+$period_timing_check
+    : "$period" "("
+        ")" ";"
+    ;
+$width_timing_check
+    : "$width" "(" controlled_reference_event "," timing_check_limit ","
+        threshold OPTION( "," OPTION( notifier ) ) ")" ";"
+    ;
+$nochange_timing_check
+    : "$nochange" "(" reference_event "," data_event "," 
+        start_edge_offset "," end_edge_offset OPTION( "," OPTION( notifier ) ) ")" ";"
+    ;
+
+# 7.5.2) System timing check command arguments
+timecheck_condition
+    : mintypmax_expression
+    ;
+controlled_reference_event
+    : controlled_timing_check_event
+    ;
+data_event
+    : timing_check_event
+    ;
+delayed_data
+    : terminal_identifier
+    | terminal_identifier "[" constant_mintypmax_expression "]"
+    ;
+delayed_reference
+    : terminal_identifier
+    | terminal_identifier "[" constant_mintypmax_expression "]"
+    ;
+end_edge_offset
+    : mintypmax_expression
+    ;
+event_based_flag
+    : constant_expression
+    ;
+notifier
+    : variable_identifier
+    ;
+reference_event
+    : timing_check_event
+    ;
+remain_active_flag
+    : constant_mintypmax_expression
+    ;
+timestamp_condition
+    : mintypmax_expression
+    ;
+start_edge_offset
+    : mintypmax_expression
+    ;
+threshold
+    : constant_expression
+    ;
+timing_check_limit
+    : expression
+    ;
+
+# 7.5.3) System timing check event definitions
+timing_check_event
+    : OPTION( timing_check_event_control ) specify_terminal_descriptor
+        OPTION( "&&&" timing_check_condition )
+    ;
+controlled_timing_check_event
+    : timing_check_event_control specify_terminal_descriptor 
+        OPTION( "&&&" timing_check_condition )
+    ;
+timing_check_event_control
+    : "posedge" | "negedge" | "edge" | edge_control_specifier
+    ;
+specify_terminal_descriptor
+    : specify_input_terminal_descriptor
+    | specify_output_terminal_descriptor
+    ;
+edge_control_specifier
+    : "edge" "[" LIST( edge_descriptor, "," ) "]"
+    ;
+edge_descriptor
+    : "01" | "10" | z_or_x zero_or_one | zero_or_one z_or_x
+    ;
+zero_or_one
+    : "0" | "1"
+    ;
+z_or_x
+    : "z" | "Z" | "x" | "X"
+    ;
+timing_check_condition
+    : scalar_timing_check_condition
+    | "(" scalar_timing_check_condition ")"
+    ;
+scalar_timing_check_condition
+    : expression
+    | "~" expression
+    | expression "==" scalar_constant
+    | expression "===" scalar_constant
+    | expression "!=" scalar_constant
+    | expression "!==" scalar_constant
+    ;
+scalar_constant
+    : "1'b0" | "1'b1" | "1'B0" | "1'B1"
+    | "'b0"  | "'b1"  | "'B0"  | "'B1"
+    | "1"    | "0"
+    ;
+
+
+#================================================================================
+# NEW SECTION
+# 8. Expressions
+#--------------------------------------------------------------------------------
+# 8.1) Concatenations
+# 8.2) Subroutine Calls
+# 8.3) Expressions
+# 8.4) Primaries
+# 8.5) Expression left-side values
+# 8.6) Operators
+# 8.7) Numbers
+# 8.8) Strings
+#================================================================================
+# 8.1) Concatenations
+concatenation
+    : "{" LIST( expression, "," ) "}"
+    ;
+constant_concatenation
+    : "{" LIST( constant_expression, "," ) "}"
+    ;
+constant_multiple_concatenation
+    : "{" constant_expression constant_concatenation "}"
+    ;
+module_path_concatenation
+    : "{" LIST( module_path_expression, "," ) "}"
+    ;
+module_path_multiple_concatenation
+    : "{" constant_expression module_path_concatenation "}"
+    ;
+multiple_concatenation
+    : "{" expression concatenation "}"
+    ;
+streaming_concatenation
+    : "{" stream_operator OPTION( slice_size ) stream_concatenation "}"
+    ;
+stream_operator
+    : ">>" | "<<"
+    ;
+slice_size
+    : simple_type
+    | constant_expression
+    ;
+stream_concatenation
+    : "{" expression OPTION( "with" "[" array_range_expression "]" stream_concatenation ) "}"
+    ;
+stream_expression
+    : expression OPTION( "with" "[" array_range_expression "]" )
+    ;
+array_range_expression
+    : expression
+    | expression ":" expression
+    | expression "+:" expression
+    | expression "-:" expression
+    ;
+empty_queue
+    : "{" "}"
+    ;
+
+# 8.2) Subroutine Calls
+constant_function_call
+    : function_subroutine_call 
+    ;
+tf_call
+    : ps_or_hierarchical_tf_identifier 
+        STAR( attribute_instance )
+        OPTION( "(" list_of_arguments ")" )
+    ;
+system_tf_call
+    : system_tf_identifier
+        OPTION( "(" list_of_arguments ")" )
+    ;
+subroutine_call
+    : tf_call
+    | system_tf_call
+    | method_call
+    | OPTION( "std::" randomize_call ) 
+    ;
+function_subroutine_call
+    : subroutine_call
+    ;
+list_of_arguments
+    : LIST( OPTION( expression ) , "," )
+        STAR( "," "." identifier "(" OPTION( expression ) ")" )
+    | "." identifier "(" OPTION( expression ) ")" 
+        STAR( "," "." identifier "(" OPTION( expression ) ")" )
+    ;
+method_call
+    : method_call_root "." method_call_body
+    ;
+method_call_body
+    : method_identifier STAR( attribute_instance ) OPTION( "(" list_of_arguments ")" )
+    | built_in_method_call
+    ; 
+built_in_method_call
+    : array_manipulation_call
+    | randomize_call
+    ;
+array_manipulation_call
+    : array_method_name STAR( attribute_instance )
+        OPTION( "(" list_of_arguments ")" )
+        OPTION( "with" "(" expression ")" )
+    ;
+randomize_call
+    : "randomize" STAR( attribute_instance )
+        OPTION( "(" OPTION( variable_identifier_list | "null" ) ")" )
+        OPTION( "with" OPTION( "(" identifier_list ")" ) constraint_block )
+    ;
+method_call_root
+    : primary
+    | implicit_class_handle
+    ;
+array_method_name
+    : method_identifier
+    | "unique" | "and" | "or" | "xor"
+    ;
+
+# 8.3) Expressions
+inc_or_dec_expression
+    : inc_or_dec_operator STAR( attribute_instance ) variable_lvalue
+    | variable_lvalue STAR( attribute_instance ) inc_or_dec_operator
+    ;
+conditional_expression
+    : cond_predicate "?" STAR( attribute_instance ) expression ":" expression
+    ;
+constant_expression
+    : constant_primary
+    | unary_operator STAR( attribute_instance ) constant_primary
+    | constant_expression binary_operator STAR( attribute_instance ) constant_expression
+    | constant_expression "?" STAR( attribute_instance ) 
+        constant_expression ":" constant_expression
+    ;
+constant_mintypmax_expression
+    : constant_expression
+    | constant_expression ":" constant_expression ":" constant_expression
+    ;
+constant_param_expression
+    : constant_mintypmax_expression
+    | data_type
+    | "$"
+    ;
+param_expression
+    : mintypmax_expression
+    | data_type
+    | "$"
+    ;
+constant_range_expression
+    : constant_expression
+    | constant_part_select_range
+    ;
+constant_part_select_range
+    : constant_range
+    | constant_indexed_range
+    ;
+constant_range
+    : constant_expression ":" constant_expression
+    ;
+constant_indexed_range
+    : constant_expression "+:" constant_expression
+    | constant_expression "-:" constant_expression
+    ;
+expression
+    : primary
+    | unary_operator STAR( attribute_instance ) primary
+    | inc_or_dec_expression
+    | "(" operator_assignment ")"
+    | expression binary_operator STAR( attribute_instance ) expression
+    | conditional_expression
+    | inside_expression
+    | tagged_union_expression
+    ;
+tagged_union_expression
+    : "tagged" member_identifier OPTION( expression )
+    ;
+inside_expression
+    : expression "inside" "{" open_range_list "}"
+    ;
+value_range
+    : expression
+    | "[" expression ":" expression "]"
+    ;
+mintypmax_expression
+    : expression
+    | expression ":" expression ":" expression
+    ;
+module_path_conditional_expression
+    : module_path_expression "?" STAR( attribute_instance )
+        module_path_expression ":" module_path_expression
+    ;
+module_path_expression
+    : module_path_primary
+    | unary_module_path_operator STAR( attribute_instance ) module_path_primary
+    | module_path_expression binary_module_path_operator STAR( attribute_instance )
+        module_path_conditional_expression
+    ;
+module_path_mintypmax_expression
+    : module_path_expression
+    | module_path_expression ":" module_path_expression ":" module_path_expression
+    ;
+part_select_range
+    : constant_range
+    | indexed_range
+    ;
+indexed_range
+    : expression "+:" constant_expression
+    | expression "-:" constant_expression
+    ;
+genvar_expression
+    : constant_expression
+    ;
+
+# 8.4) Primaries
+constant_primary
+    : primary_literal
+    | ps_parameter_identifier constant_select
+    | specparam_identifier OPTION( "[" constant_range_expression "]" )
+    | genvar_identifier
+    | formal_port_identifier constant_select
+    | OPTION( package_scope | class_scope ) enum_identifier
+    | constant_concatenation OPTION( "[" constant_range_expression "]" )
+    | constant_multiple_concatenation OPTION( "[" constant_range_expression "]" )
+    | constant_function_call
+    | constant_let_expression
+    | "(" constant_mintypmax_expression ")"
+    | constant_cast
+    | constant_assignment_pattern_expression
+    | type_reference
+    ;
+module_path_primary
+    : number
+    | identifier
+    | module_path_concatenation
+    | module_path_multiple_concatenation
+    | function_subroutine_call
+    | "(" module_path_mintypmax_expression ")"
+    ;
+primary
+    : primary_literal
+    | OPTION( class_qualifier | package_scope ) hierarchical_identifier select
+    | empty_queue
+    | concatenation OPTION( "[" range_expression "]" )
+    | multiple_concatenation OPTION( "[" range_expression "]" )
+    | function_subroutine_call
+    | let_expression
+    | "(" mintypmax_expression ")"
+    | cast
+    | assignment_pattern_expression
+    | streaming_concatenation
+    | sequence_method_call
+    | "this"
+    | "$"
+    | "null"
+    ;
+class_qualifier
+    : OPTION( "local::" ) OPTION( implicit_class_handle "." | class_scope )
+    ;
+range_expression
+    : expression
+    | part_select_range
+    ;
+primary_literal
+    : number
+    | time_literal
+    | unbased_unsized_literal
+    | string_literal
+    ;
+time_literal
+    : unsigned_number time_unit
+    | fixed_point_number time_unit
+    ;
+time_unit
+    : "s" | "ms" | "us" | "ns" | "ps" | "fs"
+    ;
+implicit_class_handle
+    : "this" | "super" | "this" "." "super"
+    ;
+bit_select
+    : STAR( "[" expression "]" )
+    ;
+select
+    : OPTION( STAR( "." member_identifier bit_select ) "." member_identifier )
+        bit_select OPTION( "[" part_select_range "]" )
+    ;
+nonrange_select
+    : OPTION( STAR( "." member_identifier bit_select ) "." member_identifier )
+        bit_select
+    ;
+constant_bit_select
+    : STAR( "[" expression "]" )
+    ;
+constant_select
+    : OPTION( STAR( "." member_identifier constant_bit_select) "." member_identifier )
+        constant_bit_select OPTION( "[" constant_part_select_range "]" )
+    ;
+constant_cast
+    : casting_type "'" "(" constant_expression ")"
+    ;
+constant_let_expression
+    : let_expression
+    ;
+cast
+    : casting_type "'" "(" expression ")"
+    ;
+
+# 8.5) Expression left-side values
+net_lvalue
+    : ps_or_hierarchical_net_identifier constant_select
+    | "{" LIST( net_lvalue, "," ) "}"
+    | OPTION( assignment_pattern_expression_type ) assignment_pattern_net_value
+    ;
+variable_lvalue
+    : OPTION( implicit_class_handle "." | package_scope ) 
+        hierarchical_variable_identifier select
+    | "{" LIST( variable_lvalue, "," ) "}"
+    | OPTION( assignment_pattern_expression_type ) assignment_pattern_variable_lvalue
+    | streaming_concatenation
+    ;
+nonrange_variable_lvalue
+    : OPTION( implicit_class_handle "." | package_scope )
+        hierarchical_variable_identifier nonrange_select
+    ;
+
+# 8.6) Operators
+unary_operator TERMINAL
+    : "+"   | "-"   | "!"   | "~"   | "&"   | "~&"  | "|"   | "~|"  | "^"   | "~^"  | "^~"
+    ;
+binary_operator TERMINAL
+    : "+"   | "-"   | "*"   | "/"   | "%"
+    | "=="  | "!="  | "===" | "!==" | "==?" | "!=?" | "&&"  | "||"  | "**"
+    | "<"   | "<="  | ">"   | ">="  | "&"   | "|"   | "^"   | "^~"  | "~^"
+    | ">>"  | "<<"  | ">>>" | "<<<" | "->"  | "<->"
+    ;
+inc_or_dec_operator TERMINAL
+    : "++"  | "--"
+    ;
+unary_module_path_operator TERMINAL
+    : "!"   | "~"   | "&"   | "~&"  | "|"   | "~|"  | "^"   | "~^"  | "^~"
+    ;
+binary_module_path_operator TERMINAL
+    : "=="  | "!="  | "&&"  | "||"  | "&"   | "|"   | "^"   | "^~"  | "~^"
+    ;
+
+# 8.7) Numbers
+number
+    : integral_number
+    ;
+integral_number
+    : decimal_number
+    | octal_number
+    | binary_number
+    | hex_number
+    ;
+decimal_number
+    : unsigned_number
+    | OPTION( size ) decimal_base unsigned_number
+    | OPTION( size ) decimal_base x_digit STAR( "_" )
+    | OPTION( size ) decimal_base z_digit STAR( "_" )
+    ;
+binary_number
+    : OPTION( size ) binary_base binary_value
+    ;
+octal_number
+    : OPTION( size ) octal_base octal_value
+    ;
+hex_number
+    : OPTION( size ) hex_base hex_value
+    ;
+sign
+    : "+" | "-"
+    ;
+size
+    : non_zero_unsigned_number
+    ;
+non_zero_unsigned_number
+    : non_zero_decimal_digit STAR( "_" | decimal_digit )
+    ;
+real_number
+    : fixed_point_number
+    | unsigned_number OPTION( "." unsigned_number ) exp OPTION( sign ) unsigned_number
+    ;
+fixed_point_number
+    : unsigned_number "." unsigned_number
+    ;
+exp
+    : "e" | "E"
+    ;
+unsigned_number
+    : decimal_digit STAR( "_" | decimal_digit )
+    ;
+binary_value
+    : binary_digit STAR( "_" | binary_digit )
+    ;
+octal_value
+    : octal_digit STAR( "_" | octal_digit )
+    ;
+hex_value
+    : hex_digit STAR( "_" | hex_digit )
+    ;
+decimal_base
+    : "'" OPTION( "s" | "S" ) "d" | "'" OPTION( "s" | "S" ) "D"
+    ;
+binary_base
+    : "'" OPTION( "s" | "S" ) "b" | "'" OPTION( "s" | "S" ) "B"
+    ;
+octal_base
+    : "'" OPTION( "s" | "S" ) "o" | "'" OPTION( "s" | "S" ) "O"
+    ;
+hex_base
+    : "'" OPTION( "s" | "S" ) "h" | "'" OPTION( "s" | "S" ) "H"
+    ;
+non_zero_decimal_digit
+    : "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+    ;
+decimal_digit
+    : "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+    ;
+binary_digit
+    : x_digit | z_digit | "0" | "1"
+    ;
+octal_digit
+    : x_digit | z_digit | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7"
+    ;
+hex_digit
+    : x_digit | z_digit
+    | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+    | "a" | "b" | "c" | "d" | "e" | "f"
+    | "A" | "B" | "C" | "D" | "E" | "F" 
+    ;
+x_digit
+    : "x" | "X"
+    ;
+z_digit
+    : "z" | "Z"
+    ;
+unbased_unsized_literal
+    : "'0" | "'1" | "'" z_or_x
+    ;
+# 8.8) Strings
+string_literal SKIP
+    : CSTRING
+    ;
+
+
+
+#================================================================================
+# NEW SECTION
+# 9. General
+#--------------------------------------------------------------------------------
+# 9.1) Attributes
+# 9.2) Comments
+# 9.3) Identifiers
+# 9.4) White space
+#================================================================================
+# 9.1) Attributes
+attribute_instance
+    : "(*" LIST( attr_spec, "," ) "*)"
+    ;
+attr_spec
+    : attr_name OPTION( "=" constant_expression )
+    ;
+attr_name
+    : identifier
+    ;
+
+# 9.2) Comments
+comment SKIP
+    : NULL
+    ;
+one_line_comment SKIP
+    : NULL
+    ;
+block_comment SKIP
+    : NULL
+    ;
+comment_text SKIP
+    : NULL
+    ;
+
+# 9.3) Identifiers
+array_identifier
+    : identifier
+    ;
+block_identifier
+    : identifier
+    ;
+bin_identifier
+    : identifier
+    ;
+c_identifier
+    : identifier
+    ;
+cell_identifier
+    : identifier
+    ;
+checker_identifier
+    : identifier
+    ;
+class_identifier
+    : identifier
+    ;
+class_variable_identifier
+    : identifier
+    ;
+clocking_identifier
+    : identifier
+    ;
+config_identfier
+    : identifier
+    ;
+const_identifier
+    : identifier
+    ;
+constraint_identifier
+    : identifier
+    ;
+covergroup_identifier
+    : identifier
+    ;
+covergroup_variable_identifier
+    : identifier
+    ;
+cover_point_identifier
+    : identifier
+    ;
+cross_identifier
+    : identifier
+    ;
+dynamic_array_variable_identifier
+    : identifier
+    ;
+enum_identifier
+    : identifier
+    ;
+escaped_identifier
+    : identifier
+    ;
+formal_identifier
+    : identifier
+    ;
+formal_port_identifier
+    : identifier
+    ;
+function_identifier
+    : identifier
+    ;
+generate_block_identifier
+    : identifier
+    ;
+genvar_identifier
+    : identifier
+    ;
+hierarchical_array_identifier
+    : identifier
+    ;
+hierarchical_block_identifier
+    : identifier
+    ;
+hierarchical_event_identifier
+    : identifier
+    ;
+hierarchical_identifier
+    : identifier
+    ;
+hierarchical_net_identifier
+    : identifier
+    ;
+hierarchical_parameter_identifier
+    : identifier
+    ;
+hierarchical_property_identifier
+    : identifier
+    ;
+hierarchical_sequence_identifier
+    : identifier
+    ;
+hierarchical_task_identifier
+    : identifier
+    ;
+hierarchical_tf_identifier
+    : identifier
+    ;
+hierarchical_variable_identifier
+    : identifier
+    ;
+identifier
+    : simple_identifier
+    | escaped_identifier
+    ;
+index_variable_identifier
+    : identifier
+    ;
+interface_identifier
+    : identifier
+    ;
+interface_instance_identifier
+    : identifier
+    ;
+inout_port_identifier
+    : identifier
+    ;
+input_port_identifier
+    : identifier
+    ;
+instance_identifier
+    : identifier
+    ;
+library_identifier
+    : identifier
+    ;
+member_identifier
+    : identifier
+    ;
+method_identifier
+    : identifier
+    ;
+modport_identifier
+    : identifier
+    ;
+module_identifier
+    : identifier
+    ;
+net_identifier
+    : identifier
+    ;
+net_type_identifier
+    : identifier
+    ;
+output_port_identifier
+    : identifier
+    ;
+package_identifier
+    : identifier
+    ;
+package_scope
+    : package_identifier "::"
+    | "$unit" "::"
+    ;
+parameter_identifier
+    : identifier
+    ;
+port_identifier
+    : identifier
+    ;
+production_identifier
+    : identifier
+    ;
+program_identifier 
+    : identifier
+    ;
+property_identifier
+    : identifier
+    ;
+ps_class_identifier
+    : identifier
+    ;
+ps_covergroup_identifier
+    : identifier
+    ;
+ps_checker_identifier
+    : identifier
+    ;
+ps_identifier
+    : identifier
+    ;
+ps_or_hierarchical_array_identifier
+    : identifier
+    ;
+ps_or_hierarchical_net_identifier
+    : identifier
+    ;
+ps_or_hierarchical_property_identifier
+    : identifier
+    ;
+ps_or_hierarchical_sequence_identifier
+    : identifier
+    ;
+ps_or_hierarchical_tf_identifier
+    : identifier
+    ;
+ps_parameter_identifier
+    : identifier
+    ;
+ps_type_identifier
+    : identifier
+    ;
+sequence_identifier
+    : identifier
+    ;
+signal_identifier
+    : identifier
+    ;
+simple_identifier
+    : identifier
+    ;
+specparam_identifier
+    : identifier
+    ;
+system_tf_identifier
+    : identifier
+    ;
+task_identifier
+    : identifier
+    ;
+tf_identifier
+    : identifier
+    ;
+terminal_identifier
+    : identifier
+    ;
+topmodule_identifier
+    : identifier
+    ;
+type_identifier
+    : identifier
+    ;
+udp_identifier
+    : identifier
+    ;
+variable_identifier
+    : identifier
+    ;
+
+# 9.4) White space
+white_space SKIP
+    : NULL
+    ;
+
+
+

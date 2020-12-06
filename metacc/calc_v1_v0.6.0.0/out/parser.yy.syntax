@@ -1,0 +1,117 @@
+
+line_list 
+    : LIST_0 
+    {
+        ast::line_list *ret = new ast::line_list;
+        $$ = ret;
+    }
+    ;
+
+line 
+    : expr TOKEN_0 /* ; */ 
+    {
+        ast::line *ret = new ast::line;
+        $$ = ret;
+    }
+    ;
+
+expr 
+    : expr TOKEN_1 /* + */ term 
+    {
+        ast::expr *ret = new ast::expr;
+        $$ = ret;
+    }
+    | expr TOKEN_2 /* - */ term 
+    {
+        ast::expr *ret = new ast::expr;
+        $$ = ret;
+    }
+    | term 
+    {
+        ast::expr *ret = new ast::expr;
+        $$ = ret;
+    }
+    ;
+
+term 
+    : term TOKEN_3 /* * */ primary 
+    {
+        ast::term *ret = new ast::term;
+        $$ = ret;
+    }
+    | term TOKEN_4 /* / */ primary 
+    {
+        ast::term *ret = new ast::term;
+        $$ = ret;
+    }
+    | primary 
+    {
+        ast::term *ret = new ast::term;
+        $$ = ret;
+    }
+    ;
+
+primary 
+    : SV_UNSIGNED_NUMBER 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    | SV_DECIMAL_NUMBER 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    | SV_BINARY_NUMBER 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    | SV_OCTAL_NUMBER 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    | SV_HEX_NUMBER 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    | SV_STRING 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    | attribute 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    | TOKEN_5 /* ( */ expr TOKEN_6 /* ) */ 
+    {
+        ast::primary *ret = new ast::primary;
+        $$ = ret;
+    }
+    ;
+
+attribute 
+    : SV_IDENTIFIER 
+    {
+        ast::attribute *ret = new ast::attribute;
+        $$ = ret;
+    }
+    ;
+
+LIST_0
+    : line 
+    {
+        ast::list<ast::object *> *list = new ast::list<ast::object *>();
+        // list->append($1);
+        $$ = list;
+    }
+    | LIST_0  line 
+    {
+        // $1->append($2);
+        $$ = $1;
+    }
+    ;

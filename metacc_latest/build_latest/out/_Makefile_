@@ -1,0 +1,83 @@
+EXE=out
+LINK=-lfl -lm
+TARGET1=source.txt
+TARGET2=wrong.txt
+TARGET_SV=source.sv
+
+
+
+YACC=bison
+LEX=flex
+CC=g++
+YACC_SRC=*.yy
+LEX_SRC=*.l
+CC_SRC=*.cpp *.cc
+
+default: all_lyc
+
+all_lyc: clean_lyc yacc lex cc
+
+debug: debug_build test
+
+debug_build: clean yacc_dbg lex_dbg cc_dbg
+
+yacc:
+	$(YACC) -d $(YACC_SRC)
+
+lex:
+	$(LEX) -o parser.yy.cc $(LEX_SRC)
+
+cc: 
+	$(CC) -o $(EXE) $(CC_SRC) $(LINK)
+
+yacc_dbg:
+	$(YACC) -d -v -t $(YACC_SRC)
+
+lex_dbg:
+	$(LEX) -o parser.yy.cc $(LEX_SRC)
+
+cc_dbg: 
+	$(CC) -DYYDEBUG -g -o $(EXE) $(CC_SRC) $(LINK)
+
+test: test1
+	echo "done."
+
+test1:
+	./$(EXE) < $(TARGET1)
+
+test2:
+	./$(EXE) < $(TARGET2)
+
+sv: clean_all all_lyc
+	./$(EXE) < $(TARGET_SV)
+
+sv_dbg: clean_all debug_build
+	./$(EXE) < $(TARGET_SV)
+
+clean: clean_lyc
+
+clean_all: clean_pp clean
+
+clean_pp:
+	rm -rf parser.l.*
+	rm -rf parser.y.*
+	rm -rf parser_ast.c.*
+	rm -rf parser_ast.h.*
+	rm -rf parser.yy.*
+	rm -rf parser_ast.cpp.*
+	rm -rf parser_ast.hh.*
+
+clean_lyc:
+	rmtmp
+	rm -rf y.tab.c y.tab.h lex.yy.c
+	rm -rf y.output y.dot
+	rm -rf *.tab.cc *.tab.hh *.yy.cc
+	rm -rf *.output *.dot
+	rm -rf $(EXE)
+	if [ -f out/Makefile ]; then \
+		mv out/Makefile Makefile_out; \
+		fi
+	rm -rf out/*
+	if [ -f Makefile_out ]; then \
+		mv Makefile_out out/Makefile; \
+		fi

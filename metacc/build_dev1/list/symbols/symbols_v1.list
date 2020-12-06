@@ -1,0 +1,848 @@
+# vim: expandtab ts=4 sw=4
+#================================================================================
+# NEW SECTION
+# 1. 
+#--------------------------------------------------------------------------------
+# 1.1) 
+# 1.2) 
+# 1.3) 
+# 1.4) 
+# 1.5) 
+# 1.6) 
+# 1.7) 
+# 1.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 2. 
+#--------------------------------------------------------------------------------
+# 2.1) 
+# 2.2) 
+# 2.3) 
+# 2.4) 
+# 2.5) 
+# 2.6) 
+# 2.7) 
+# 2.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 3. 
+#--------------------------------------------------------------------------------
+# 3.1) 
+# 3.2) 
+# 3.3) 
+# 3.4) 
+# 3.5) 
+# 3.6) 
+# 3.7) 
+# 3.8) 
+#================================================================================
+# 
+
+
+
+#================================================================================
+# NEW SECTION
+# 4. 
+#--------------------------------------------------------------------------------
+# 4.1) 
+# 4.2) 
+# 4.3) 
+# 4.4) 
+# 4.5) 
+# 4.6) 
+# 4.7) 
+# 4.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 5. 
+#--------------------------------------------------------------------------------
+# 5.1) 
+# 5.2) 
+# 5.3) 
+# 5.4) 
+# 5.5) 
+# 5.6) 
+# 5.7) 
+# 5.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 6. 
+#--------------------------------------------------------------------------------
+# 6.1) 
+# 6.2) 
+# 6.3) 
+# 6.4) 
+# 6.5) 
+# 6.6) 
+# 6.7) 
+# 6.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 7. 
+#--------------------------------------------------------------------------------
+# 7.1) 
+# 7.2) 
+# 7.3) 
+# 7.4) 
+# 7.5) 
+# 7.6) 
+# 7.7) 
+# 7.8) 
+#================================================================================
+#
+
+
+
+#================================================================================
+# NEW SECTION
+# 8. Expressions
+#--------------------------------------------------------------------------------
+# 8.1) Concatenations
+# 8.2) Subroutine Calls
+# 8.3) Expressions
+# 8.4) Primaries
+# 8.5) Expression left-side values
+# 8.6) Operators
+# 8.7) Numbers
+# 8.8) Strings
+#================================================================================
+# 8.1) Concatenations
+concatenation
+    : "{" LIST( expression, "," ) "}"
+    ;
+constant_concatenation
+    : "{" LIST( constant_expression, "," ) "}"
+    ;
+constant_multiple_concatenation
+    : "{" constant_expression constant_concatenation "}"
+    ;
+module_path_concatenation
+    : "{" LIST( module_path_expression, "," ) "}"
+    ;
+module_path_multiple_concatenation
+    : "{" constant_expression module_path_concatenation "}"
+    ;
+multiple_concatenation
+    : "{" expression concatenation "}"
+    ;
+streaming_concatenation
+    : "{" stream_operator OPTION( slice_size ) stream_concatenation "}"
+    ;
+stream_operator
+    : ">>" | "<<"
+    ;
+slice_size
+    : simple_type
+    | constant_expression
+    ;
+stream_concatenation
+    : "{" expression OPTION( "with" "[" array_range_expression "]" stream_concatenation ) "}"
+    ;
+stream_expression
+    : expression OPTION( "with" "[" array_range_expression "]" )
+    ;
+array_range_expression
+    : expression
+    | expression ":" expression
+    | expression "+:" expression
+    | expression "-:" expression
+    ;
+empty_queue
+    : "{" "}"
+    ;
+
+# 8.2) Subroutine Calls
+constant_function_call
+    : function_subroutine_call 
+    ;
+tf_call
+    : ps_or_hierarchical_tf_identifier 
+        STAR( attribute_instance )
+        OPTION( "(" list_of_arguments ")" )
+    ;
+system_tf_call
+    : system_tf_identifier
+        OPTION( "(" list_of_arguments ")" )
+    ;
+subroutine_call
+    : tf_call
+    | system_tf_call
+    | method_call
+    | OPTION( "std::" randomize_call ) 
+    ;
+function_subroutine_call
+    : subroutine_call
+    ;
+list_of_arguments
+    : LIST( OPTION( expression ) , "," )
+        STAR( "," "." identifier "(" OPTION( expression ) ")" )
+    | "." identifier "(" OPTION( expression ) ")" 
+        STAR( "," "." identifier "(" OPTION( expression ) ")" )
+    ;
+method_call
+    : method_call_root "." method_call_body
+    ;
+method_call_body
+    : method_identifier STAR( attribute_instance ) OPTION( "(" list_of_arguments ")" )
+    | built_in_method_call
+    ; 
+built_in_method_call
+    : array_manipulation_call
+    | randomize_call
+    ;
+array_manipulation_call
+    : array_method_name STAR( attribute_instance )
+        OPTION( "(" list_of_arguments ")" )
+        OPTION( "with" "(" expression ")" )
+    ;
+randomize_call
+    : "randomize" STAR( attribute_instance )
+        OPTION( "(" OPTION( variable_identifier_list | "null" ) ")" )
+        OPTION( "with" OPTION( "(" identifier_list ")" ) constraint_block )
+    ;
+method_call_root
+    : primary
+    | implicit_class_handle
+    ;
+array_method_name
+    : method_identifier
+    | "unique" | "and" | "or" | "xor"
+    ;
+
+# 8.3) Expressions
+inc_or_dec_expression
+    : inc_or_dec_operator STAR( attribute_instance ) variable_lvalue
+    | variable_lvalue STAR( attribute_instance ) inc_or_dec_operator
+    ;
+conditional_expression
+    : cond_predicate "?" STAR( attribute_instance ) expression ":" expression
+    ;
+constant_expression
+    : constant_primary
+    | unary_operator STAR( attribute_instance ) constant_primary
+    | constant_expression binary_operator STAR( attribute_instance ) constant_expression
+    | constant_expression "?" STAR( attribute_instance ) 
+        constant_expression ":" constant_expression
+    ;
+constant_mintypmax_expression
+    : constant_expression
+    | constant_expression ":" constant_expression ":" constant_expression
+    ;
+constant_param_expression
+    : constant_mintypmax_expression
+    | data_type
+    | "$"
+    ;
+param_expression
+    : mintypmax_expression
+    | data_type
+    | "$"
+    ;
+constant_range_expression
+    : constant_expression
+    | constant_part_select_range
+    ;
+constant_part_select_range
+    : constant_range
+    | constant_indexed_range
+    ;
+constant_range
+    : constant_expression ":" constant_expression
+    ;
+constant_indexed_range
+    : constant_expression "+:" constant_expression
+    | constant_expression "-:" constant_expression
+    ;
+expression
+    : primary
+    | uniary_operator STAR( attribute_instance ) primary
+    | inc_or_dec_expression
+    | "(" operator_assignment ")"
+    | expression binary_operator STAR( attribute_instance ) expression
+    | conditional_expression
+    | inside_expression
+    | tagged_union_expression
+    ;
+tagged_union_expression
+    : "tagged" member_identifier OPTION( expression )
+    ;
+inside_expression
+    : expression "inside" "{" open_range_list "}"
+    ;
+value_range
+    : expression
+    | "[" expression ":" expression "]"
+    ;
+mintypmax_expression
+    : expression
+    | expression ":" expression ":" expression
+    ;
+module_path_conditional_expression
+    : module_path_expression "?" STAR( attribute_instance )
+        module_path_expression ":" module_path_expression
+    ;
+module_path_expression
+    : module_path_primary
+    | unary_module_path_operator STAR( attribute_instance ) module_path_primary
+    | module_path_expression binary_module_path_operator STAR( attribute_instance )
+        module_path_conditional_expression
+    ;
+module_path_mintypmax_expression
+    : module_path_expression
+    | module_path_expression ":" module_path_expression ":" module_path_expression
+    ;
+part_select_range
+    : constant_range
+    | indexed_range
+    ;
+indexed_range
+    : expression "+:" constant_expression
+    | expression "-:" constant_expression
+    ;
+genvar_expression
+    : constant_expression
+    ;
+
+# 8.4) Primaries
+constant_primary
+    : primary_literal
+    | ps_parameter_identifier constant_select
+    | specparam_identifier OPTION( "[" constant_range_expression "]" )
+    | genvar_identifier
+    | formal_port_identifier constant_select
+    | OPTION( package_scope | class_scope ) enum_identifier
+    | constant_concatenation OPTION( "[" constant_range_expression "]" )
+    | constant_multiple_concatenation OPTION( "[" constant_range_expression "]" )
+    | constant_function_call
+    | constant_let_expression
+    | "(" constant_mintypmax_expression ")"
+    | constant_cast
+    | constant_assignment_pattern_expression
+    | type_reference
+    ;
+module_path_primary
+    : number
+    | identifier
+    | module_path_concatenation
+    | module_path_multiple_concatenation
+    | function_subroutine_call
+    | "(" module_path_mintypmax_expression ")"
+    ;
+primary
+    : primary_literal
+    | OPTION( class_qualifier | package_scope ) hierarchical_identifier select
+    | empty_queue
+    | concatenation OPTION( "[" range_expression "]" )
+    | multiple_concatenation OPTION( "[" range_expression "]" )
+    | function_subroutine_call
+    | let_expression
+    | "(" mintypmax_expression ")"
+    | cast
+    | assignment_pattern_expression
+    | streaming_concatenation
+    | sequence_method_call
+    | "this"
+    | "$"
+    | "null"
+    ;
+class_qualifier
+    : OPTION( "local::" ) OPTION( implicit_class_handle "." | class_scope )
+    ;
+range_expression
+    : expression
+    | part_select_range
+    ;
+primary_literal
+    : number
+    | time_literal
+    | unbased_unsized_literal
+    | string_literal
+    ;
+time_literal
+    : unsigned_number time_unit
+    | fixed_point_number time_unit
+    ;
+time_unit
+    : "s" | "ms" | "us" | "ns" | "ps" | "fs"
+    ;
+implicit_class_handle
+    : "this" | "super" | "this" "." "super"
+    ;
+bit_select
+    : STAR( "[" expression "]" )
+    ;
+select
+    : OPTION( STAR( "." member_identifier bit_select ) "." member_identifier )
+        bit_select OPTION( "[" part_select_range "]" )
+    ;
+nonrange_select
+    : OPTION( STAR( "." member_identifier bit_select ) "." member_identifier )
+        bit_select
+    ;
+constant_bit_select
+    : STAR( "[" expression "]" )
+    ;
+constant_select
+    : OPTION( STAR( "." member_identifier constant_bit_select) "." member_identifier )
+        constant_bit_select OPTION( "[" constant_part_select_range "]" )
+    ;
+constant_cast
+    : casting_type "'" "(" constant_expression ")"
+    ;
+constant_let_expression
+    : let_expression
+    ;
+cast
+    : casting_type "'" "(" expression ")"
+    ;
+
+# 8.5) Expression left-side values
+net_lvalue
+    : ps_or_hierarchical_net_identifier constant_select
+    | "{" LIST( net_lvalue, "," ) "}"
+    | OPTION( assignment_pattern_expression_type ) assignment_pattern_net_value
+    ;
+variable_lvalue
+    : OPTION( implicit_class_handle "." | package_scope ) 
+        hierarchical_variable_identifier select
+    | "{" LIST( variable_lvalue, "," ) "}"
+    | OPTION( assignment_pattern_expression_type ) assignment_pattern_variable_lvalue
+    | streaming_concatenation
+    ;
+nonrange_variable_lvalue
+    : OPTION( implicit_class_handle "." | package_scope )
+        hierarchical_variable_identifier nonrange_select
+    ;
+
+# 8.6) Operators
+unary_operator TERMINAL
+    : "+"   | "-"   | "!"   | "~"   | "&"   | "~&"  | "|"   | "~|"  | "^"   | "~^"  | "^~"
+    ;
+binary_operator TERMINAL
+    : "+"   | "-"   | "*"   | "/"   | "%"
+    | "=="  | "!="  | "===" | "!==" | "==?" | "!=?" | "&&"  | "||"  | "**"
+    | "<"   | "<="  | ">"   | ">="  | "&"   | "|"   | "^"   | "^~"  | "~^"
+    | ">>"  | "<<"  | ">>>" | "<<<" | "->"  | "<->"
+    ;
+inc_or_dec_operator TERMINAL
+    : "++"  | "--"
+    ;
+unary_module_path_operator TERMINAL
+    : "!"   | "~"   | "&"   | "~&"  | "|"   | "~|"  | "^"   | "~^"  | "^~"
+    ;
+binary_module_path_operator TERMINAL
+    : "=="  | "!="  | "&&"  | "||"  | "&"   | "|"   | "^"   | "^~"  | "~^"
+    ;
+
+# 8.7) Numbers
+number
+    : integral_number
+    ;
+integral_number
+    : decimal_number
+    | octal_number
+    | binary_number
+    | hex_number
+    ;
+decimal_number
+    : unsigned_number
+    | OPTION( size ) decimal_base unsigned_number
+    | OPTION( size ) decimal_base x_digit STAR( "_" )
+    | OPTION( size ) decimal_base z_digit STAR( "_" )
+    ;
+binary_number
+    : OPTION( size ) binary_base binary_value
+    ;
+octal_number
+    : OPTION( size ) octal_base octal_value
+    ;
+hex_number
+    : OPTION( size ) hex_base hex_value
+    ;
+sign
+    : "+" | "-"
+    ;
+size
+    : non_zero_unsigned_number
+    ;
+non_zero_unsigned_number
+    : non_zero_decimal_digit STAR( "_" | decimal_digit )
+    ;
+real_number
+    : fixed_point_number
+    | unsigned_number OPTION( "." unsigned_number ) exp OPTION( sign ) unsigned_number
+    ;
+fixed_point_number
+    : unsigned_number "." unsigned_number
+    ;
+exp
+    : "e" | "E"
+    ;
+unsigned_number
+    : decimal_digit STAR( "_" | decimal_digit )
+    ;
+binary_value
+    : binary_digit STAR( "_" | binary_digit )
+    ;
+octal_value
+    : octal_digit STAR( "_" | octal_digit )
+    ;
+hex_value
+    : hex_digit STAR( "_" | hex_digit )
+    ;
+decimal_base
+    : "'" OPTION( "s" | "S" ) "d" | "'" OPTION( "s" | "S" ) "D"
+    ;
+binary_base
+    : "'" OPTION( "s" | "S" ) "b" | "'" OPTION( "s" | "S" ) "B"
+    ;
+octal_base
+    : "'" OPTION( "s" | "S" ) "o" | "'" OPTION( "s" | "S" ) "O"
+    ;
+hex_base
+    : "'" OPTION( "s" | "S" ) "h" | "'" OPTION( "s" | "S" ) "H"
+    ;
+non_zero_decimal_digit
+    : "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+    ;
+decimal_digit
+    : "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+    ;
+binary_digit
+    : x_digit | z_digit | "0" | "1"
+    ;
+octal_digit
+    : x_digit | z_digit | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7"
+    ;
+hex_digit
+    : x_digit | z_digit
+    | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+    | "a" | "b" | "c" | "d" | "e" | "f"
+    | "A" | "B" | "C" | "D" | "E" | "F" 
+    ;
+x_digit
+    : "x" | "X"
+    ;
+z_digit
+    : "z" | "Z"
+    ;
+unbased_unsized_literal
+    : "'0" | "'1" | "'" z_or_x
+    ;
+# 8.8) Strings
+string_literal SKIP
+    : CSTRING
+    ;
+
+
+
+#================================================================================
+# NEW SECTION
+# 9. General
+#--------------------------------------------------------------------------------
+# 9.1) Attributes
+# 9.2) Comments
+# 9.3) Identifiers
+# 9.4) White space
+#================================================================================
+# 9.1) Attributes
+attribute_instance
+    : "(*" LIST( attr_spec, "," ) "*)"
+    ;
+attr_spec
+    : attr_name OPTION( "=" constant_expression )
+    ;
+attr_name
+    : identifier
+    ;
+
+# 9.2) Comments
+comment SKIP
+    : NULL
+    ;
+one_line_comment SKIP
+    : NULL
+    ;
+block_comment SKIP
+    : NULL
+    ;
+comment_text SKIP
+    : NULL
+    ;
+
+# 9.3) Identifiers
+array_identifier
+    : identifier
+    ;
+block_identifier
+    : identifier
+    ;
+bin_identifier
+    : identifier
+    ;
+c_identifier
+    : identifier
+    ;
+cell_identifier
+    : identifier
+    ;
+checker_identifier
+    : identifier
+    ;
+class_identifier
+    : identifier
+    ;
+class_variable_identifier
+    : identifier
+    ;
+clocking_identifier
+    : identifier
+    ;
+config_identfier
+    : identifier
+    ;
+const_identifier
+    : identifier
+    ;
+constraint_identifier
+    : identifier
+    ;
+covergroup_identifier
+    : identifier
+    ;
+covergroup_variable_identifier
+    : identifier
+    ;
+cover_point_identifier
+    : identifier
+    ;
+cross_identifier
+    : identifier
+    ;
+dynamic_array_variable_identifier
+    : identifier
+    ;
+enum_identifier
+    : identifier
+    ;
+escaped_identifier
+    : identifier
+    ;
+formal_identifier
+    : identifier
+    ;
+formal_port_identifier
+    : identifier
+    ;
+function_identifier
+    : identifier
+    ;
+generate_block_identifier
+    : identifier
+    ;
+genvar_identifier
+    : identifier
+    ;
+hierarchical_array_identifier
+    : identifier
+    ;
+hierarchical_block_identifier
+    : identifier
+    ;
+hierarchical_event_identifier
+    : identifier
+    ;
+hierarchical_identifier
+    : identifier
+    ;
+hierarchical_net_identifier
+    : identifier
+    ;
+hierarchical_parameter_identifier
+    : identifier
+    ;
+hierarchical_property_identifier
+    : identifier
+    ;
+hierarchical_sequence_identifier
+    : identifier
+    ;
+hierarchical_task_identifier
+    : identifier
+    ;
+hierarchical_tf_identifier
+    : identifier
+    ;
+hierarchical_variable_identifier
+    : identifier
+    ;
+identifier
+    : simple_identifier
+    | escaped_identifier
+    ;
+index_variable_identifier
+    : identifier
+    ;
+interface_identifier
+    : identifier
+    ;
+interface_instance_identifier
+    : identifier
+    ;
+inout_port_identifier
+    : identifier
+    ;
+input_port_identifier
+    : identifier
+    ;
+instance_identifier
+    : identifier
+    ;
+library_identifier
+    : identifier
+    ;
+member_identifier
+    : identifier
+    ;
+method_identifier
+    : identifier
+    ;
+modport_identifier
+    : identifier
+    ;
+module_identifier
+    : identifier
+    ;
+net_identifier
+    : identifier
+    ;
+net_type_identifier
+    : identifier
+    ;
+output_port_identifier
+    : identifier
+    ;
+package_identifier
+    : identifier
+    ;
+package_scope
+    : package_identifier "::"
+    | "$unit" "::"
+    ;
+parameter_identifier
+    : identifier
+    ;
+port_identifier
+    : identifier
+    ;
+production_identifier
+    : identifier
+    ;
+program_identifier 
+    : identifier
+    ;
+property_identifier
+    : identifier
+    ;
+ps_class_identifier
+    : identifier
+    ;
+ps_covergroup_identifier
+    : identifier
+    ;
+ps_checker_identifier
+    : identifier
+    ;
+ps_identifier
+    : identifier
+    ;
+ps_or_hierarchical_array_identifier
+    : identifier
+    ;
+ps_or_hierarchical_net_identifier
+    : identifier
+    ;
+ps_or_hierarchical_property_identifier
+    : identifier
+    ;
+ps_or_hierarchical_sequence_identifier
+    : identifier
+    ;
+ps_or_hierarchical_tf_identifier
+    : identifier
+    ;
+ps_parameter_identifier
+    : identifier
+    ;
+ps_type_identifier
+    : identifier
+    ;
+sequence_identifier
+    : identifier
+    ;
+signal_identifier
+    : identifier
+    ;
+simple_identifier
+    : identifier
+    ;
+specparam_identifier
+    : identifier
+    ;
+system_tf_identifier
+    : identifier
+    ;
+task_identifier
+    : identifier
+    ;
+tf_identifier
+    : identifier
+    ;
+terminal_identifier
+    : identifier
+    ;
+topmodule_identifier
+    : identifier
+    ;
+type_identifier
+    : identifier
+    ;
+udp_identifier
+    : identifier
+    ;
+variable_identifier
+    : identifier
+    ;
+
+# 9.4) White space
+white_space SKIP
+    : NULL
+    ;
+
+
+
