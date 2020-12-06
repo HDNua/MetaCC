@@ -1,0 +1,1 @@
+/usr/bin/c++    -Wall -Wno-deprecated-register -g   CMakeFiles/metacc.dir/main.cpp.o CMakeFiles/metacc.dir/ast_common.cpp.o CMakeFiles/metacc.dir/ast_describe.cpp.o CMakeFiles/metacc.dir/ast_glance.cpp.o CMakeFiles/metacc.dir/ast_action.cpp.o CMakeFiles/metacc.dir/mcc_parser.yy.cc.o CMakeFiles/metacc.dir/mcc_parser.tab.cc.o  -o metacc -rdynamic 

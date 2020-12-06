@@ -1,0 +1,18 @@
+%type <ast_line_list>   line_list
+%type <ast_line>        line
+%type <ast_expr>        expr
+%type <ast_term>        term
+%type <ast_primary>     primary
+%type <ast_list> LIST_0
+%type <token_str> TOKEN_0
+%type <token_str> TOKEN_1
+%type <token_str> TOKEN_2
+%type <token_str> TOKEN_3
+%type <token_str> TOKEN_4
+%type <token_str> TOKEN_5
+%type <token_str> TOKEN_6
+%type <token_str> SV_UNSIGNED_INTEGER
+%type <token_str> SV_STRING
+%type <token_str> SV_IDENTIFIER
+%type <token_str> SV_INTEGER
+
