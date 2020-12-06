@@ -1,7 +1,0 @@
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/out/CMakeFiles/test.dir
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/out/CMakeFiles/edit_cache.dir
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/out/CMakeFiles/rebuild_cache.dir
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/out/CMakeFiles/debug.dir
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/out/CMakeFiles/out.dir
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/out/CMakeFiles/clean_all.dir
-/home/handy/Dropbox/linux/work/yacc/metacc/latest/build/out/CMakeFiles/init.dir

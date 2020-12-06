@@ -1,2 +1,0 @@
-# MetaCC
-Meta Compiler Compiler
