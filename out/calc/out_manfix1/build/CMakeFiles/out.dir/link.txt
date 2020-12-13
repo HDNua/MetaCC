@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -g  -rdynamic CMakeFiles/out.dir/parser_ast.cpp.o CMakeFiles/out.dir/parser.tab.cc.o CMakeFiles/out.dir/parser.yy.cc.o  -o out 

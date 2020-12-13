@@ -884,56 +884,56 @@ case 14:
 YY_RULE_SETUP
 #line 88 "parser.l"
 {
-	strcpy(yylval.token_str, yytext);
-	return TOKEN_0;
+    strcpy(yylval.token_str, yytext);
+    return TOKEN_0;
 }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 92 "parser.l"
 {
-	strcpy(yylval.token_str, yytext);
-	return TOKEN_1;
+    strcpy(yylval.token_str, yytext);
+    return TOKEN_1;
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 96 "parser.l"
 {
-	strcpy(yylval.token_str, yytext);
-	return TOKEN_2;
+    strcpy(yylval.token_str, yytext);
+    return TOKEN_2;
 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 100 "parser.l"
 {
-	strcpy(yylval.token_str, yytext);
-	return TOKEN_3;
+    strcpy(yylval.token_str, yytext);
+    return TOKEN_3;
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 104 "parser.l"
 {
-	strcpy(yylval.token_str, yytext);
-	return TOKEN_4;
+    strcpy(yylval.token_str, yytext);
+    return TOKEN_4;
 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 108 "parser.l"
 {
-	strcpy(yylval.token_str, yytext);
-	return TOKEN_5;
+    strcpy(yylval.token_str, yytext);
+    return TOKEN_5;
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 112 "parser.l"
 {
-	strcpy(yylval.token_str, yytext);
-	return TOKEN_6;
+    strcpy(yylval.token_str, yytext);
+    return TOKEN_6;
 }
 	YY_BREAK
 case 21:

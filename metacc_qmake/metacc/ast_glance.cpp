@@ -122,7 +122,13 @@ std::string mcc_string::glance(FILE *out, act_opt option) {
             index = string_tokens.size(); //_keys.count;
             sprintf(key_name, "TOKEN_%d", index);
             string_tokens_add(key_name, _value.c_str());
-            fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
+
+            //fprintf(out_lyc_l_tokendef, "\"%s\" return %s;\n", _value.c_str(), key_name);
+            // 버그 수정: token_str에서 이 문자열을 저장해두어야 합니다.
+            fprintf(out_lyc_l_tokendef, "\"%s\" {\n", _value.c_str());
+            fprintf(out_lyc_l_tokendef, "    strcpy(yylval.token_str, yytext);\n");
+            fprintf(out_lyc_l_tokendef, "    return %s;\n", key_name);
+            fprintf(out_lyc_l_tokendef, "}\n");
         }
         else {
             sprintf(key_name, "%s", string_tokens[index].first.c_str());

@@ -1,0 +1,13 @@
+LIST_0
+    : line 
+    {
+        ast::list<ast::object *> *list = new ast::list<ast::object *>();
+        // list->append($1);
+        $$ = list;
+    }
+    | LIST_0  line 
+    {
+        // $1->append($2);
+        $$ = $1;
+    }
+    ;

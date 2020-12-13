@@ -11,16 +11,6 @@
 
 namespace ast {
 using std::string;
-
-class object;
-class line_list;
-class line;
-class expr;
-class term;
-class primary;
-class attribute;
-
-
 typedef enum ast_type {
     AST_UNTYPED,
     AST_LIST,
@@ -32,14 +22,6 @@ typedef enum ast_type {
     AST_PRIMARY,
     AST_ATTRIBUTE,
 } ast_type;
-
-typedef struct cs_info {
-    FILE *out;
-    const int level;
-    cs_info(int level, FILE *out=stdout) : out(out), level(level) { }
-    cs_info sub() { return cs_info(level+1); }
-    cs_info sub0() { return cs_info(level); }
-} cs_info;
 
 
 
@@ -56,16 +38,16 @@ public:
     ast_type type() const { return _type; }
     
     // 
-    virtual void describe(cs_info &&cs) {
+    virtual void describe(FILE *out) {
         // throw Exception("NOT IMPLEMENTED");
     }
     // 
-    virtual std::string glance(cs_info &&cs) {
+    virtual std::string glance(FILE *out) {
         // throw Exception("NOT IMPLEMENTED");
         return std::string("NOT IMPLEMENTED");
     }
     // 
-    virtual void action(cs_info &&cs) {
+    virtual void action(FILE *out) {
         // throw Exception("NOT IMPLEMENTED");
     }
     // 
@@ -98,17 +80,15 @@ public:
     int count() const { return _vector.size(); }
     
     // 
-    void describe(cs_info &&cs) {
-        for (auto it = _vector.begin(); it != _vector.end(); ++it) {
-            (*it)->describe(cs.sub());
-        }
+    void describe(FILE *out) {
+        
     }
     // 
-    std::string glance(cs_info &&cs) {
+    std::string glance(FILE *out) {
         return std::string("NOT IMPLEMENTED");
     }
     // 
-    void action(cs_info &&cs) {
+    void action(FILE *out) {
         
     }
     
@@ -141,15 +121,11 @@ public:
 
 // 
 class line_list: public object {
-    //ast_type                        type;
-    ast::list<ast::object *>          *_list;
+    ast_type                        type;
     
 public: 
     // 
-    line_list()
-        : object(AST_LINE_LIST)
-        , _list(nullptr)
-    {
+    line_list(): object(AST_LINE_LIST) {
         
     }
     ~line_list() {
@@ -157,22 +133,16 @@ public:
     }
     
     // 
-    void describe(cs_info &&cs);
+    void describe(FILE *out);
     // 
-    void action(cs_info &&cs);
-
-    //
-    void init_with_list(ast::list<ast::object *> *list) {
-        _list = list;
-    }
+    void action(FILE *out);
 };
 
 
 
 // 
 class line: public object {
-    //ast_type                        type;
-    ast::expr                       *_expr;
+    ast_type                        type;
     
 public: 
     // 
@@ -184,216 +154,93 @@ public:
     }
     
     // 
-    void describe(cs_info &&cs);
+    void describe(FILE *out);
     // 
-    void action(cs_info &&cs);
-
-    //
-    void init_with_expr(ast::expr *expr) {
-        _expr = expr;
-    }
+    void action(FILE *out);
 };
 
 
 
 // 
 class expr: public object {
-    //ast_type                        type;
-    int                             _init_type;
-    ast::expr                       *_expr;
-    std::string                     _op;
-    ast::term                       *_term;
+    ast_type                        type;
     
 public: 
     // 
-    expr()
-        : object(AST_EXPR)
-        , _init_type(-1)
-        , _expr(nullptr)
-        , _op("")
-        , _term(nullptr)
-    {
+    expr(): object(AST_EXPR) {
         
     }
     ~expr() {
-        //delete _expr;
-        //delete _term;
+        
     }
     
     // 
-    void describe(cs_info &&cs);
+    void describe(FILE *out);
     // 
-    void action(cs_info &&cs);
-
-    //
-    void init_with_add(ast::expr *expr, const char *op, ast::term *term) {
-        _init_type = 0;
-        _expr = expr;
-        _op   = op;
-        _term = term;
-        fprintf(stderr, "[init_with_add] OP IS [ %s ] \n", op);
-    }
-    void init_with_sub(ast::expr *expr, const char *op, ast::term *term) {
-        _init_type = 1;
-        _expr = expr;
-        _op   = op;
-        _term = term;
-        fprintf(stderr, "[init_with_sub] OP IS [ %s ] \n", op);
-    }
-    void init_with_term(ast::term *term) {
-        _init_type = 2;
-        _expr = nullptr;
-        _term = term;
-    }
+    void action(FILE *out);
 };
 
 
 
 // 
 class term: public object {
-    //ast_type                        type;
-    int                             _init_type;
-    ast::term                       *_term;
-    std::string                     _op;
-    ast::primary                    *_primary;
+    ast_type                        type;
     
 public: 
     // 
-    term()
-        : object(AST_TERM)
-        , _init_type(-1)
-        , _term(nullptr)
-        , _op("")
-        , _primary(nullptr)
-    {
+    term(): object(AST_TERM) {
         
     }
     ~term() {
-        //delete _term;
-        //delete _primary;
+        
     }
     
     // 
-    void describe(cs_info &&cs);
+    void describe(FILE *out);
     // 
-    void action(cs_info &&cs);
-
-    //
-    void init_with_mul(ast::term *term, const char *op, ast::primary *primary) {
-        _init_type = 0;
-        _term    = term;
-        _op      = op;
-        _primary = primary;
-        fprintf(stderr, "[init_with_mul] OP IS [ %s ] \n", op);
-    }
-    void init_with_div(ast::term *term, const char *op, ast::primary *primary) {
-        _init_type = 1;
-        _term    = term;
-        _op      = op;
-        _primary = primary;
-        fprintf(stderr, "[init_with_div] OP IS [ %s ] \n", op);
-    }
-    void init_with_primary(ast::primary *primary) {
-        _init_type = 2;
-        _primary = primary;
-    }
+    void action(FILE *out);
 };
 
 
 
 // 
 class primary: public object {
-    //ast_type                        type;
-
-    int                             _init_type;
-    int                             _number;
-    std::string                     _string;
-    ast::attribute                  *_attribute;
-    ast::expr                       *_expr;
+    ast_type                        type;
     
 public: 
-    //
-    primary()
-        : object(AST_PRIMARY)
-        , _init_type(-1)
-        , _number(0)
-        , _string("")
-        , _attribute(nullptr)
-        , _expr(nullptr)
-    {
+    // 
+    primary(): object(AST_PRIMARY) {
+        
     }
     ~primary() {
-        //delete _string;
-        //delete _attribute;
-        //delete _expr;
-    }
-
-    //
-    void init_with_unsigned_number(const char *s) {
-        _init_type = 0;
-        _number = atoi(s);
-    }
-    void init_with_decimal_number(const char *s) {
-        _init_type = 1;
-        _number = atoi(s);
-    }
-    void init_with_binary_number(const char *s) {
-        _init_type = 2;
-        _number = atoi(s);
-    }
-    void init_with_octal_number(const char *s) {
-        _init_type = 3;
-        _number = atoi(s);
-    }
-    void init_with_hex_number(const char *s) {
-        _init_type = 4;
-        _number = atoi(s);
-    }
-    void init_with_string(const char *s) {
-        _init_type = 5;
-        _string = s;
-    }
-    void init_with_attribute(ast::attribute *attribute) {
-        _init_type = 6;
-        _attribute = attribute;
-    }
-    void init_with_expr(ast::expr *expr) {
-        _init_type = 7;
-        _expr = expr;
+        
     }
     
     // 
-    void describe(cs_info &&cs);
+    void describe(FILE *out);
     // 
-    void action(cs_info &&cs);
+    void action(FILE *out);
 };
 
 
 
 // 
 class attribute: public object {
-    //ast_type                        type;
-    std::string                     _attribute;
+    ast_type                        type;
     
 public: 
     // 
-    attribute()
-        : object(AST_ATTRIBUTE)
-        , _attribute("") {
+    attribute(): object(AST_ATTRIBUTE) {
+        
     }
     ~attribute() {
         
     }
     
     // 
-    void describe(cs_info &&cs);
+    void describe(FILE *out);
     // 
-    void action(cs_info &&cs);
-
-    //
-    void init_with_identifier(const std::string &op) {
-        fprintf(stderr, "[attribute::attribute()] %s \n", _attribute.c_str());
-    }
+    void action(FILE *out);
 };
 
 

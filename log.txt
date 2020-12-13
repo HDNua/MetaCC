@@ -1,11 +1,24 @@
+MetaCC - Meta Compiler Compiler v0.6.2.2 (201213-2217)
+----
+
+- metacc qt project에서 LEXER와 PARSER 수정 가능하게 해두었습니다.
+> 이건 다시 켜보니 잘 안 되는데, 그냥 써야겠네요.
+
+- 다음 이슈를 metacc에서 해결하였습니다.
+> 모든 토큰은 token_str string에 저장되어야 할 것으로 보입니다.
+  '+', '-', '*', '/' 등의 연산자 토큰을 저장하지 않았더니, $2 등으로 호출할 때
+  token_str에 이전에 남아있던 값이 출력되는 큰 문제가 있었습니다.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.6.2.1 (201213-2139)
 ----
 
 - metacc qt project에서 LEXER와 PARSER 수정 가능하게 해두었습니다.
 
 end.
-
-
 
 
 MetaCC - Meta Compiler Compiler v0.6.2.0 (201213-1548)
