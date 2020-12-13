@@ -78,6 +78,5 @@ HEADERS += \
     table.h
 
 DISTFILES += \
-    mcc_lexer.l \
-    mcc_parser.yy
+    mcc_lexer.l
 
