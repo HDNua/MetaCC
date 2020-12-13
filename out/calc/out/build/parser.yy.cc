@@ -883,41 +883,62 @@ YY_RULE_SETUP
 case 14:
 YY_RULE_SETUP
 #line 88 "parser.l"
-return TOKEN_0;
+{
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_0;
+}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 89 "parser.l"
-return TOKEN_1;
+#line 92 "parser.l"
+{
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_1;
+}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 90 "parser.l"
-return TOKEN_2;
+#line 96 "parser.l"
+{
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_2;
+}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 91 "parser.l"
-return TOKEN_3;
+#line 100 "parser.l"
+{
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_3;
+}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 92 "parser.l"
-return TOKEN_4;
+#line 104 "parser.l"
+{
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_4;
+}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 93 "parser.l"
-return TOKEN_5;
+#line 108 "parser.l"
+{
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_5;
+}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 94 "parser.l"
-return TOKEN_6;
+#line 112 "parser.l"
+{
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_6;
+}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 95 "parser.l"
+#line 116 "parser.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return SV_IDENTIFIER;
@@ -925,7 +946,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 102 "parser.l"
+#line 123 "parser.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return SV_UNSIGNED_NUMBER;
@@ -933,7 +954,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 106 "parser.l"
+#line 127 "parser.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return SV_DECIMAL_NUMBER;
@@ -941,7 +962,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 110 "parser.l"
+#line 131 "parser.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return SV_OCTAL_NUMBER;
@@ -949,7 +970,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 114 "parser.l"
+#line 135 "parser.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return SV_BINARY_NUMBER;
@@ -957,7 +978,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 118 "parser.l"
+#line 139 "parser.l"
 {
 	strcpy(yylval.token_str, yytext);
 	return SV_HEX_NUMBER;
@@ -965,10 +986,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 125 "parser.l"
+#line 146 "parser.l"
 ECHO;
 	YY_BREAK
-#line 972 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.yy.cc"
+#line 993 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.yy.cc"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_STRING):
 case YY_STATE_EOF(IN_COMMENT):
@@ -1939,4 +1960,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 125 "parser.l"
+#line 146 "parser.l"

@@ -85,13 +85,34 @@ char *dst;
 	++line_count;
 }
 
-";" return TOKEN_0;
-"+" return TOKEN_1;
-"-" return TOKEN_2;
-"*" return TOKEN_3;
-"/" return TOKEN_4;
-"(" return TOKEN_5;
-")" return TOKEN_6;
+";" {
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_0;
+}
+"+" {
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_1;
+}
+"-" {
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_2;
+}
+"*" {
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_3;
+}
+"/" {
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_4;
+}
+"(" {
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_5;
+}
+")" {
+	strcpy(yylval.token_str, yytext);
+	return TOKEN_6;
+}
 [a-zA-Z_][a-zA-Z_0-9]* {
 	strcpy(yylval.token_str, yytext);
 	return SV_IDENTIFIER;

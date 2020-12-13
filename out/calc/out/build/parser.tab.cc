@@ -544,9 +544,9 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    76,    76,    95,   103,   112,   118,   124,   133,   139,
-     145,   154,   160,   166,   172,   178,   184,   190,   196,   205,
-     214,   220
+       0,    76,    76,    98,   107,   116,   122,   128,   137,   144,
+     150,   159,   165,   171,   177,   183,   189,   195,   201,   210,
+     219,   225
 };
 #endif
 
@@ -1348,196 +1348,206 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+  case 2:
+#line 77 "parser.yy"
+        {
+		start = (yyvsp[0].ast_line_list);
+	}
+#line 1357 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+    break;
+
   case 3:
-#line 96 "parser.yy"
+#line 99 "parser.yy"
     {
         ast::line_list *ret = new ast::line_list;
+		ret->init_with_list((yyvsp[0].ast_list));
         (yyval.ast_line_list) = ret;
     }
-#line 1358 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1367 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
   case 4:
-#line 104 "parser.yy"
+#line 108 "parser.yy"
     {
         ast::line *ret = new ast::line;
-		ret->init_expr((yyvsp[-1].ast_expr));
+		ret->init_with_expr((yyvsp[-1].ast_expr));
         (yyval.ast_line) = ret;
     }
-#line 1368 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1377 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
   case 5:
-#line 113 "parser.yy"
+#line 117 "parser.yy"
     {
         ast::expr *ret = new ast::expr;
-		ret->init_add((yyvsp[-2].ast_expr), (yyvsp[-1].token_str), (yyvsp[0].ast_term));
+		ret->init_with_add((yyvsp[-2].ast_expr), (yyvsp[-1].token_str), (yyvsp[0].ast_term));
         (yyval.ast_expr) = ret;
     }
-#line 1378 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1387 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
   case 6:
-#line 119 "parser.yy"
+#line 123 "parser.yy"
     {
         ast::expr *ret = new ast::expr;
-		ret->init_sub((yyvsp[-2].ast_expr), (yyvsp[-1].token_str), (yyvsp[0].ast_term));
+		ret->init_with_sub((yyvsp[-2].ast_expr), (yyvsp[-1].token_str), (yyvsp[0].ast_term));
         (yyval.ast_expr) = ret;
     }
-#line 1388 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1397 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
   case 7:
-#line 125 "parser.yy"
+#line 129 "parser.yy"
     {
         ast::expr *ret = new ast::expr;
-		ret->init_term((yyvsp[0].ast_term));
+		ret->init_with_term((yyvsp[0].ast_term));
         (yyval.ast_expr) = ret;
     }
-#line 1398 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1407 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
   case 8:
-#line 134 "parser.yy"
+#line 138 "parser.yy"
     {
         ast::term *ret = new ast::term;
-		ret->init_multiple((yyvsp[-2].ast_term), (yyvsp[-1].token_str), (yyvsp[0].ast_primary));
-        (yyval.ast_term) = ret;
-    }
-#line 1408 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
-    break;
-
-  case 9:
-#line 140 "parser.yy"
-    {
-        ast::term *ret = new ast::term;
-		ret->init_division((yyvsp[-2].ast_term), (yyvsp[-1].token_str), (yyvsp[0].ast_primary));
+		fprintf(stderr, "[parser.yy/term] 2 IS [ %s ] \n", (yyvsp[-1].token_str));
+		ret->init_with_mul((yyvsp[-2].ast_term), (yyvsp[-1].token_str), (yyvsp[0].ast_primary));
         (yyval.ast_term) = ret;
     }
 #line 1418 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 10:
-#line 146 "parser.yy"
+  case 9:
+#line 145 "parser.yy"
     {
         ast::term *ret = new ast::term;
-		ret->init_primary((yyvsp[0].ast_primary));
+		ret->init_with_div((yyvsp[-2].ast_term), (yyvsp[-1].token_str), (yyvsp[0].ast_primary));
         (yyval.ast_term) = ret;
     }
 #line 1428 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 11:
-#line 155 "parser.yy"
+  case 10:
+#line 151 "parser.yy"
     {
-        ast::primary *ret = new ast::primary;
-		ret->init_number((yyvsp[0].token_str));
-        (yyval.ast_primary) = ret;
+        ast::term *ret = new ast::term;
+		ret->init_with_primary((yyvsp[0].ast_primary));
+        (yyval.ast_term) = ret;
     }
 #line 1438 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 12:
-#line 161 "parser.yy"
+  case 11:
+#line 160 "parser.yy"
     {
         ast::primary *ret = new ast::primary;
-		ret->init_number((yyvsp[0].token_str));
+		ret->init_with_unsigned_number((yyvsp[0].token_str));
         (yyval.ast_primary) = ret;
     }
 #line 1448 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 13:
-#line 167 "parser.yy"
+  case 12:
+#line 166 "parser.yy"
     {
         ast::primary *ret = new ast::primary;
-		ret->init_number((yyvsp[0].token_str));
+		ret->init_with_decimal_number((yyvsp[0].token_str));
         (yyval.ast_primary) = ret;
     }
 #line 1458 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 14:
-#line 173 "parser.yy"
+  case 13:
+#line 172 "parser.yy"
     {
         ast::primary *ret = new ast::primary;
-		ret->init_number((yyvsp[0].token_str));
+		ret->init_with_binary_number((yyvsp[0].token_str));
         (yyval.ast_primary) = ret;
     }
 #line 1468 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 15:
-#line 179 "parser.yy"
+  case 14:
+#line 178 "parser.yy"
     {
         ast::primary *ret = new ast::primary;
-		ret->init_number((yyvsp[0].token_str));
+		ret->init_with_octal_number((yyvsp[0].token_str));
         (yyval.ast_primary) = ret;
     }
 #line 1478 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 16:
-#line 185 "parser.yy"
+  case 15:
+#line 184 "parser.yy"
     {
         ast::primary *ret = new ast::primary;
-		ret->init_number((yyvsp[0].token_str));
+		ret->init_with_hex_number((yyvsp[0].token_str));
         (yyval.ast_primary) = ret;
     }
 #line 1488 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 17:
-#line 191 "parser.yy"
+  case 16:
+#line 190 "parser.yy"
     {
         ast::primary *ret = new ast::primary;
-		ret->init_attribute((yyvsp[0].ast_attribute));
+		ret->init_with_string((yyvsp[0].token_str));
         (yyval.ast_primary) = ret;
     }
 #line 1498 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 18:
-#line 197 "parser.yy"
+  case 17:
+#line 196 "parser.yy"
     {
         ast::primary *ret = new ast::primary;
-		ret->init_expr((yyvsp[-1].ast_expr));
+		ret->init_with_attribute((yyvsp[0].ast_attribute));
         (yyval.ast_primary) = ret;
     }
 #line 1508 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
-  case 19:
-#line 206 "parser.yy"
+  case 18:
+#line 202 "parser.yy"
     {
-        ast::attribute *ret = new ast::attribute;
-		ret->init_identifier((yyvsp[0].token_str));
-        (yyval.ast_attribute) = ret;
+        ast::primary *ret = new ast::primary;
+		ret->init_with_expr((yyvsp[-1].ast_expr));
+        (yyval.ast_primary) = ret;
     }
 #line 1518 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
+  case 19:
+#line 211 "parser.yy"
+    {
+        ast::attribute *ret = new ast::attribute;
+		ret->init_with_identifier((yyvsp[0].token_str));
+        (yyval.ast_attribute) = ret;
+    }
+#line 1528 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+    break;
+
   case 20:
-#line 215 "parser.yy"
+#line 220 "parser.yy"
     {
         ast::list<ast::object *> *list = new ast::list<ast::object *>();
         list->append((yyvsp[0].ast_line));
         (yyval.ast_list) = list;
     }
-#line 1528 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1538 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
   case 21:
-#line 221 "parser.yy"
+#line 226 "parser.yy"
     {
         (yyvsp[-1].ast_list)->append((yyvsp[0].ast_line));
         (yyval.ast_list) = (yyvsp[-1].ast_list);
     }
-#line 1537 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1547 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
     break;
 
 
-#line 1541 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
+#line 1551 "/home/handy/work/yacc/metacc/dev/out/calc/out/build/parser.tab.cc"
 
       default: break;
     }
@@ -1769,7 +1779,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 227 "parser.yy"
+#line 232 "parser.yy"
 
 int line_count = 0;
 
@@ -1792,5 +1802,15 @@ int main(int argc, const char *argv[]) {
         fprintf(stderr, "Compilation error \n");
     }
     
+	//
+	if (argc == 2) {
+		fprintf(stdout, "BEGINNING OF DESCRIPTION \n");
+		if (start) {
+			start->describe(ast::cs_info(0));
+		}
+		fprintf(stdout, "END OF DESCRIPTION \n");
+	}
+
+	//
     return 0;
 }
