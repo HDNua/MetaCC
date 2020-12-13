@@ -1,0 +1,4 @@
+/home/handy/Dropbox/linux/work/yacc/metacc/dev/metacc/debug/CMakeFiles/rebuild_cache.dir
+/home/handy/Dropbox/linux/work/yacc/metacc/dev/metacc/debug/CMakeFiles/edit_cache.dir
+/home/handy/Dropbox/linux/work/yacc/metacc/dev/metacc/debug/CMakeFiles/test.dir
+/home/handy/Dropbox/linux/work/yacc/metacc/dev/metacc/debug/CMakeFiles/metacc.dir

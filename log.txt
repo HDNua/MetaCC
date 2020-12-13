@@ -1,3 +1,13 @@
+MetaCC - Meta Compiler Compiler v0.6.2.0 (201213-1548)
+----
+
+- metacc를 metacc_cmake와 metacc_qmake의 두 개 프로젝트로 분리하였습니다.
+  이 링크가 도움이 많이 됐습니다.
+  http://jonmacey.blogspot.com/2012/03/using-flex-with-qt.html
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.6.1.1 (201213-1338)
 ----
 
