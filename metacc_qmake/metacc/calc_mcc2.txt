@@ -7,7 +7,7 @@ line_list
 line
     fields
     {
-        ast::expr *_expr;
+        expr_t expr;
     }
     methods
     {

@@ -27,7 +27,7 @@ flex.output = ${QMAKE_FILE_BASE}.cpp
 # this is the actual compile command we wish to call in this case it wil be
 # bison -o (output).tab.cc input.yy
 # flex -o (output).cpp input.l
-bison.commands = bison -d -o ${QMAKE_FILE_IN_BASE}.tab.cc ${QMAKE_FILE_IN}
+bison.commands = bison -g -d -o ${QMAKE_FILE_IN_BASE}.tab.cc ${QMAKE_FILE_IN} --verbose
 flex.commands = flex -o ${QMAKE_FILE_IN_BASE}.cpp ${QMAKE_FILE_IN}
 
 # once this compiler has been run we need to add the output files to the linker stage in this case
@@ -41,7 +41,7 @@ bison.CONFIG += target_predeps
 flex.CONFIG += target_predeps
 
 # this tells the make clean command what files to remove
-bison.clean = ${QMAKE_FILE_IN_BASE}.cpp
+bison.clean = ${QMAKE_FILE_IN_BASE}.tab.*
 flex.clean = ${QMAKE_FILE_IN_BASE}.cpp
 
 # this is just the name of the extra compiler used in the make file (make flex for example)

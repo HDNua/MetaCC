@@ -339,9 +339,9 @@ benchmark: first
 
 compiler_bison_make_all: mcc_parser.tab.cc
 compiler_bison_clean:
-	-$(DEL_FILE) mcc_parser.cpp
+	-$(DEL_FILE) mcc_parser.tab.*
 mcc_parser.tab.cc: ../metacc/mcc_parser.yy
-	bison -d -o mcc_parser.tab.cc ../metacc/mcc_parser.yy
+	bison -g -d -o mcc_parser.tab.cc ../metacc/mcc_parser.yy --verbose
 
 compiler_flex_make_all: mcc_lexer.cpp
 compiler_flex_clean:

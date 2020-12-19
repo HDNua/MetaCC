@@ -46,9 +46,9 @@ int yyerror(char const *str);
 %token	COLON SEMICOLON
 %token	MCC_STRING
 %token	MCC_SYMBOL MCC_METHOD
-%token  C_MCC_TYPE
+%token  C_MCC_TYPE C_IDENTIFIER
 
-%token	VBAR LP RP MLP MRP COMMA
+%token	VBAR LP RP MLP MRP COMMA ASTERISK
 %token	LIST OPTION STAR
 %token	CSTRING NULL_
 %token	SKIP TERMINAL
@@ -59,7 +59,7 @@ int yyerror(char const *str);
 %type <token_str> MCC_SYMBOL MCC_METHOD
 %type <token_str> list_parameter_delim
 %type <token_str> SKIP TERMINAL TOKEN
-%type <token_str> C_MCC_TYPE
+%type <token_str> C_MCC_TYPE C_IDENTIFIER
 
 %type <ast_symbol_definition_list> symbol_definition_list
 %type <ast_symbol_value_list> symbol_value_list
@@ -352,26 +352,42 @@ method_declaration
     ;
 
 C_variable_declaration
-	: C_MCC_TYPE MCC_SYMBOL SEMICOLON
-	{
-		;
-	}
-	| C_MCC_TYPE STAR MCC_SYMBOL SEMICOLON
-	{
-		;
-	}
+    : C_declaration_qualifier C_init_declarator_list SEMICOLON
+    {
+        ;
+    }
 	;
 C_function_declaration
-    : MCC_SYMBOL MCC_SYMBOL LP RP SEMICOLON
+    : C_declaration_qualifier C_direct_declarator LP RP SEMICOLON
 	{
 		;
 	}
 	;
 C_function_call
-	: MCC_SYMBOL LP RP SEMICOLON
+    : C_direct_declarator LP RP SEMICOLON
 	{
 	}
 	;
+C_declaration_qualifier
+    : C_MCC_TYPE
+    | MCC_SYMBOL
+    ;
+C_init_declarator_list
+    : C_init_declarator
+    | C_init_declarator_list C_init_declarator
+    ;
+C_init_declarator
+    : C_declarator
+    ;
+C_declarator
+	: ASTERISK C_declarator
+	| C_direct_declarator
+	;
+C_direct_declarator
+	: MCC_SYMBOL
+	| C_IDENTIFIER
+	| LP C_declarator RP
+    ;
 
 
 /*************************************************************/
@@ -391,6 +407,11 @@ yyerror(char const *str)
 int main(int argc, const char *argv[]) {
         extern int metacc_init(int, const char *[]);
         extern int metacc_main(int, const char *[]);
+
+#ifdef YYDEBUG
+        extern int yydebug;
+        yydebug = 1;
+#endif
 
         if (metacc_init(argc, argv) == 0) {
                 return metacc_main(argc, argv);

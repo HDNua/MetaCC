@@ -39,14 +39,15 @@ char *mcc_string_ptr;
 [\n]			{
         ++line_count;
 }
-"|"				return VBAR;
-"("				return LP;
-")"				return RP;
-"{"				return MLP;
-"}"				return MRP;
-","				return COMMA;
-":"				return COLON;
-";"				return SEMICOLON;
+"|"             return VBAR;
+"("             return LP;
+")"             return RP;
+"{"             return MLP;
+"}"             return MRP;
+","             return COMMA;
+":"             return COLON;
+";"             return SEMICOLON;
+"*"             return ASTERISK;
 
 
 
@@ -108,7 +109,7 @@ char *mcc_string_ptr;
         mcc_string_ptr = mcc_string_buf;
 }
 <STRING>\n		{
-        fprintf(stderr, "invalid stirng \n");
+        fprintf(stderr, "invalid string \n");
         exit(1);
 }
 <STRING>\"		{
@@ -123,9 +124,6 @@ char *mcc_string_ptr;
 
 
 
-
-
-
 [a-z$][a-z_0-9]* {
         strcpy(yylval.token_str, yytext);
         return MCC_SYMBOL;
@@ -134,9 +132,13 @@ char *mcc_string_ptr;
         strcpy(yylval.token_str, yytext);
         return MCC_METHOD;
 }
-[a-zA-Z][a-z_0-9]*(::[a-zA-Z][a-z_0-9]*)* {
+[a-zA-Z_][a-zA-Z_0-9]*(\:\:[a-zA-Z][a-zA-Z_0-9]*)+ {
         strcpy(yylval.token_str, yytext);
         return C_MCC_TYPE;
+}
+[a-zA-Z_][a-zA-Z0-9_]* {
+        strcpy(yylval.token_str, yytext);
+        return C_IDENTIFIER;
 }
 
 
