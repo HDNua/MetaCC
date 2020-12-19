@@ -1,0 +1,36 @@
+line_list
+    : LIST( line, "" )
+    // : line
+    // | line_list line
+    ;
+
+line
+    : expr ";"
+    ;
+
+expr
+    : expr "+" term
+    | expr "-" term
+    | term
+    ;
+
+term
+    : term "*" primary
+    | term "/" primary
+    | primary
+    ;
+
+primary
+    : TOKEN( "SV_UNSIGNED_NUMBER" )
+    | TOKEN( "SV_DECIMAL_NUMBER" )
+    | TOKEN( "SV_BINARY_NUMBER" )
+    | TOKEN( "SV_OCTAL_NUMBER" )
+    | TOKEN( "SV_HEX_NUMBER" )
+    | TOKEN( "SV_STRING" )
+    | attribute
+    | "(" expr ")"
+    ;
+
+attribute
+    : TOKEN( "SV_IDENTIFIER" )
+    ;

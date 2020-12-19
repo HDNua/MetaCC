@@ -78,6 +78,11 @@ HEADERS += \
     table.h
 
 DISTFILES += \
+    calc_mcc1.txt \
+    calc_mcc2.txt \
     mcc_lexer.l \
-    mcc_parser.yy
+    mcc_parser.yy \
+    out_calc_mcc1_l.txt \
+    out_calc_mcc1_y.txt \
+    syntax.txt
 

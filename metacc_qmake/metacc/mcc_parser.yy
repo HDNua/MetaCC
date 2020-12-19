@@ -38,22 +38,28 @@ int yyerror(char const *str);
     class ast::option_parameter_value       *ast_option_parameter_value;
     class ast::star_parameter_value         *ast_star_parameter_value;
     class ast::token_definition             *ast_token_definition;
+
+    class ast::field_initializer            *ast_field_initializer;
+    class ast::method_initializer           *ast_method_initializer;
 }
 
 %token	COLON SEMICOLON
 %token	MCC_STRING
 %token	MCC_SYMBOL MCC_METHOD
+%token  C_MCC_TYPE
 
-%token	VBAR LP RP COMMA
+%token	VBAR LP RP MLP MRP COMMA
 %token	LIST OPTION STAR
 %token	CSTRING NULL_
 %token	SKIP TERMINAL
 %token	TOKEN
+%token  FIELDS METHODS
 
 %type <token_str> MCC_STRING
 %type <token_str> MCC_SYMBOL MCC_METHOD
 %type <token_str> list_parameter_delim
 %type <token_str> SKIP TERMINAL TOKEN
+%type <token_str> C_MCC_TYPE
 
 %type <ast_symbol_definition_list> symbol_definition_list
 %type <ast_symbol_value_list> symbol_value_list
@@ -71,6 +77,9 @@ int yyerror(char const *str);
 %type <ast_option_parameter_value> option_parameter_value
 %type <ast_star_parameter_value> star_parameter_value
 %type <ast_token_definition> token_definition
+
+%type <ast_field_initializer> field_initializer
+%type <ast_method_initializer> method_initializer
 
 %%
 source_text
@@ -98,6 +107,21 @@ symbol_definition
         : symbol_key COLON symbol_value_list SEMICOLON
         {
                 ast::symbol_definition *ret = new ast::symbol_definition($1, $3);
+                $$ = ret;
+        }
+        | symbol_key METHODS method_initializer COLON symbol_value_list SEMICOLON
+        {
+                ast::symbol_definition *ret = new ast::symbol_definition($1, $3, $5);
+                $$ = ret;
+        }
+        | symbol_key FIELDS field_initializer COLON symbol_value_list SEMICOLON
+        {
+                ast::symbol_definition *ret = new ast::symbol_definition($1, $3, $5);
+                $$ = ret;
+        }
+        | symbol_key FIELDS field_initializer METHODS method_initializer COLON symbol_value_list SEMICOLON
+        {
+                ast::symbol_definition *ret = new ast::symbol_definition($1, $3, $5, $7);
                 $$ = ret;
         }
         ;
@@ -141,7 +165,12 @@ symbol_value_list
         }
         ;
 symbol_value
-        : symbol_value_element_list
+        : symbol_value_element_list MLP symbol_value_implementation MRP
+        {
+                ast::symbol_value *ret = new ast::symbol_value($1);
+                $$ = ret;
+        }
+        | symbol_value_element_list
         {
                 ast::symbol_value *ret = new ast::symbol_value($1);
                 $$ = ret;
@@ -241,12 +270,108 @@ star_parameter_value
         }
         ;
 token_definition
-        : TOKEN LP MCC_STRING RP
-        {
-                ast::token_definition *ret = new ast::token_definition($3, "");
-                $$ = ret;
-        }
+    : TOKEN LP MCC_STRING RP
+    {
+        ast::token_definition *ret = new ast::token_definition($3, "");
+        $$ = ret;
+    }
+    ;
+symbol_value_implementation
+    : symbol_value_initializer_list
+    {
         ;
+    }
+    ;
+symbol_value_initializer_list
+    : symbol_value_initializer
+    {
+        ;
+    }
+    | symbol_value_initializer_list symbol_value_initializer
+    {
+        ;
+    }
+    ;
+symbol_value_initializer
+    : initializer_call
+    {
+        ;
+    }
+    ;
+initializer_call
+    : C_function_call
+    {
+        ;
+    }
+    ;
+
+field_initializer
+    : MLP field_declaration_list MRP
+    {
+        ;
+    }
+    ;
+field_declaration_list
+    : field_declaration
+    {
+        ;
+    }
+    | field_declaration_list field_declaration
+    {
+        ;
+    }
+    ;
+field_declaration
+    : C_variable_declaration
+    {
+        ;
+    }
+    ;
+
+method_initializer
+    : MLP method_declaration_list MRP
+    {
+        ;
+    }
+    ;
+method_declaration_list
+    : method_declaration
+    {
+        ;
+    }
+    | method_declaration_list method_declaration
+    {
+        ;
+    }
+    ;
+method_declaration
+    : C_function_declaration
+    {
+        ;
+    }
+    ;
+
+C_variable_declaration
+	: C_MCC_TYPE MCC_SYMBOL SEMICOLON
+	{
+		;
+	}
+	| C_MCC_TYPE STAR MCC_SYMBOL SEMICOLON
+	{
+		;
+	}
+	;
+C_function_declaration
+    : MCC_SYMBOL MCC_SYMBOL LP RP SEMICOLON
+	{
+		;
+	}
+	;
+C_function_call
+	: MCC_SYMBOL LP RP SEMICOLON
+	{
+	}
+	;
 
 
 /*************************************************************/

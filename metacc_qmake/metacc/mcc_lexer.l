@@ -42,6 +42,8 @@ char *mcc_string_ptr;
 "|"				return VBAR;
 "("				return LP;
 ")"				return RP;
+"{"				return MLP;
+"}"				return MRP;
 ","				return COMMA;
 ":"				return COLON;
 ";"				return SEMICOLON;
@@ -68,6 +70,11 @@ char *mcc_string_ptr;
         strcpy(yylval.token_str, yytext);
         return TERMINAL;
 }
+
+
+
+"fields"        return FIELDS;
+"methods"       return METHODS;
 
 
 
@@ -126,6 +133,10 @@ char *mcc_string_ptr;
 [A-Z][A-Z_0-9]* {
         strcpy(yylval.token_str, yytext);
         return MCC_METHOD;
+}
+[a-zA-Z][a-z_0-9]*(::[a-zA-Z][a-z_0-9]*)* {
+        strcpy(yylval.token_str, yytext);
+        return C_MCC_TYPE;
 }
 
 

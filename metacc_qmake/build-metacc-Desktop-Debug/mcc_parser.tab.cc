@@ -140,18 +140,23 @@ extern int yydebug;
     MCC_STRING = 260,
     MCC_SYMBOL = 261,
     MCC_METHOD = 262,
-    VBAR = 263,
-    LP = 264,
-    RP = 265,
-    COMMA = 266,
-    LIST = 267,
-    OPTION = 268,
-    STAR = 269,
-    CSTRING = 270,
-    NULL_ = 271,
-    SKIP = 272,
-    TERMINAL = 273,
-    TOKEN = 274
+    C_MCC_TYPE = 263,
+    VBAR = 264,
+    LP = 265,
+    RP = 266,
+    MLP = 267,
+    MRP = 268,
+    COMMA = 269,
+    LIST = 270,
+    OPTION = 271,
+    STAR = 272,
+    CSTRING = 273,
+    NULL_ = 274,
+    SKIP = 275,
+    TERMINAL = 276,
+    TOKEN = 277,
+    FIELDS = 278,
+    METHODS = 279
   };
 #endif
 
@@ -181,7 +186,10 @@ union YYSTYPE
     class ast::star_parameter_value         *ast_star_parameter_value;
     class ast::token_definition             *ast_token_definition;
 
-#line 185 "mcc_parser.tab.cc"
+    class ast::field_initializer            *ast_field_initializer;
+    class ast::method_initializer           *ast_method_initializer;
+
+#line 193 "mcc_parser.tab.cc"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -500,19 +508,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   33
+#define YYLAST   82
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  20
+#define YYNTOKENS  25
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  18
+#define YYNNTS  31
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  29
+#define YYNRULES  50
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  49
+#define YYNSTATES  99
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   274
+#define YYMAXUTOK   279
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -551,16 +559,19 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    77,    77,    83,    90,    98,   105,   110,   117,   122,
-     129,   136,   144,   151,   158,   166,   171,   176,   180,   184,
-     188,   192,   198,   205,   212,   219,   226,   229,   236,   244
+       0,    86,    86,    92,    99,   107,   112,   117,   122,   129,
+     134,   141,   146,   153,   160,   168,   173,   180,   187,   195,
+     200,   205,   209,   213,   217,   221,   227,   234,   241,   248,
+     255,   258,   265,   273,   280,   286,   290,   296,   302,   309,
+     315,   319,   325,   332,   338,   342,   348,   355,   359,   365,
+     371
 };
 #endif
 
@@ -570,14 +581,20 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "COLON", "SEMICOLON", "MCC_STRING",
-  "MCC_SYMBOL", "MCC_METHOD", "VBAR", "LP", "RP", "COMMA", "LIST",
-  "OPTION", "STAR", "CSTRING", "NULL_", "SKIP", "TERMINAL", "TOKEN",
-  "$accept", "source_text", "symbol_definition_list", "symbol_definition",
-  "symbol_key", "key_attributes", "symbol_value_list", "symbol_value",
+  "MCC_SYMBOL", "MCC_METHOD", "C_MCC_TYPE", "VBAR", "LP", "RP", "MLP",
+  "MRP", "COMMA", "LIST", "OPTION", "STAR", "CSTRING", "NULL_", "SKIP",
+  "TERMINAL", "TOKEN", "FIELDS", "METHODS", "$accept", "source_text",
+  "symbol_definition_list", "symbol_definition", "symbol_key",
+  "key_attributes", "symbol_value_list", "symbol_value",
   "symbol_value_element_list", "symbol_value_element", "list_parameter",
   "option_parameter", "star_parameter", "list_parameter_value",
   "list_parameter_delim", "option_parameter_value", "star_parameter_value",
-  "token_definition", YY_NULLPTR
+  "token_definition", "symbol_value_implementation",
+  "symbol_value_initializer_list", "symbol_value_initializer",
+  "initializer_call", "field_initializer", "field_declaration_list",
+  "field_declaration", "method_initializer", "method_declaration_list",
+  "method_declaration", "C_variable_declaration", "C_function_declaration",
+  "C_function_call", YY_NULLPTR
 };
 #endif
 
@@ -587,11 +604,12 @@ static const char *const yytname[] =
 static const yytype_int16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273,   274
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
+     275,   276,   277,   278,   279
 };
 # endif
 
-#define YYPACT_NINF (-15)
+#define YYPACT_NINF (-12)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -605,11 +623,16 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -1,   -14,    12,    -1,   -15,    10,   -15,   -15,   -15,   -15,
-     -15,    -5,   -15,   -15,     6,     8,     9,   -15,    11,     2,
-     -15,    -5,   -15,   -15,    -5,    -5,    -5,    14,   -15,    -5,
-     -15,    13,    15,    16,    13,    18,   -15,    19,   -15,   -15,
-      20,   -15,   -15,    17,   -15,   -15,   -15,   -15,   -15
+       2,     6,    15,     2,   -12,    -2,   -12,   -12,   -12,   -12,
+     -12,    28,     5,    12,   -12,   -12,    29,    30,    36,   -12,
+      38,     1,   -12,    13,   -12,   -12,    34,    -1,    43,    35,
+      28,    28,    28,    46,   -12,    28,    47,   -12,    -3,    -4,
+     -12,   -12,    28,    12,    48,     0,   -12,   -12,    28,    49,
+      41,    42,    49,    44,   -12,    50,   -12,   -12,    51,   -12,
+      53,    52,    47,   -12,   -12,   -12,    55,    54,   -12,   -12,
+       3,    61,    56,   -12,   -12,     7,   -12,    62,   -12,   -12,
+     -12,    57,   -12,   -12,   -12,    65,   -12,    28,    59,   -12,
+     -12,   -12,    67,   -12,    32,    68,   -12,   -12,   -12
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -617,25 +640,34 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     6,     0,     2,     3,     0,     8,     9,     7,     1,
-       4,     0,    15,    16,     0,     0,     0,    20,     0,     0,
-      10,    12,    13,    21,     0,     0,     0,     0,     5,     0,
-      14,    25,     0,     0,    27,     0,    23,     0,    28,    24,
-       0,    11,    17,     0,    18,    19,    29,    26,    22
+       0,     9,     0,     2,     3,     0,    11,    12,    10,     1,
+       4,     0,     0,     0,    19,    20,     0,     0,     0,    24,
+       0,     0,    13,    16,    17,    25,     0,     0,     0,     0,
+       0,     0,     0,     0,     5,     0,     0,    18,     0,     0,
+      40,    42,     0,     0,     0,     0,    44,    46,     0,    29,
+       0,     0,    31,     0,    27,     0,    32,    28,     0,    14,
+       0,     0,    34,    35,    37,    38,     0,     0,    39,    41,
+       0,     0,     0,    43,    45,     0,    21,     0,    22,    23,
+      33,     0,    15,    36,    47,     0,     7,     0,     0,     6,
+      30,    26,     0,    48,     0,     0,    50,     8,    49
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -15,   -15,   -15,    21,   -15,   -15,    -9,    -6,   -15,     5,
-     -15,   -15,   -15,     7,   -15,   -15,   -15,   -15
+     -12,   -12,   -12,    70,   -12,   -12,   -11,    22,   -12,    58,
+     -12,   -12,   -12,    45,   -12,   -12,   -12,   -12,   -12,   -12,
+      16,   -12,   -12,   -12,    40,    31,   -12,    37,   -12,   -12,
+     -12
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     3,     4,     5,     8,    31,    20,    21,    22,
-      32,    35,    37,    33,    48,    36,    39,    23
+      -1,     2,     3,     4,     5,     8,    49,    22,    23,    24,
+      50,    53,    55,    51,    91,    54,    57,    25,    61,    62,
+      63,    64,    27,    39,    40,    29,    45,    46,    41,    47,
+      65
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -643,45 +675,66 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      12,    13,    19,     6,     7,     1,    28,    14,    15,    16,
-      29,    17,     9,    11,    18,    24,    34,    25,    26,    40,
-      27,    29,    47,    41,    10,    42,    30,    43,    44,    45,
-      46,     0,     0,    38
+      21,    11,    42,    66,    38,    34,    44,    86,     1,    68,
+      35,    89,    35,    73,    67,     9,    35,    26,    14,    15,
+      52,    12,    13,    43,    28,    36,     6,     7,    16,    17,
+      18,    70,    19,    14,    15,    20,    97,    75,    48,    30,
+      31,    35,    38,    16,    17,    18,    32,    19,    33,    44,
+      20,    58,    76,    60,    72,    78,    77,    59,    35,    84,
+      85,    79,    80,    81,    87,    82,    88,    90,    92,    93,
+      95,    96,    98,    10,    71,     0,    94,    56,    83,    69,
+       0,    37,    74
 };
 
 static const yytype_int8 yycheck[] =
 {
-       5,     6,    11,    17,    18,     6,     4,    12,    13,    14,
-       8,    16,     0,     3,    19,     9,    25,     9,     9,     5,
-       9,     8,     5,    29,     3,    10,    21,    11,    10,    10,
-      10,    -1,    -1,    26
+      11,     3,     3,     6,     8,     4,     6,     4,     6,    13,
+       9,     4,     9,    13,    17,     0,     9,    12,     5,     6,
+      31,    23,    24,    24,    12,    12,    20,    21,    15,    16,
+      17,    42,    19,     5,     6,    22,     4,    48,     3,    10,
+      10,     9,     8,    15,    16,    17,    10,    19,    10,     6,
+      22,     5,    11,     6,     6,    11,    14,    35,     9,     4,
+       6,    11,    11,    10,     3,    13,    10,     5,    11,     4,
+      11,     4,     4,     3,    43,    -1,    87,    32,    62,    39,
+      -1,    23,    45
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     6,    21,    22,    23,    24,    17,    18,    25,     0,
-      23,     3,     5,     6,    12,    13,    14,    16,    19,    26,
-      27,    28,    29,    37,     9,     9,     9,     9,     4,     8,
-      29,    26,    30,    33,    26,    31,    35,    32,    33,    36,
-       5,    27,    10,    11,    10,    10,    10,     5,    34
+       0,     6,    26,    27,    28,    29,    20,    21,    30,     0,
+      28,     3,    23,    24,     5,     6,    15,    16,    17,    19,
+      22,    31,    32,    33,    34,    42,    12,    47,    12,    50,
+      10,    10,    10,    10,     4,     9,    12,    34,     8,    48,
+      49,    53,     3,    24,     6,    51,    52,    54,     3,    31,
+      35,    38,    31,    36,    40,    37,    38,    41,     5,    32,
+       6,    43,    44,    45,    46,    55,     6,    17,    13,    49,
+      31,    50,     6,    13,    52,    31,    11,    14,    11,    11,
+      11,    10,    13,    45,     4,     6,     4,     3,    10,     4,
+       5,    39,    11,     4,    31,    11,     4,     4,     4
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    20,    21,    22,    22,    23,    24,    24,    25,    25,
-      26,    26,    27,    28,    28,    29,    29,    29,    29,    29,
-      29,    29,    30,    31,    32,    33,    34,    35,    36,    37
+       0,    25,    26,    27,    27,    28,    28,    28,    28,    29,
+      29,    30,    30,    31,    31,    32,    32,    33,    33,    34,
+      34,    34,    34,    34,    34,    34,    35,    36,    37,    38,
+      39,    40,    41,    42,    43,    44,    44,    45,    46,    47,
+      48,    48,    49,    50,    51,    51,    52,    53,    53,    54,
+      55
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     2,     4,     1,     2,     1,     1,
-       1,     3,     1,     1,     2,     1,     1,     4,     4,     4,
-       1,     1,     3,     1,     1,     1,     1,     1,     1,     4
+       0,     2,     1,     1,     2,     4,     6,     6,     8,     1,
+       2,     1,     1,     1,     3,     4,     1,     1,     2,     1,
+       1,     4,     4,     4,     1,     1,     3,     1,     1,     1,
+       1,     1,     1,     4,     1,     1,     2,     1,     1,     3,
+       1,     2,     1,     3,     1,     2,     1,     3,     4,     5,
+       4
 };
 
 
@@ -1377,254 +1430,425 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 78 "../metacc/mcc_parser.yy"
+#line 87 "../metacc/mcc_parser.yy"
         {
                 symbol_definition_list = (yyvsp[0].ast_symbol_definition_list);
         }
-#line 1385 "mcc_parser.tab.cc"
+#line 1438 "mcc_parser.tab.cc"
     break;
 
   case 3:
-#line 84 "../metacc/mcc_parser.yy"
+#line 93 "../metacc/mcc_parser.yy"
         {
                 ast::symbol_definition_list *list = new ast::symbol_definition_list();
                 if ((yyvsp[0].ast_symbol_definition) == nullptr) { puts("1"); }
                 list->append((yyvsp[0].ast_symbol_definition));
                 (yyval.ast_symbol_definition_list) = list;
         }
-#line 1396 "mcc_parser.tab.cc"
+#line 1449 "mcc_parser.tab.cc"
     break;
 
   case 4:
-#line 91 "../metacc/mcc_parser.yy"
+#line 100 "../metacc/mcc_parser.yy"
         {
                 if ((yyvsp[0].ast_symbol_definition) == nullptr) { puts("2"); }
                 (yyvsp[-1].ast_symbol_definition_list)->append((yyvsp[0].ast_symbol_definition));
                 (yyval.ast_symbol_definition_list) = (yyvsp[-1].ast_symbol_definition_list);
         }
-#line 1406 "mcc_parser.tab.cc"
+#line 1459 "mcc_parser.tab.cc"
     break;
 
   case 5:
-#line 99 "../metacc/mcc_parser.yy"
+#line 108 "../metacc/mcc_parser.yy"
         {
                 ast::symbol_definition *ret = new ast::symbol_definition((yyvsp[-3].ast_symbol_key), (yyvsp[-1].ast_symbol_value_list));
                 (yyval.ast_symbol_definition) = ret;
         }
-#line 1415 "mcc_parser.tab.cc"
+#line 1468 "mcc_parser.tab.cc"
     break;
 
   case 6:
-#line 106 "../metacc/mcc_parser.yy"
+#line 113 "../metacc/mcc_parser.yy"
+        {
+                ast::symbol_definition *ret = new ast::symbol_definition((yyvsp[-5].ast_symbol_key), (yyvsp[-3].ast_method_initializer), (yyvsp[-1].ast_symbol_value_list));
+                (yyval.ast_symbol_definition) = ret;
+        }
+#line 1477 "mcc_parser.tab.cc"
+    break;
+
+  case 7:
+#line 118 "../metacc/mcc_parser.yy"
+        {
+                ast::symbol_definition *ret = new ast::symbol_definition((yyvsp[-5].ast_symbol_key), (yyvsp[-3].ast_field_initializer), (yyvsp[-1].ast_symbol_value_list));
+                (yyval.ast_symbol_definition) = ret;
+        }
+#line 1486 "mcc_parser.tab.cc"
+    break;
+
+  case 8:
+#line 123 "../metacc/mcc_parser.yy"
+        {
+                ast::symbol_definition *ret = new ast::symbol_definition((yyvsp[-7].ast_symbol_key), (yyvsp[-5].ast_field_initializer), (yyvsp[-3].ast_method_initializer), (yyvsp[-1].ast_symbol_value_list));
+                (yyval.ast_symbol_definition) = ret;
+        }
+#line 1495 "mcc_parser.tab.cc"
+    break;
+
+  case 9:
+#line 130 "../metacc/mcc_parser.yy"
         {
                 ast::symbol_key *ret = new ast::symbol_key((yyvsp[0].token_str), nullptr);
                 (yyval.ast_symbol_key) = ret;
         }
-#line 1424 "mcc_parser.tab.cc"
+#line 1504 "mcc_parser.tab.cc"
     break;
 
-  case 7:
-#line 111 "../metacc/mcc_parser.yy"
+  case 10:
+#line 135 "../metacc/mcc_parser.yy"
         {
                 ast::symbol_key *ret = new ast::symbol_key((yyvsp[-1].token_str), (yyvsp[0].ast_key_attributes));
                 (yyval.ast_symbol_key) = ret;
         }
-#line 1433 "mcc_parser.tab.cc"
+#line 1513 "mcc_parser.tab.cc"
     break;
 
-  case 8:
-#line 118 "../metacc/mcc_parser.yy"
+  case 11:
+#line 142 "../metacc/mcc_parser.yy"
         {
                 ast::key_attributes *ret = new ast::key_attributes((yyvsp[0].token_str));
                 (yyval.ast_key_attributes) = ret;
         }
-#line 1442 "mcc_parser.tab.cc"
+#line 1522 "mcc_parser.tab.cc"
     break;
 
-  case 9:
-#line 123 "../metacc/mcc_parser.yy"
+  case 12:
+#line 147 "../metacc/mcc_parser.yy"
         {
                 ast::key_attributes *ret = new ast::key_attributes((yyvsp[0].token_str));
                 (yyval.ast_key_attributes) = ret;
         }
-#line 1451 "mcc_parser.tab.cc"
+#line 1531 "mcc_parser.tab.cc"
     break;
 
-  case 10:
-#line 130 "../metacc/mcc_parser.yy"
+  case 13:
+#line 154 "../metacc/mcc_parser.yy"
         {
                 ast::symbol_value_list *list = new ast::symbol_value_list();
                 if ((yyvsp[0].ast_symbol_value) == nullptr) { puts("symbol_value_list found nullptr parameter $1;"); }
                 list->append((yyvsp[0].ast_symbol_value));
                 (yyval.ast_symbol_value_list) = list;
         }
-#line 1462 "mcc_parser.tab.cc"
+#line 1542 "mcc_parser.tab.cc"
     break;
 
-  case 11:
-#line 137 "../metacc/mcc_parser.yy"
+  case 14:
+#line 161 "../metacc/mcc_parser.yy"
         {
                 if ((yyvsp[0].ast_symbol_value) == nullptr) { puts("symbol_value_list found nullptr parameter $3;"); }
                 (yyvsp[-2].ast_symbol_value_list)->append((yyvsp[0].ast_symbol_value));
                 (yyval.ast_symbol_value_list) = (yyvsp[-2].ast_symbol_value_list);
         }
-#line 1472 "mcc_parser.tab.cc"
+#line 1552 "mcc_parser.tab.cc"
     break;
 
-  case 12:
-#line 145 "../metacc/mcc_parser.yy"
+  case 15:
+#line 169 "../metacc/mcc_parser.yy"
+        {
+                ast::symbol_value *ret = new ast::symbol_value((yyvsp[-3].ast_symbol_value_element_list));
+                (yyval.ast_symbol_value) = ret;
+        }
+#line 1561 "mcc_parser.tab.cc"
+    break;
+
+  case 16:
+#line 174 "../metacc/mcc_parser.yy"
         {
                 ast::symbol_value *ret = new ast::symbol_value((yyvsp[0].ast_symbol_value_element_list));
                 (yyval.ast_symbol_value) = ret;
         }
-#line 1481 "mcc_parser.tab.cc"
+#line 1570 "mcc_parser.tab.cc"
     break;
 
-  case 13:
-#line 152 "../metacc/mcc_parser.yy"
+  case 17:
+#line 181 "../metacc/mcc_parser.yy"
         {
                 ast::symbol_value_element_list *list = new ast::symbol_value_element_list();
                 if ((yyvsp[0].ast_symbol_value_element) == nullptr) { puts("5"); }
                 list->append((yyvsp[0].ast_symbol_value_element));
                 (yyval.ast_symbol_value_element_list) = list;
         }
-#line 1492 "mcc_parser.tab.cc"
+#line 1581 "mcc_parser.tab.cc"
     break;
 
-  case 14:
-#line 159 "../metacc/mcc_parser.yy"
+  case 18:
+#line 188 "../metacc/mcc_parser.yy"
         {
                 if ((yyvsp[0].ast_symbol_value_element) == nullptr) { puts("6"); }
                 (yyvsp[-1].ast_symbol_value_element_list)->append((yyvsp[0].ast_symbol_value_element));
                 (yyval.ast_symbol_value_element_list) = (yyvsp[-1].ast_symbol_value_element_list);
         }
-#line 1502 "mcc_parser.tab.cc"
+#line 1591 "mcc_parser.tab.cc"
     break;
 
-  case 15:
-#line 167 "../metacc/mcc_parser.yy"
+  case 19:
+#line 196 "../metacc/mcc_parser.yy"
         {
                 ast::mcc_string *ret = new ast::mcc_string((yyvsp[0].token_str));
                 (yyval.ast_symbol_value_element) = ret;
         }
-#line 1511 "mcc_parser.tab.cc"
+#line 1600 "mcc_parser.tab.cc"
     break;
 
-  case 16:
-#line 172 "../metacc/mcc_parser.yy"
+  case 20:
+#line 201 "../metacc/mcc_parser.yy"
         {
                 ast::mcc_symbol *ret = new ast::mcc_symbol((yyvsp[0].token_str));
                 (yyval.ast_symbol_value_element) = ret;
         }
-#line 1520 "mcc_parser.tab.cc"
-    break;
-
-  case 17:
-#line 177 "../metacc/mcc_parser.yy"
-        {
-                (yyval.ast_symbol_value_element) = (yyvsp[-1].ast_list_parameter);
-        }
-#line 1528 "mcc_parser.tab.cc"
-    break;
-
-  case 18:
-#line 181 "../metacc/mcc_parser.yy"
-        {
-                (yyval.ast_symbol_value_element) = (yyvsp[-1].ast_option_parameter);
-        }
-#line 1536 "mcc_parser.tab.cc"
-    break;
-
-  case 19:
-#line 185 "../metacc/mcc_parser.yy"
-        {
-                (yyval.ast_symbol_value_element) = (yyvsp[-1].ast_star_parameter);
-        }
-#line 1544 "mcc_parser.tab.cc"
-    break;
-
-  case 20:
-#line 189 "../metacc/mcc_parser.yy"
-        {
-                (yyval.ast_symbol_value_element) = nullptr;
-        }
-#line 1552 "mcc_parser.tab.cc"
+#line 1609 "mcc_parser.tab.cc"
     break;
 
   case 21:
-#line 193 "../metacc/mcc_parser.yy"
+#line 206 "../metacc/mcc_parser.yy"
         {
-                (yyval.ast_symbol_value_element) = (yyvsp[0].ast_token_definition);
+                (yyval.ast_symbol_value_element) = (yyvsp[-1].ast_list_parameter);
         }
-#line 1560 "mcc_parser.tab.cc"
+#line 1617 "mcc_parser.tab.cc"
     break;
 
   case 22:
-#line 199 "../metacc/mcc_parser.yy"
+#line 210 "../metacc/mcc_parser.yy"
+        {
+                (yyval.ast_symbol_value_element) = (yyvsp[-1].ast_option_parameter);
+        }
+#line 1625 "mcc_parser.tab.cc"
+    break;
+
+  case 23:
+#line 214 "../metacc/mcc_parser.yy"
+        {
+                (yyval.ast_symbol_value_element) = (yyvsp[-1].ast_star_parameter);
+        }
+#line 1633 "mcc_parser.tab.cc"
+    break;
+
+  case 24:
+#line 218 "../metacc/mcc_parser.yy"
+        {
+                (yyval.ast_symbol_value_element) = nullptr;
+        }
+#line 1641 "mcc_parser.tab.cc"
+    break;
+
+  case 25:
+#line 222 "../metacc/mcc_parser.yy"
+        {
+                (yyval.ast_symbol_value_element) = (yyvsp[0].ast_token_definition);
+        }
+#line 1649 "mcc_parser.tab.cc"
+    break;
+
+  case 26:
+#line 228 "../metacc/mcc_parser.yy"
         {
                 ast::list_parameter *ret = new ast::list_parameter((yyvsp[-2].ast_list_parameter_value), (yyvsp[0].token_str));
                 (yyval.ast_list_parameter) = ret;
         }
-#line 1569 "mcc_parser.tab.cc"
+#line 1658 "mcc_parser.tab.cc"
     break;
 
-  case 23:
-#line 206 "../metacc/mcc_parser.yy"
+  case 27:
+#line 235 "../metacc/mcc_parser.yy"
         {
                 ast::option_parameter *ret = new ast::option_parameter((yyvsp[0].ast_option_parameter_value));
                 (yyval.ast_option_parameter) = ret;
         }
-#line 1578 "mcc_parser.tab.cc"
+#line 1667 "mcc_parser.tab.cc"
     break;
 
-  case 24:
-#line 213 "../metacc/mcc_parser.yy"
+  case 28:
+#line 242 "../metacc/mcc_parser.yy"
         {
                 ast::star_parameter *ret = new ast::star_parameter((yyvsp[0].ast_star_parameter_value));
                 (yyval.ast_star_parameter) = ret;
         }
-#line 1587 "mcc_parser.tab.cc"
+#line 1676 "mcc_parser.tab.cc"
     break;
 
-  case 25:
-#line 220 "../metacc/mcc_parser.yy"
+  case 29:
+#line 249 "../metacc/mcc_parser.yy"
         {
                 ast::list_parameter_value *ret = new ast::list_parameter_value((yyvsp[0].ast_symbol_value_list));
                 (yyval.ast_list_parameter_value) = ret;
         }
-#line 1596 "mcc_parser.tab.cc"
+#line 1685 "mcc_parser.tab.cc"
     break;
 
-  case 27:
-#line 230 "../metacc/mcc_parser.yy"
+  case 31:
+#line 259 "../metacc/mcc_parser.yy"
         {
                 ast::option_parameter_value *ret = new ast::option_parameter_value((yyvsp[0].ast_symbol_value_list));
                 (yyval.ast_option_parameter_value) = ret;
         }
-#line 1605 "mcc_parser.tab.cc"
+#line 1694 "mcc_parser.tab.cc"
     break;
 
-  case 28:
-#line 237 "../metacc/mcc_parser.yy"
+  case 32:
+#line 266 "../metacc/mcc_parser.yy"
         {
                 ast::list_parameter *lp = new ast::list_parameter((yyvsp[0].ast_list_parameter_value), "");
                 ast::star_parameter_value *ret = new ast::star_parameter_value(lp);
                 (yyval.ast_star_parameter_value) = ret;
         }
-#line 1615 "mcc_parser.tab.cc"
+#line 1704 "mcc_parser.tab.cc"
     break;
 
-  case 29:
-#line 245 "../metacc/mcc_parser.yy"
+  case 33:
+#line 274 "../metacc/mcc_parser.yy"
+    {
+        ast::token_definition *ret = new ast::token_definition((yyvsp[-1].token_str), "");
+        (yyval.ast_token_definition) = ret;
+    }
+#line 1713 "mcc_parser.tab.cc"
+    break;
+
+  case 34:
+#line 281 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1721 "mcc_parser.tab.cc"
+    break;
+
+  case 35:
+#line 287 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1729 "mcc_parser.tab.cc"
+    break;
+
+  case 36:
+#line 291 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1737 "mcc_parser.tab.cc"
+    break;
+
+  case 37:
+#line 297 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1745 "mcc_parser.tab.cc"
+    break;
+
+  case 38:
+#line 303 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1753 "mcc_parser.tab.cc"
+    break;
+
+  case 39:
+#line 310 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1761 "mcc_parser.tab.cc"
+    break;
+
+  case 40:
+#line 316 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1769 "mcc_parser.tab.cc"
+    break;
+
+  case 41:
+#line 320 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1777 "mcc_parser.tab.cc"
+    break;
+
+  case 42:
+#line 326 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1785 "mcc_parser.tab.cc"
+    break;
+
+  case 43:
+#line 333 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1793 "mcc_parser.tab.cc"
+    break;
+
+  case 44:
+#line 339 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1801 "mcc_parser.tab.cc"
+    break;
+
+  case 45:
+#line 343 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1809 "mcc_parser.tab.cc"
+    break;
+
+  case 46:
+#line 349 "../metacc/mcc_parser.yy"
+    {
+        ;
+    }
+#line 1817 "mcc_parser.tab.cc"
+    break;
+
+  case 47:
+#line 356 "../metacc/mcc_parser.yy"
         {
-                ast::token_definition *ret = new ast::token_definition((yyvsp[-1].token_str), "");
-                (yyval.ast_token_definition) = ret;
-        }
-#line 1624 "mcc_parser.tab.cc"
+		;
+	}
+#line 1825 "mcc_parser.tab.cc"
+    break;
+
+  case 48:
+#line 360 "../metacc/mcc_parser.yy"
+        {
+		;
+	}
+#line 1833 "mcc_parser.tab.cc"
+    break;
+
+  case 49:
+#line 366 "../metacc/mcc_parser.yy"
+        {
+		;
+	}
+#line 1841 "mcc_parser.tab.cc"
+    break;
+
+  case 50:
+#line 372 "../metacc/mcc_parser.yy"
+        {
+	}
+#line 1848 "mcc_parser.tab.cc"
     break;
 
 
-#line 1628 "mcc_parser.tab.cc"
+#line 1852 "mcc_parser.tab.cc"
 
       default: break;
     }
@@ -1856,7 +2080,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 253 "../metacc/mcc_parser.yy"
+#line 378 "../metacc/mcc_parser.yy"
 
 int line_count = 0;
 

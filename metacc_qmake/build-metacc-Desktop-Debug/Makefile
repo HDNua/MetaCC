@@ -65,8 +65,13 @@ OBJECTS       = ast_action.o \
 		main.o \
 		mcc_parser.tab.o \
 		mcc_lexer.o
-DIST          = ../metacc/mcc_lexer.l \
+DIST          = ../metacc/calc_mcc1.txt \
+		../metacc/calc_mcc2.txt \
+		../metacc/mcc_lexer.l \
 		../metacc/mcc_parser.yy \
+		../metacc/out_calc_mcc1_l.txt \
+		../metacc/out_calc_mcc1_y.txt \
+		../metacc/syntax.txt \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \

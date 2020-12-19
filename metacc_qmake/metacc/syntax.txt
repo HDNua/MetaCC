@@ -1,0 +1,105 @@
+#
+# 이 문서에서는 metacc의 문법을 기술합니다.
+#
+
+
+source_text
+    : symbol_definition_list
+    ;
+
+symbol_definition_list
+    : symbol_definition
+    | symbol_definition_list symbol_definition
+    ;
+
+symbol_definition
+    : symbol_key ":" symbol_value_list ";"
+    ;
+
+symbol_key
+    : MCC_SYMBOL
+    | MCC_SYMBOL key_attributes
+    ;
+
+key_attributes
+    : SKIP
+    | TERMINAL
+    ;
+
+symbol_value_list
+    : symbol_value
+    | symbol_value_list "|" symbol_value
+    ;
+
+symbol_value
+    : symbol_value_element_list
+    ;
+
+symbol_value_element_list
+    : symbol_value_element
+    | symbol_value_element_list symbol_value_element
+    ;
+
+symbol_value_element
+    : MCC_STRING
+    | MCC_SYMBOL
+    | LIST( list_parameter )
+    | OPTION( option_parameter )
+    | STAR( star_parameter )
+    | NULL
+    | token_definition
+    ;
+
+list_parameter
+    : list_parameter_value "," list_parameter_delim
+    ;
+
+option_parameter
+    : option_parameter_value
+    ;
+
+star_parameter
+    : star_parameter_value
+    ;
+
+list_parameter_value
+    : symbol_value_list
+    ;
+
+list_parameter_delim
+    : MCC_STRING
+    ;
+
+option_parameter_value
+    : symbol_value_list
+    ;
+
+star_parameter_value
+    : list_parameter_value
+    ;
+
+token_definition
+    : TOKEN( MCC_STRING )
+    ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

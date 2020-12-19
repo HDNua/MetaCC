@@ -54,18 +54,23 @@ extern int yydebug;
     MCC_STRING = 260,
     MCC_SYMBOL = 261,
     MCC_METHOD = 262,
-    VBAR = 263,
-    LP = 264,
-    RP = 265,
-    COMMA = 266,
-    LIST = 267,
-    OPTION = 268,
-    STAR = 269,
-    CSTRING = 270,
-    NULL_ = 271,
-    SKIP = 272,
-    TERMINAL = 273,
-    TOKEN = 274
+    C_MCC_TYPE = 263,
+    VBAR = 264,
+    LP = 265,
+    RP = 266,
+    MLP = 267,
+    MRP = 268,
+    COMMA = 269,
+    LIST = 270,
+    OPTION = 271,
+    STAR = 272,
+    CSTRING = 273,
+    NULL_ = 274,
+    SKIP = 275,
+    TERMINAL = 276,
+    TOKEN = 277,
+    FIELDS = 278,
+    METHODS = 279
   };
 #endif
 
@@ -95,7 +100,10 @@ union YYSTYPE
     class ast::star_parameter_value         *ast_star_parameter_value;
     class ast::token_definition             *ast_token_definition;
 
-#line 99 "mcc_parser.tab.hh"
+    class ast::field_initializer            *ast_field_initializer;
+    class ast::method_initializer           *ast_method_initializer;
+
+#line 107 "mcc_parser.tab.hh"
 
 };
 typedef union YYSTYPE YYSTYPE;

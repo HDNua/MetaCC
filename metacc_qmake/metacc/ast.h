@@ -42,6 +42,10 @@ namespace ast {
     class symbol_definition_list;
     class symbol_value_list;
     class symbol_value_element_list;
+
+    //
+    class field_initializer;
+    class method_initializer;
 }
 
 
@@ -237,6 +241,8 @@ namespace ast {
     class symbol_definition: public object {
         class symbol_key                    *_symbol_key; 
         class symbol_value_list             *_symbol_value_list;
+        class field_initializer             *_field_initializer;
+        class method_initializer            *_method_initializer;
 
     public:
         // 
@@ -244,6 +250,36 @@ namespace ast {
             : object() // object(AST_SYMBOL_DEFINITION)
             , _symbol_key(_symbol_key)
             , _symbol_value_list(_symbol_value_list)
+            , _field_initializer(nullptr)
+            , _method_initializer(nullptr)
+        {
+        }
+        symbol_definition(symbol_key *_symbol_key, field_initializer *_field_initializer, symbol_value_list *_symbol_value_list)
+            : object() // object(AST_SYMBOL_DEFINITION)
+            , _symbol_key(_symbol_key)
+            , _symbol_value_list(_symbol_value_list)
+            , _field_initializer(_field_initializer)
+            , _method_initializer(nullptr)
+        {
+        }
+        symbol_definition(symbol_key *_symbol_key, method_initializer *_method_initializer, symbol_value_list *_symbol_value_list)
+            : object() // object(AST_SYMBOL_DEFINITION)
+            , _symbol_key(_symbol_key)
+            , _symbol_value_list(_symbol_value_list)
+            , _field_initializer(nullptr)
+            , _method_initializer(_method_initializer)
+        {
+        }
+        symbol_definition(
+                symbol_key *_symbol_key, 
+                field_initializer *_field_initializer, 
+                method_initializer *_method_initializer, 
+                symbol_value_list *_symbol_value_list)
+            : object() // object(AST_SYMBOL_DEFINITION)
+            , _symbol_key(_symbol_key)
+            , _symbol_value_list(_symbol_value_list)
+            , _field_initializer(_field_initializer)
+            , _method_initializer(_method_initializer)
         {
         }
         // 
@@ -1104,6 +1140,24 @@ namespace ast {
         static int compare(const symbol_value_element_list *p1, const symbol_value_element_list *p2) {
             return p1->compare(p2);
         }
+    };
+
+
+
+    //
+    class field_initializer: public object {
+
+    public:
+        field_initializer() {}
+        ~field_initializer() {}
+
+    };
+    class method_initializer: public object {
+
+    public:
+        method_initializer() {}
+        ~method_initializer() {}
+
     };
 
 

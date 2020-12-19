@@ -1,0 +1,116 @@
+line_list
+    : LIST( line, "" )
+    // : line
+    // | line_list line
+    ;
+
+line
+    fields
+    {
+        ast::expr *_expr;
+    }
+    methods
+    {
+        //void init_with_expr(ast::expr *expr);
+        void init_with_expr();
+    }
+    : expr ";"
+    {
+        //self = new ast::line;
+        //init_with_expr($1);
+        //$$ = ret;
+        init_with_expr();
+    }
+    ;
+
+expr
+    fields
+    {
+        //int         _init_type;
+        ast::expr   *_expr;
+        std::string _op;
+        ast::term   *_term;
+    }
+    methods
+    {
+        //void init_with_add(ast::expr *expr, const std::string &op, ast::term *term);
+        //void init_with_sub(ast::expr *expr, const std::string &op, ast::term *term);
+        //void init_with_term(ast::term *term);
+        void init_with_add();
+        void init_with_sub();
+        void init_with_term();
+    }
+    : expr "+" term
+    {
+        //init_with_add($1, $2, $3);
+        init_with_add();
+    }
+    | expr "-" term
+    {
+        //init_with_sub($1, $2, $3);
+        init_with_sub();
+    }
+    | term
+    {
+        //init_with_term($1);
+        init_with_term();
+    }
+    ;
+
+term
+    fields
+    {
+        ast::term    *_term;
+        std::string  _op;
+        ast::primary *_primary;
+    }
+    methods
+    {
+        //void init_with_mul(ast::term *term, const std::string &op, ast::primary *primary);
+        //void init_with_div(ast::term *term, const std::string &op, ast::primary *primary);
+        //void init_with_primary(ast::primary *primary);
+        void init_with_mul();
+        void init_with_div();
+        void init_with_primary();
+    }
+    : term "*" primary
+    {
+        //init_with_mul($1, $2, $3);
+        init_with_mul();
+    }
+    | term "/" primary
+    {
+        //init_with_div($1, $2, $3);
+        init_with_div();
+    }
+    | primary
+    {
+        //init_with_primary($1);
+        init_with_primary();
+    }
+    ;
+
+primary
+    fields
+    {
+        ast::attribute *_attribute;
+        ast::expr      *_expr;
+    }
+    methods
+    {
+        void init_with_attribute();
+        void init_with_expr();
+    }
+    : TOKEN( "SV_UNSIGNED_NUMBER" )
+    | TOKEN( "SV_DECIMAL_NUMBER" )
+    | TOKEN( "SV_BINARY_NUMBER" )
+    | TOKEN( "SV_OCTAL_NUMBER" )
+    | TOKEN( "SV_HEX_NUMBER" )
+    | TOKEN( "SV_STRING" )
+    | attribute
+    | "(" expr ")"
+    ;
+
+attribute
+    : TOKEN( "SV_IDENTIFIER" )
+    ;
