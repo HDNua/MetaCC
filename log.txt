@@ -1,3 +1,14 @@
+MetaCC - Meta Compiler Compiler v0.6.3.0 (201222-0232)
+----
+
+- describe, glance, action 세 함수의 파라미터가 각각 다음이 되게 변경.
+> describe_args, glance_args, action_args
+>> 효과는 명백하다.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.6.2.6 (201222-0158)
 ----
 

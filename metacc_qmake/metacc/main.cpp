@@ -232,7 +232,7 @@ int metacc_main(int argc, const char *argv[]) {
 
         // 
         /// ast_list_traverse(out_jj, symbol_definition_list, ast::ACTOPT_NONE);    
-        symbol_definition_list->action(out_jj, ast::ACTOPT_NONE);
+        symbol_definition_list->action(ast::action_args(out_jj, ast::ACTOPT_NONE));
 
         // 
         fprintf(out_jj, "\n");
@@ -376,7 +376,7 @@ int metacc_main(int argc, const char *argv[]) {
         }
 
         // 
-        symbol_definition_list->action(out_lyc, ast::ACTOPT_NONE);
+        symbol_definition_list->action(ast::action_args(out_lyc, ast::ACTOPT_NONE));
 
         // 
         {

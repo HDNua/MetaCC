@@ -44,7 +44,7 @@ extern FILE *out_lycpp;
 
 //==============================================================================
 // 
-void symbol_definition::action(FILE *out, act_opt option) {
+void symbol_definition::action(action_args args) {
     action_header();
     symbol_key *ast_symbol_key = this->ast_symbol_key();
     key_attributes *ast_key_attr = ast_symbol_key->ast_key_attributes();
@@ -136,23 +136,23 @@ void symbol_definition::action(FILE *out, act_opt option) {
 
         // 
         ast_symbol_value_list->set_symbol_name(symbol_name);
-        ast_symbol_value_list->action(out, option);
+        ast_symbol_value_list->action(args);
     }
 }
 // 
-void symbol_key::action(FILE *out, act_opt option) {
+void symbol_key::action(action_args args) {
     action_header();
     if (out_lyc) {
         // 
     }
 }
 // 
-void key_attributes::action(FILE *out, act_opt option) {
+void key_attributes::action(action_args args) {
     action_header();
     // 
 }
 // 
-void symbol_value::action(FILE *out, act_opt option) {
+void symbol_value::action(action_args args) {
     action_header();
     symbol_value_element_list *ast_symbol_value_element_list 
         = this->ast_symbol_value_element_list();
@@ -160,10 +160,10 @@ void symbol_value::action(FILE *out, act_opt option) {
             node != ast_symbol_value_element_list->end();
             ++node) {
         symbol_value_element *elem = dynamic_cast<symbol_value_element *>(*node);
-        elem->action(out, option);
+        elem->action(args);
     }
 }
-void symbol_value_element::action(FILE *out, act_opt option) {
+void symbol_value_element::action(action_args args) {
     action_header();
     // 
     if (out_lyc) {
@@ -171,7 +171,7 @@ void symbol_value_element::action(FILE *out, act_opt option) {
     }
 }
 // 
-void mcc_string::action(FILE *out, act_opt option) {
+void mcc_string::action(action_args args) {
     action_header();
     if (_value != "") {
         // IMPORTANT
@@ -188,24 +188,24 @@ fprintf(stderr, "mcc_string_action >> cannot find token [%s] \n", _value.c_str()
         // 
         sprintf(key_name, "%s", ast::string_tokens[index].first.c_str());
         sprintf(sec_name, "%s", ast::string_tokens[index].second.c_str());
-        //fprintf(out, "%s ", key_name);
-        fprintf(out, "%s /""* %s *""/ ", key_name, sec_name);
+        //fprintf(args.fout, "%s ", key_name);
+        fprintf(args.fout, "%s /""* %s *""/ ", key_name, sec_name);
     }
 }
 // 
-void mcc_symbol::action(FILE *out, act_opt option) {
+void mcc_symbol::action(action_args args) {
     action_header();
     // 
-    fprintf(out, "%s ", this->value().c_str());
+    fprintf(args.fout, "%s ", this->value().c_str());
 }
 
 // 
-void list_parameter::action(FILE *out, act_opt option) {
+void list_parameter::action(action_args args) {
     action_header();
     // 
     if (out_lyc) {
         // this->ast_list_parameter_value()->glance(out_lyc_y_list, option);
-        std::string ret = this->glance(out_lyc_y_list, option);
+        std::string ret = this->glance(glance_args(out_lyc_y_list, args.option));
         int index = ast_table_LIST_index(this);
         if (index < 0) {
 fprintf(stderr, "list_parameter_action >> cannot find definition of LIST[%d] \n", index);
@@ -213,16 +213,16 @@ fprintf(stderr, "list_parameter_action >> cannot find definition of LIST[%d] \n"
         }
 
         // 
-        fprintf(out, "LIST_%d ", index);
+        fprintf(args.fout, "LIST_%d ", index);
     }
 }
 // 
-void option_parameter::action(FILE *out, act_opt option) {
+void option_parameter::action(action_args args) {
     action_header();
     //
     if (out_lyc) {
         // this->ast_option_parameter_value()->glance(out_lyc_y_option, option);
-        std::string ret = this->glance(out_lyc_y_option, option);
+        std::string ret = this->glance(glance_args(out_lyc_y_option, args.option));
         int index = ast_table_OPT_index(this);
         if (index < 0) {
             using ast::ast_table_OPT;
@@ -261,16 +261,16 @@ fprintf(stderr, "%p \n", this);
 
         // 
         //////// printf("OPT_%d fetched successfully. \n", index);
-        fprintf(out, "OPT_%d ", index);
+        fprintf(args.fout, "OPT_%d ", index);
     }
 }
 // 
-void star_parameter::action(FILE *out, act_opt option) {
+void star_parameter::action(action_args args) {
     action_header();
     // 
     if (out_lyc) {
         // this->ast_star_parameter_value()->glance(out_lyc_y_star, option);
-        std::string ret = this->glance(out_lyc_y_star, option);
+        std::string ret = this->glance(glance_args(out_lyc_y_star, args.option));
         int index = ast_table_STAR_index(this);
         if (index < 0) {
 fprintf(stderr, "star_parameter_action >> cannot find definition of STAR[%d] \n", index);
@@ -278,35 +278,35 @@ fprintf(stderr, "star_parameter_action >> cannot find definition of STAR[%d] \n"
         }
         
         // 
-        fprintf(out, "STAR_%d ", index);
+        fprintf(args.fout, "STAR_%d ", index);
     }
 }
 // 
-void list_parameter_value::action(FILE *out, act_opt option) {
+void list_parameter_value::action(action_args args) {
     action_header();
     // 
     if (out_lyc) {
-        this->ast_symbol_value_list()->action(out, option);
+        this->ast_symbol_value_list()->action(args);
     }
 }
 // 
-void option_parameter_value::action(FILE *out, act_opt option) {
+void option_parameter_value::action(action_args args) {
     action_header();
     // 
     if (out_lyc) {
-        this->ast_symbol_value_list()->action(out, option);
+        this->ast_symbol_value_list()->action(args);
     }
 }
 // 
-void star_parameter_value::action(FILE *out, act_opt option) {
+void star_parameter_value::action(action_args args) {
     action_header();
     // 
     if (out_lyc) {
-        this->ast_list_parameter()->action(out, option);
+        this->ast_list_parameter()->action(args);
     }
 }
 // 
-void token_definition::action(FILE *out, act_opt option) {
+void token_definition::action(action_args args) {
     action_header();
     // 
     if (out_lyc) {
@@ -331,7 +331,7 @@ void token_definition::action(FILE *out, act_opt option) {
 
 //==============================================================================
 // 
-void symbol_definition_list::action(FILE *out, act_opt option) {
+void symbol_definition_list::action(action_args args) {
     action_header();
     // static int depth = 0;
     auto node = this->first(); // list_node *node;
@@ -339,7 +339,7 @@ void symbol_definition_list::action(FILE *out, act_opt option) {
     // 
     if (out_lyc) {
         for (node = this->first(); node != this->end(); ++node) {
-            (*node)->action(out, option);
+            (*node)->action(args);
             // printf("=== [%s] \n", (*node)->ast_symbol_key()->symbol_name().c_str());
         }
     }
@@ -347,7 +347,7 @@ void symbol_definition_list::action(FILE *out, act_opt option) {
     // 
 }
 // 
-void symbol_value_list::action(FILE *out, act_opt option) {
+void symbol_value_list::action(action_args args) {
     action_header();
     // gather syntax list.
     symbol_value_list *ast_list = this;
@@ -374,8 +374,8 @@ void symbol_value_list::action(FILE *out, act_opt option) {
             }
 
             // 
-            ast_elem->glance(out, option);
-            ast_elem->action(out, option);
+            ast_elem->glance(glance_args(args.fout, args.option));
+            ast_elem->action(args);
         }
         fprintf(out_lyc, "\n    {\n");
         if (islower(symbol_name()[0])) {
@@ -390,14 +390,14 @@ void symbol_value_list::action(FILE *out, act_opt option) {
     fprintf(out_lyc, "    ;\n\n");
 }
 // 
-void symbol_value_element_list::action(FILE *out, act_opt option) {
+void symbol_value_element_list::action(action_args args) {
     action_header();
 
     auto node = this->first();
 
     if (out_lyc) {
         for (node = this->first(); node != this->end(); ++node) {
-            (*node)->action(out, option);
+            (*node)->action(args);
         }
     }
 }

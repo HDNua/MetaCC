@@ -316,7 +316,8 @@ symbol_value_implementation
     : symbol_value_initializer_list
     {
         ast::symbol_value_implementation *self =
-            new ast::symbol_value_implementation($1);
+            new ast::symbol_value_implementation();
+        self->init_with_symbol_value_initializer_list($1);
         $$ = self;
     }
     ;
@@ -325,8 +326,8 @@ symbol_value_initializer_list
     {
         ast::symbol_value_initializer_list *self =
             new ast::symbol_value_initializer_list();
-        //self->append($1);
-        //$$ = self;
+        self->append($1);
+        $$ = self;
     }
     | symbol_value_initializer_list symbol_value_initializer
     {
@@ -338,7 +339,8 @@ symbol_value_initializer
     : initializer_call
     {
         ast::symbol_value_initializer *self = 
-            new ast::symbol_value_initializer($1);
+            new ast::symbol_value_initializer();
+        self->init_with_initializer_call($1);
         $$ = self;
     }
     ;
@@ -346,7 +348,8 @@ initializer_call
     : C_function_call
     {
         ast::initializer_call *self
-            = new ast::initializer_call($1);
+            = new ast::initializer_call();
+        self->init_with_C_function_call($1);
         $$ = self;
     }
     ;

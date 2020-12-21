@@ -197,7 +197,7 @@ int ast_table_LIST_index(const std::vector<ast::symbol_value_element *> &obj_lis
     list_parameter *ast_list_parameter = new list_parameter(ast_list_param_value, "");
 
     // 
-    std::string key_name = ast_list_parameter->glance(out_lyc_y_list, ACTOPT_NONE);
+    std::string key_name = ast_list_parameter->glance(glance_args(out_lyc_y_list, ACTOPT_NONE));
     int index = ast_table_LIST_index(ast_list_parameter);
     if (index < 0) {
         fprintf(stderr, "cannot find defined LIST [%d] \n", index);

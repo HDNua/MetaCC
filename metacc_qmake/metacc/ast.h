@@ -118,7 +118,35 @@ namespace ast {
 
 
 
-    //
+    ///
+    /// \brief The describe_args struct
+    ///
+    struct describe_args {
+        FILE *fout;
+        describe_args(FILE *fout = NULL): fout(fout) {}
+    };
+    ///
+    /// \brief The glance_args struct
+    ///
+    struct glance_args {
+        FILE *fout;
+        act_opt option;
+        glance_args(FILE *fout = NULL, act_opt option = ACTOPT_NONE): fout(fout), option(option) {}
+    };
+    ///
+    /// \brief The action_args struct
+    ///
+    struct action_args {
+        FILE *fout;
+        act_opt option;
+        action_args(FILE *fout = NULL, act_opt option = ACTOPT_NONE): fout(fout), option(option) {}
+    };
+
+
+
+    ///
+    /// \brief The object class
+    ///
     class object {
 
     public:
@@ -131,15 +159,15 @@ namespace ast {
         ast_type type() const { return typeid(*this); }
 
         // 
-        virtual void describe(FILE *out) {
+        virtual void describe(describe_args args) {
             throw NotImplementedException();
         }
         // 
-        virtual std::string glance(FILE *out, act_opt option = ACTOPT_NONE) {
+        virtual std::string glance(glance_args args) {
             throw NotImplementedException();
         }
         // 
-        virtual void action(FILE *out, act_opt option = ACTOPT_NONE) {
+        virtual void action(action_args args) {
             throw NotImplementedException();
         }
         // 
@@ -162,7 +190,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The list class
+    ///
     template <class Type>
     class list: public object {
         std::vector<Type>                   _vector;
@@ -184,21 +214,21 @@ namespace ast {
         int count() const { return _vector.size(); }
 
         // 
-        void describe(FILE *out) {
+        void describe(describe_args args) {
             ;
         }
         // 
-        std::string glance(FILE *out, act_opt option) {
+        std::string glance(glance_args args) {
             for (auto node = this->first(); node != this->end(); ++node) {
-                (*node)->glance(out, option);
+                (*node)->glance(args);
             }
             return std::string("list");
         }
         // 
-        void action(FILE *out, act_opt option) {
+        void action(action_args args) {
             // 
             for (auto node = this->first(); node != this->end(); ++node) {
-                (*node)->action(out, option);
+                (*node)->action(args);
             }
         }
         // 
@@ -264,7 +294,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The symbol_definition class
+    ///
     class symbol_definition: public object {
         class symbol_key                    *_symbol_key; 
         class symbol_value_list             *_symbol_value_list;
@@ -322,11 +354,11 @@ namespace ast {
         const symbol_value_list *ast_symbol_value_list() const { return _symbol_value_list; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const symbol_definition *p2) const;
         // 
@@ -345,7 +377,9 @@ namespace ast {
 
 
 
-    //
+    ///
+    /// \brief The symbol_key class
+    ///
     class symbol_key: public object {
         string                              _symbol_name;
         class key_attributes                *_key_attributes;
@@ -371,11 +405,11 @@ namespace ast {
         const key_attributes *ast_key_attributes() const { return _key_attributes; }
 
         //
-        void describe(FILE *out);
+        void describe(describe_args args);
         //
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         //
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         //
         int compare(const symbol_key *p2) const;
         //
@@ -394,7 +428,9 @@ namespace ast {
 
 
 
-    //
+    ///
+    /// \brief The key_attributes class
+    ///
     class key_attributes: public object {
         string                              _attributes;
 
@@ -414,11 +450,11 @@ namespace ast {
         const string &attributes() const { return _attributes; }
 
         //
-        void describe(FILE *out);
+        void describe(describe_args args);
         //
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         //
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         //
         int compare(const key_attributes *p2) const;
         //
@@ -437,7 +473,9 @@ namespace ast {
 
 
 
-    //
+    ///
+    /// \brief The symbol_value class
+    ///
     class symbol_value: public object {
         class symbol_value_element_list     *_symbol_value_element_list;
         class symbol_value_implementation   *_symbol_value_implementation;
@@ -472,11 +510,11 @@ namespace ast {
         }
 
         //
-        void describe(FILE *out);
+        void describe(describe_args args);
         //
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         //
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         //
         int compare(const symbol_value *p2) const;
         //
@@ -495,7 +533,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The symbol_value_element class
+    ///
     class symbol_value_element: public object {
 
     public:
@@ -508,11 +548,11 @@ namespace ast {
         ~symbol_value_element();
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         virtual int compare(const symbol_value_element *p2) const = 0;
         // 
@@ -532,7 +572,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The mcc_string class
+    ///
     class mcc_string: public symbol_value_element {    
         string                              _value;
 
@@ -558,11 +600,11 @@ namespace ast {
         const string &value() const { return _value; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
 
         // 
         int compare(const mcc_string &p2) const {
@@ -627,7 +669,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The mcc_symbol class
+    ///
     class mcc_symbol: public symbol_value_element {    
         string                              _value;
 
@@ -654,11 +698,11 @@ namespace ast {
         const string &value() const { return _value; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const mcc_symbol *p2) const {
             return _value.compare(p2->value());
@@ -687,7 +731,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The list_parameter class
+    ///
     class list_parameter: public symbol_value_element {
         class list_parameter_value          *_list_parameter_value;
         class mcc_string                    *_list_parameter_delim;
@@ -720,11 +766,11 @@ namespace ast {
         const mcc_string *list_parameter_delim() const { return _list_parameter_delim; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const list_parameter *p2) const;
         // 
@@ -751,7 +797,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The option_parameter class
+    ///
     class option_parameter: public symbol_value_element {
         class option_parameter_value        *_option_parameter_value;
 
@@ -775,11 +823,11 @@ namespace ast {
         }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const option_parameter *p2) const;
         // 
@@ -806,7 +854,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The star_parameter class
+    ///
     class star_parameter: public symbol_value_element {
         class star_parameter_value          *_star_parameter_value;
 
@@ -830,11 +880,11 @@ namespace ast {
         }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const star_parameter *p2) const;
         // 
@@ -861,7 +911,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The list_parameter_value class
+    ///
     class list_parameter_value: public object {
         class symbol_value_list             *_symbol_value_list;
 
@@ -885,11 +937,11 @@ namespace ast {
         }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const list_parameter_value *p2) const;
         // 
@@ -912,7 +964,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The option_parameter_value class
+    ///
     class option_parameter_value: public object {
         class symbol_value_list             *_symbol_value_list;
 
@@ -936,11 +990,11 @@ namespace ast {
         }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const option_parameter_value *p2) const;
         // 
@@ -963,7 +1017,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The star_parameter_value class
+    ///
     class star_parameter_value: public object {
         class list_parameter                *_list_parameter;
 
@@ -983,11 +1039,11 @@ namespace ast {
         const list_parameter *ast_list_parameter() const { return _list_parameter; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const star_parameter_value *p2) const;
         // 
@@ -1009,7 +1065,9 @@ namespace ast {
 
 
 
-    // 
+    ///
+    /// \brief The token_definition class
+    ///
     class token_definition: public symbol_value_element {
         string                              _token_key;
         string                              _token_value;
@@ -1035,11 +1093,11 @@ namespace ast {
         const string &token_value() const { return _token_value; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const token_definition *p2) const;
         // 
@@ -1066,41 +1124,66 @@ namespace ast {
 
 
 
-    //
+    ///
+    /// \brief The symbol_value_implementation class
+    ///
     class symbol_value_implementation: public object {
         class symbol_value_initializer_list *_symbol_value_initializer_list;
 
     public:
-        symbol_value_implementation(class symbol_value_initializer_list *_symbol_value_initializer_list)
-            : _symbol_value_initializer_list(_symbol_value_initializer_list)
+        symbol_value_implementation()
+            : _symbol_value_initializer_list(nullptr)
         {
         }
         ~symbol_value_implementation() {}
+
+        //
+        void init_with_symbol_value_initializer_list(symbol_value_initializer_list *_symbol_value_initializer_list) {
+            this->_symbol_value_initializer_list = _symbol_value_initializer_list;
+        }
     };
+    ///
+    /// \brief The symbol_value_initializer class
+    ///
     class symbol_value_initializer: public object {
         class initializer_call *_initializer_call;
 
     public:
-        symbol_value_initializer(class initializer_call *_initializer_call)
-            : _initializer_call(_initializer_call)
+        symbol_value_initializer()
+            : _initializer_call(nullptr)
         {
         }
         ~symbol_value_initializer() {}
+
+        //
+        void init_with_initializer_call(initializer_call *_initializer_call) {
+            this->_initializer_call = _initializer_call;
+        }
     };
+    ///
+    /// \brief The initializer_call class
+    ///
     class initializer_call: public object {
         class C_function_call *_C_function_call;
 
     public:
-        initializer_call(class C_function_call *_C_function_call)
-            : _C_function_call(_C_function_call)
+        initializer_call()
+            : _C_function_call(nullptr)
         {
         }
         ~initializer_call() {}
+
+        //
+        void init_with_C_function_call(C_function_call *_C_function_call) {
+            this->_C_function_call = _C_function_call;
+        }
     };
 
 
 
-    //
+    ///
+    /// \brief The field_initializer class
+    ///
     class field_initializer: public object {
         class field_declaration_list *_field_declaration_list;
 
@@ -1115,6 +1198,9 @@ namespace ast {
             this->_field_declaration_list = _field_declaration_list;
         }
     };
+    ///
+    /// \brief The field_declaration class
+    ///
     class field_declaration: public object {
         class C_variable_declaration *_C_variable_declaration;
     
@@ -1129,6 +1215,7 @@ namespace ast {
             this->_C_variable_declaration = _C_variable_declaration;
         }
     };
+
 
 
     ///
@@ -1330,11 +1417,11 @@ namespace ast {
         void set_symbol_name(const std::string &value) { _symbol_name = value; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const symbol_definition_list *p2) const;
         // 
@@ -1370,11 +1457,11 @@ namespace ast {
         void set_symbol_name(const std::string &value) { _symbol_name = value; }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
         // 
         int compare(const symbol_value_list *p2) const;
         // 
@@ -1402,11 +1489,11 @@ namespace ast {
         ~symbol_value_element_list() { }
 
         // 
-        void describe(FILE *out);
+        void describe(describe_args args);
         // 
-        std::string glance(FILE *out, act_opt option);
+        std::string glance(glance_args args);
         // 
-        void action(FILE *out, act_opt option);
+        void action(action_args args);
 
         // 
         int compare(const symbol_value_element_list *p2) const;
@@ -1435,11 +1522,11 @@ namespace ast {
         ~symbol_value_initializer_list() { }
 
         // 
-        void describe(FILE *out) { throw NotImplementedException(); }
+        void describe(describe_args args) { throw NotImplementedException(); }
         // 
-        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        std::string glance(glance_args args) { throw NotImplementedException(); }
         // 
-        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+        void action(action_args args) { throw NotImplementedException(); }
 
         // 
         int compare(const symbol_value_initializer_list *p2) const;
@@ -1468,11 +1555,11 @@ namespace ast {
         ~field_declaration_list() { }
 
         //
-        void describe(FILE *out) { throw NotImplementedException(); }
+        void describe(describe_args args) { throw NotImplementedException(); }
         //
-        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        std::string glance(glance_args args) { throw NotImplementedException(); }
         //
-        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+        void action(action_args args) { throw NotImplementedException(); }
 
         //
         int compare(const field_declaration_list *p2) const;
@@ -1501,11 +1588,11 @@ namespace ast {
         ~method_declaration_list() { }
 
         //
-        void describe(FILE *out) { throw NotImplementedException(); }
+        void describe(describe_args args) { throw NotImplementedException(); }
         //
-        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        std::string glance(glance_args args) { throw NotImplementedException(); }
         //
-        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+        void action(action_args args) { throw NotImplementedException(); }
 
         //
         int compare(const method_declaration_list *p2) const;
@@ -1534,11 +1621,11 @@ namespace ast {
         ~C_init_declarator_list() { }
 
         //
-        void describe(FILE *out) { throw NotImplementedException(); }
+        void describe(describe_args args) { throw NotImplementedException(); }
         //
-        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        std::string glance(glance_args args) { throw NotImplementedException(); }
         //
-        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+        void action(action_args args) { throw NotImplementedException(); }
 
         //
         int compare(const C_init_declarator_list *p2) const;

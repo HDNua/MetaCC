@@ -19,26 +19,26 @@ const int MAX_TOKEN_LEN = 2048;
 
 
 //==============================================================================
-extern FILE *out_jj;
-extern FILE *out_java;
+extern describe_args args_jj;
+extern describe_args args_java;
 
 //------------------------------------------------------------------------------
-extern FILE *out_lyc;
-extern FILE *out_lyc_y;
-extern FILE *out_lyc_y_token;
-extern FILE *out_lyc_y_list;
-extern FILE *out_lyc_y_option;
-extern FILE *out_lyc_y_star;
-extern FILE *out_lyc_l;
-extern FILE *out_lyc_l_tokendef;
-extern FILE *out_lyc_ast_h;
-extern FILE *out_lyc_ast_h_typedef;
-extern FILE *out_lyc_ast_h_declaration;
-extern FILE *out_lyc_ast_c;
-extern FILE *out_lyc_ast_c_templates;
+extern describe_args args_lyc;
+extern describe_args args_lyc_y;
+extern describe_args args_lyc_y_token;
+extern describe_args args_lyc_y_list;
+extern describe_args args_lyc_y_option;
+extern describe_args args_lyc_y_star;
+extern describe_args args_lyc_l;
+extern describe_args args_lyc_l_tokendef;
+extern describe_args args_lyc_ast_h;
+extern describe_args args_lyc_ast_h_typedef;
+extern describe_args args_lyc_ast_h_declaration;
+extern describe_args args_lyc_ast_c;
+extern describe_args args_lyc_ast_c_templates;
 
 //------------------------------------------------------------------------------
-extern FILE *out_lycpp;
+extern describe_args args_lycpp;
 
 
 
@@ -69,7 +69,7 @@ static void tab_depth() {
 
 //==============================================================================
 /*
-void list_node::describe(FILE *out) {
+void list_node::describe(describe_args args) {
     describe_begin();
 
     / *
@@ -121,14 +121,14 @@ void list_node::describe(FILE *out) {
 */
 // 
 //////// template <class Type>
-//////// void list<Type>::describe(FILE *out) {
+//////// void list<Type>::describe(describe_args args) {
 //////// 
 //////// }
 
 
 
 // 
-void symbol_definition::describe(FILE *out) {
+void symbol_definition::describe(describe_args args) {
     describe_begin();
     tab_depth();
 
@@ -141,7 +141,7 @@ void symbol_definition::describe(FILE *out) {
     describe_end();
 }
 // 
-void symbol_key::describe(FILE *out) {
+void symbol_key::describe(describe_args args) {
     /*
     // describe_begin();
     // tab_depth();
@@ -159,7 +159,7 @@ void symbol_key::describe(FILE *out) {
     */
 }
 // 
-void key_attributes::describe(FILE *out) {
+void key_attributes::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -169,7 +169,7 @@ void key_attributes::describe(FILE *out) {
     */
 }
 // 
-void symbol_value::describe(FILE *out) {
+void symbol_value::describe(describe_args args) {
     /*
     describe_begin();
     // tab_depth();
@@ -181,7 +181,7 @@ void symbol_value::describe(FILE *out) {
     */
 }
 // 
-void symbol_value_element::describe(FILE *out) {
+void symbol_value_element::describe(describe_args args) {
     /*
     // describe_begin();
     // tab_depth();
@@ -228,15 +228,15 @@ void symbol_value_element::describe(FILE *out) {
     */
 }
 // 
-void mcc_string::describe(FILE *out) {
+void mcc_string::describe(describe_args args) {
     ;
 }
 // 
-void mcc_symbol::describe(FILE *out) {
+void mcc_symbol::describe(describe_args args) {
     ;
 }
 // 
-void list_parameter::describe(FILE *out) {
+void list_parameter::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -246,7 +246,7 @@ void list_parameter::describe(FILE *out) {
     */
 }
 // 
-void option_parameter::describe(FILE *out) {
+void option_parameter::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -256,7 +256,7 @@ void option_parameter::describe(FILE *out) {
     */
 }
 // 
-void star_parameter::describe(FILE *out) {
+void star_parameter::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -266,7 +266,7 @@ void star_parameter::describe(FILE *out) {
     */
 }
 // 
-void list_parameter_value::describe(FILE *out) {
+void list_parameter_value::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -276,7 +276,7 @@ void list_parameter_value::describe(FILE *out) {
     */
 }
 // 
-void option_parameter_value::describe(FILE *out) {
+void option_parameter_value::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -286,7 +286,7 @@ void option_parameter_value::describe(FILE *out) {
     */
 }
 // 
-void star_parameter_value::describe(FILE *out) {
+void star_parameter_value::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -296,7 +296,7 @@ void star_parameter_value::describe(FILE *out) {
     */
 }
 // 
-void token_definition::describe(FILE *out) {
+void token_definition::describe(describe_args args) {
     /*
     describe_begin();
     tab_depth();
@@ -309,14 +309,14 @@ void token_definition::describe(FILE *out) {
 
 
 // 
-void symbol_definition_list::describe(FILE *out) {
+void symbol_definition_list::describe(describe_args args) {
 
 }
 // 
-void symbol_value_list::describe(FILE *out) {
+void symbol_value_list::describe(describe_args args) {
 
 }
 // 
-void symbol_value_element_list::describe(FILE *out) {
+void symbol_value_element_list::describe(describe_args args) {
 
 }
