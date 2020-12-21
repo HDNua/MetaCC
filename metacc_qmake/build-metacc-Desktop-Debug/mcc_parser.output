@@ -187,58 +187,58 @@ Nonterminals, with rules where they appear
     token_definition <ast_token_definition> (44)
         on left: 32
         on right: 24
-    symbol_value_implementation (45)
+    symbol_value_implementation <ast_symbol_value_implementation> (45)
         on left: 33
         on right: 14
-    symbol_value_initializer_list (46)
+    symbol_value_initializer_list <ast_symbol_value_initializer_list> (46)
         on left: 34 35
         on right: 33 35
-    symbol_value_initializer (47)
+    symbol_value_initializer <ast_symbol_value_initializer> (47)
         on left: 36
         on right: 34 35
-    initializer_call (48)
+    initializer_call <ast_initializer_call> (48)
         on left: 37
         on right: 36
     field_initializer <ast_field_initializer> (49)
         on left: 38
         on right: 6 7
-    field_declaration_list (50)
+    field_declaration_list <ast_field_declaration_list> (50)
         on left: 39 40
         on right: 38 40
-    field_declaration (51)
+    field_declaration <ast_field_declaration> (51)
         on left: 41
         on right: 39 40
     method_initializer <ast_method_initializer> (52)
         on left: 42
         on right: 5 7
-    method_declaration_list (53)
+    method_declaration_list <ast_method_declaration_list> (53)
         on left: 43 44
         on right: 42 44
-    method_declaration (54)
+    method_declaration <ast_method_declaration> (54)
         on left: 45
         on right: 43 44
-    C_variable_declaration (55)
+    C_variable_declaration <ast_C_variable_declaration> (55)
         on left: 46
         on right: 41
-    C_function_declaration (56)
+    C_function_declaration <ast_C_function_declaration> (56)
         on left: 47
         on right: 45
-    C_function_call (57)
+    C_function_call <ast_C_function_call> (57)
         on left: 48
         on right: 37
-    C_declaration_qualifier (58)
+    C_declaration_qualifier <ast_C_declaration_qualifier> (58)
         on left: 49 50
         on right: 46 47
-    C_init_declarator_list (59)
+    C_init_declarator_list <ast_C_init_declarator_list> (59)
         on left: 51 52
         on right: 46 52
-    C_init_declarator (60)
+    C_init_declarator <ast_C_init_declarator> (60)
         on left: 53
         on right: 51 52
-    C_declarator (61)
+    C_declarator <ast_C_declarator> (61)
         on left: 54 55
         on right: 53 54 58
-    C_direct_declarator (62)
+    C_direct_declarator <ast_C_direct_declarator> (62)
         on left: 56 57 58
         on right: 47 48 55
 

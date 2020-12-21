@@ -741,6 +741,54 @@ int symbol_value_element_list::compare(const symbol_value_element_list *p2) cons
 
     return 0;
 }
+//
+int symbol_value_initializer_list::compare(const symbol_value_initializer_list *p2) const {
+    compare_header();
+
+    if (this != p2) {
+        if (this->count() != p2->count()) {
+            return 1;
+        }
+        else {
+            auto n1 = this->first();
+            auto n2 = p2->first();
+
+            while (n1 != this->end()) {
+                if ((*n1)->compare(*n2)) {
+                    return 1;
+                }
+                ++n1;
+                ++n2;
+            }
+        }
+    }
+
+    return 0;
+}
+//
+int field_declaration_list::compare(const field_declaration_list *p2) const {
+    compare_header();
+
+    if (this != p2) {
+        if (this->count() != p2->count()) {
+            return 1;
+        }
+        else {
+            auto n1 = this->first();
+            auto n2 = p2->first();
+
+            while (n1 != this->end()) {
+                if ((*n1)->compare(*n2)) {
+                    return 1;
+                }
+                ++n1;
+                ++n2;
+            }
+        }
+    }
+
+    return 0;
+}
 
 
 

@@ -1,3 +1,21 @@
+MetaCC - Meta Compiler Compiler v0.6.2.5 (201221-1928)
+----
+
+- metacc에서 initialization 관련해서는 automatic implementation 가능하게 변경하려고 합니다.
+  큰 기능 추가여서 시간이 좀 걸리겠네요.. 일단 숙제를 끝냅시다.
+> C variable declaration 구문 정의 추가
+> C function declaration 구문 정의 추가
+> 장기적으로는, C++ 구문에 대한 독해 기능 추가 (template은 무시합니다)
+>> 작업중 1
+>> 작업중 2
+
+* 작업을 진행하던 도중에 compare 함수가 ast_common.cpp에 별도로 구현된 것을 발견했습니다.
+  주석을 하필 안 달아놔서.. 대체 왜 이런 식으로 구현했는지는 알 길이 없네요.
+
+
+end.
+
+
 MetaCC - Meta Compiler Compiler v0.6.2.4 (201219-1226)
 ----
 

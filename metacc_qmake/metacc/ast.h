@@ -8,6 +8,8 @@
 #include <vector>
 #include <map>
 #include <typeinfo>
+#include <exception>
+#include <stdexcept>
 
 #include <cstdio>
 #include <cstring>
@@ -30,6 +32,10 @@ namespace ast {
     class option_parameter;
     class star_parameter;
     class token_definition;
+
+    class symbol_value_implementation;
+    class symbol_value_initializer;
+    class initializer_call;
     
     class mcc_string;
     class mcc_symbol;
@@ -38,14 +44,31 @@ namespace ast {
     class option_parameter_value;
     class star_parameter_value;
 
-    // 
+    //
+    class field_initializer;
+    class field_declaration;
+    class method_initializer;
+    class method_declaration;
+
+    //
+    class C_variable_declaration;
+    class C_function_declaration;
+    class C_function_call;
+    class C_declaration_qualifier;
+    class C_init_declarator_list;
+    class C_init_declarator;
+    class C_declarator;
+    class C_direct_declarator;
+
+    //
     class symbol_definition_list;
     class symbol_value_list;
     class symbol_value_element_list;
-
-    //
-    class field_initializer;
-    class method_initializer;
+    class symbol_value_initializer_list;
+    //class field_initializer_list;
+    class field_declaration_list;
+    //class method_initializer_list;
+    class method_declaration_list;
 }
 
 
@@ -76,8 +99,6 @@ namespace ast {
     // 
     class mcc_string;
 
-
-
     // 
     class exception {
         std::string _msg;
@@ -87,6 +108,12 @@ namespace ast {
 
         // 
         const std::string &message() const { return _msg; }
+    };
+
+    class NotImplementedException: public std::logic_error {
+
+    public:
+        NotImplementedException(): std::logic_error("not implemented") {}
     };
 
 
@@ -105,15 +132,15 @@ namespace ast {
 
         // 
         virtual void describe(FILE *out) {
-            throw exception("NOT IMPLEMENTED");
+            throw NotImplementedException();
         }
         // 
         virtual std::string glance(FILE *out, act_opt option = ACTOPT_NONE) {
-            throw exception("NOT IMPLEMENTED");
+            throw NotImplementedException();
         }
         // 
         virtual void action(FILE *out, act_opt option = ACTOPT_NONE) {
-            throw exception("NOT IMPLEMENTED");
+            throw NotImplementedException();
         }
         // 
         virtual int compare(const object *p2) const {
@@ -318,40 +345,40 @@ namespace ast {
 
 
 
-    // 
+    //
     class symbol_key: public object {
         string                              _symbol_name;
         class key_attributes                *_key_attributes;
 
     public:
-        // 
+        //
         symbol_key(const std::string &symbol_name, key_attributes *_key_attributes)
             : object() // object(AST_SYMBOL_KEY)
             , _symbol_name(symbol_name)
             , _key_attributes(_key_attributes)
         {
         }
-        // 
+        //
         ~symbol_key();
 
-        // 
+        //
         string &symbol_name() { return _symbol_name; }
-        // 
+        //
         const string &symbol_name() const { return _symbol_name; }
-        // 
+        //
         key_attributes *ast_key_attributes() { return _key_attributes; }
-        // 
+        //
         const key_attributes *ast_key_attributes() const { return _key_attributes; }
 
-        // 
+        //
         void describe(FILE *out);
-        // 
+        //
         std::string glance(FILE *out, act_opt option);
-        // 
+        //
         void action(FILE *out, act_opt option);
-        // 
+        //
         int compare(const symbol_key *p2) const;
-        // 
+        //
         virtual int compare(const object *p2) const { 
             const symbol_key *child = (const symbol_key *)p2;
             if (child) {
@@ -359,7 +386,7 @@ namespace ast {
             }
             return 1;
         }
-        // 
+        //
         static int compare(const symbol_key *p1, const symbol_key *p2) {
             return p1->compare(p2);
         }
@@ -367,34 +394,34 @@ namespace ast {
 
 
 
-    // 
+    //
     class key_attributes: public object {
         string                              _attributes;
 
     public:
-        // 
+        //
         key_attributes(const std::string &attributes)
             : object() // object(AST_KEY_ATTRIBUTES)
             , _attributes(attributes)
         {
         }
-        // 
+        //
         ~key_attributes();
 
-        // 
+        //
         string &attributes() { return _attributes; }
-        // 
+        //
         const string &attributes() const { return _attributes; }
 
-        // 
+        //
         void describe(FILE *out);
-        // 
+        //
         std::string glance(FILE *out, act_opt option);
-        // 
+        //
         void action(FILE *out, act_opt option);
-        // 
+        //
         int compare(const key_attributes *p2) const;
-        // 
+        //
         virtual int compare(const object *p2) const { 
             const key_attributes *child = (const key_attributes *)p2;
             if (child) {
@@ -402,7 +429,7 @@ namespace ast {
             }
             return 1;
         }
-        // 
+        //
         static int compare(const key_attributes *p1, const key_attributes *p2) {
             return p1->compare(p2);
         }
@@ -410,38 +437,49 @@ namespace ast {
 
 
 
-    // 
+    //
     class symbol_value: public object {
         class symbol_value_element_list     *_symbol_value_element_list;
+        class symbol_value_implementation   *_symbol_value_implementation;
 
     public:
         // 
         symbol_value(symbol_value_element_list *_symbol_value_element_list)
             : object() // object(AST_SYMBOL_VALUE)
             , _symbol_value_element_list(_symbol_value_element_list)
+            , _symbol_value_implementation(nullptr)
         {
         }
-        // 
+        symbol_value(
+                symbol_value_element_list *_symbol_value_element_list,
+                symbol_value_implementation *_symbol_value_implementation
+                )
+            : object() // object(AST_SYMBOL_VALUE)
+            , _symbol_value_element_list(_symbol_value_element_list)
+            , _symbol_value_implementation(_symbol_value_implementation)
+        {
+        }
+        //
         ~symbol_value();
 
-        // 
+        //
         symbol_value_element_list *ast_symbol_value_element_list() { 
             return _symbol_value_element_list;
         }
-        // 
+        //
         const symbol_value_element_list *ast_symbol_value_element_list() const {
             return _symbol_value_element_list;
         }
 
-        // 
+        //
         void describe(FILE *out);
-        // 
+        //
         std::string glance(FILE *out, act_opt option);
-        // 
+        //
         void action(FILE *out, act_opt option);
-        // 
+        //
         int compare(const symbol_value *p2) const;
-        // 
+        //
         virtual int compare(const object *p2) const { 
             const symbol_value *child = dynamic_cast<const symbol_value *>(p2);
             if (child) {
@@ -931,7 +969,7 @@ namespace ast {
 
     public:
         // 
-        star_parameter_value(list_parameter *_list_parameter)
+        star_parameter_value(class list_parameter *_list_parameter)
             : object() // object(AST_STAR_PARAMETER_VALUE)
             , _list_parameter(_list_parameter)
         {
@@ -1028,7 +1066,124 @@ namespace ast {
 
 
 
-    // 
+    //
+    class symbol_value_implementation: public object {
+        class symbol_value_initializer_list *_symbol_value_initializer_list;
+
+    public:
+        symbol_value_implementation(class symbol_value_initializer_list *_symbol_value_initializer_list)
+            : _symbol_value_initializer_list(_symbol_value_initializer_list)
+        {
+        }
+        ~symbol_value_implementation() {}
+    };
+    class symbol_value_initializer: public object {
+        class initializer_call *_initializer_call;
+
+    public:
+        symbol_value_initializer(class initializer_call *_initializer_call)
+            : _initializer_call(_initializer_call)
+        {
+        }
+        ~symbol_value_initializer() {}
+    };
+    class initializer_call: public object {
+        class C_function_call *_C_function_call;
+
+    public:
+        initializer_call(class C_function_call *_C_function_call)
+            : _C_function_call(_C_function_call)
+        {
+        }
+        ~initializer_call() {}
+    };
+
+
+
+    //
+    class field_initializer: public object {
+        class field_declaration_list *_field_declaration_list;
+
+    public:
+        field_initializer(field_declaration_list *_field_declaration_list)
+            : _field_declaration_list(_field_declaration_list)
+        {}
+        ~field_initializer() {}
+
+        void init_with_field_declaration_list() {
+        }
+    };
+    class field_declaration: public object {
+    
+    public:
+        field_declaration() {}
+        ~field_declaration() {}
+    };
+
+
+    //
+    class method_initializer: public object {
+
+    public:
+        method_initializer() {}
+        ~method_initializer() {}
+
+    };
+    class method_declaration: public object {
+
+    public:
+        method_declaration() {}
+        ~method_declaration() {}
+    };
+
+
+
+    //
+    class C_variable_declaration: public object {
+
+    public:
+        C_variable_declaration() {}
+        ~C_variable_declaration() {}
+    };
+    class C_function_declaration: public object {
+    public:
+        C_function_declaration() {}
+        ~C_function_declaration() {}
+    };
+    class C_function_call: public object {
+    public:
+        C_function_call() {}
+        ~C_function_call() {}
+    };
+    class C_declaration_qualifier: public object {
+    public:
+        C_declaration_qualifier() {}
+        ~C_declaration_qualifier() {}
+    };
+    class C_init_declarator_list: public object {
+    public:
+        C_init_declarator_list() {}
+        ~C_init_declarator_list() {}
+    };
+    class C_init_declarator: public object {
+    public:
+        C_init_declarator() {}
+        ~C_init_declarator() {}
+    };
+    class C_declarator: public object {
+    public:
+        C_declarator() {}
+        ~C_declarator() {}
+    };
+    class C_direct_declarator: public object {
+    public:
+        C_direct_declarator() {}
+        ~C_direct_declarator() {}
+    };
+
+
+
+    //
     class symbol_definition_list: public list<symbol_definition *> {
         std::string _symbol_name;
 
@@ -1066,10 +1221,6 @@ namespace ast {
             return p1->compare(p2);
         }
     };
-
-
-
-    // 
     class symbol_value_list: public list<symbol_value *> {
         std::string _symbol_name;
 
@@ -1107,10 +1258,6 @@ namespace ast {
             return p1->compare(p2);
         }
     };
-
-
-     
-    // 
     class symbol_value_element_list: public list<symbol_value_element *> {
 
     public:
@@ -1141,23 +1288,65 @@ namespace ast {
             return p1->compare(p2);
         }
     };
-
-
-
-    //
-    class field_initializer: public object {
+    class symbol_value_initializer_list: public list<symbol_value_initializer *> {
 
     public:
-        field_initializer() {}
-        ~field_initializer() {}
+        // 
+        symbol_value_initializer_list(): list<symbol_value_initializer *>() { }
+        // 
+        ~symbol_value_initializer_list() { }
 
+        // 
+        void describe(FILE *out) { throw NotImplementedException(); }
+        // 
+        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        // 
+        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+
+        // 
+        int compare(const symbol_value_initializer_list *p2) const;
+        // 
+        virtual int compare(const object *p2) const { 
+            const symbol_value_initializer_list *child = dynamic_cast<const symbol_value_initializer_list *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
+        }
+        // 
+        static int compare(const symbol_value_initializer_list *p1, const symbol_value_initializer_list *p2) {
+            return p1->compare(p2);
+        }
     };
-    class method_initializer: public object {
+    class field_declaration_list: public list<field_declaration *> {
 
     public:
-        method_initializer() {}
-        ~method_initializer() {}
+        // 
+        field_declaration_list(): list<field_declaration *>() { }
+        // 
+        ~field_declaration_list() { }
 
+        // 
+        void describe(FILE *out) { throw NotImplementedException(); }
+        // 
+        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        // 
+        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+
+        // 
+        int compare(const field_declaration_list *p2) const;
+        // 
+        virtual int compare(const object *p2) const { 
+            const field_declaration_list *child = dynamic_cast<const field_declaration_list *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
+        }
+        // 
+        static int compare(const field_declaration_list *p1, const field_declaration_list *p2) {
+            return p1->compare(p2);
+        }
     };
 
 
