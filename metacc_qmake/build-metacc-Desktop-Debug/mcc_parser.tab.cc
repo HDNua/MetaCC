@@ -591,8 +591,8 @@ static const yytype_int16 yyrline[] =
      169,   176,   181,   188,   195,   203,   208,   215,   222,   230,
      235,   240,   244,   248,   252,   256,   262,   269,   276,   283,
      290,   293,   300,   308,   316,   324,   331,   338,   346,   355,
-     363,   370,   377,   384,   390,   394,   400,   407,   413,   419,
-     424,   425,   428,   429,   432,   435,   436,   439,   440,   441
+     364,   371,   378,   388,   397,   404,   411,   421,   430,   439,
+     448,   455,   464,   471,   478,   487,   494,   503,   510,   517
 };
 #endif
 
@@ -1796,97 +1796,229 @@ yyreduce:
 #line 356 "../metacc/mcc_parser.yy"
     {
         ast::field_initializer *self
-			= new ast::field_initializer((yyvsp[-1].ast_field_declaration_list));
+            = new ast::field_initializer();
+        self->init_with_field_declaration_list((yyvsp[-1].ast_field_declaration_list));
 		(yyval.ast_field_initializer) = self;
     }
-#line 1803 "mcc_parser.tab.cc"
+#line 1804 "mcc_parser.tab.cc"
     break;
 
   case 40:
-#line 364 "../metacc/mcc_parser.yy"
+#line 365 "../metacc/mcc_parser.yy"
     {
         ast::field_declaration_list *self
             = new ast::field_declaration_list();
         self->append((yyvsp[0].ast_field_declaration));
         (yyval.ast_field_declaration_list) = self;
     }
-#line 1814 "mcc_parser.tab.cc"
+#line 1815 "mcc_parser.tab.cc"
     break;
 
   case 41:
-#line 371 "../metacc/mcc_parser.yy"
+#line 372 "../metacc/mcc_parser.yy"
     {
         (yyvsp[-1].ast_field_declaration_list)->append((yyvsp[0].ast_field_declaration));
 		(yyval.ast_field_declaration_list) = (yyvsp[-1].ast_field_declaration_list);
     }
-#line 1823 "mcc_parser.tab.cc"
+#line 1824 "mcc_parser.tab.cc"
     break;
 
   case 42:
-#line 378 "../metacc/mcc_parser.yy"
+#line 379 "../metacc/mcc_parser.yy"
     {
-        ;
+        ast::field_declaration *self
+            = new ast::field_declaration();
+        self->init_with_C_variable_declaration((yyvsp[0].ast_C_variable_declaration));
+		(yyval.ast_field_declaration) = self;
     }
-#line 1831 "mcc_parser.tab.cc"
+#line 1835 "mcc_parser.tab.cc"
     break;
 
   case 43:
-#line 385 "../metacc/mcc_parser.yy"
+#line 389 "../metacc/mcc_parser.yy"
     {
-        ;
+        ast::method_initializer *self
+            = new ast::method_initializer();
+        self->init_with_method_declaration_list((yyvsp[-1].ast_method_declaration_list));
+		(yyval.ast_method_initializer) = self;
     }
-#line 1839 "mcc_parser.tab.cc"
+#line 1846 "mcc_parser.tab.cc"
     break;
 
   case 44:
-#line 391 "../metacc/mcc_parser.yy"
+#line 398 "../metacc/mcc_parser.yy"
     {
-        ;
+        ast::method_declaration_list *self
+			= new ast::method_declaration_list();
+		self->append((yyvsp[0].ast_method_declaration));
+		(yyval.ast_method_declaration_list) = self;
     }
-#line 1847 "mcc_parser.tab.cc"
+#line 1857 "mcc_parser.tab.cc"
     break;
 
   case 45:
-#line 395 "../metacc/mcc_parser.yy"
+#line 405 "../metacc/mcc_parser.yy"
     {
-        ;
+        (yyvsp[-1].ast_method_declaration_list)->append((yyvsp[0].ast_method_declaration));
+		(yyval.ast_method_declaration_list) = (yyvsp[-1].ast_method_declaration_list);
     }
-#line 1855 "mcc_parser.tab.cc"
+#line 1866 "mcc_parser.tab.cc"
     break;
 
   case 46:
-#line 401 "../metacc/mcc_parser.yy"
+#line 412 "../metacc/mcc_parser.yy"
     {
-        ;
+        ast::method_declaration *self
+            = new ast::method_declaration();
+        self->init_with_C_function_declaration((yyvsp[0].ast_C_function_declaration));
+		(yyval.ast_method_declaration) = self;
     }
-#line 1863 "mcc_parser.tab.cc"
+#line 1877 "mcc_parser.tab.cc"
     break;
 
   case 47:
-#line 408 "../metacc/mcc_parser.yy"
+#line 422 "../metacc/mcc_parser.yy"
     {
-        ;
+        ast::C_variable_declaration *self
+            = new ast::C_variable_declaration();
+        self->init_with_1((yyvsp[-2].ast_C_declaration_qualifier), (yyvsp[-1].ast_C_init_declarator_list));
+		(yyval.ast_C_variable_declaration) = self;
     }
-#line 1871 "mcc_parser.tab.cc"
+#line 1888 "mcc_parser.tab.cc"
     break;
 
   case 48:
-#line 414 "../metacc/mcc_parser.yy"
+#line 431 "../metacc/mcc_parser.yy"
         {
-		;
+		ast::C_function_declaration *self
+            = new ast::C_function_declaration();
+        self->init_with_1((yyvsp[-4].ast_C_declaration_qualifier), (yyvsp[-3].ast_C_direct_declarator));
+		(yyval.ast_C_function_declaration) = self;
 	}
-#line 1879 "mcc_parser.tab.cc"
+#line 1899 "mcc_parser.tab.cc"
     break;
 
   case 49:
-#line 420 "../metacc/mcc_parser.yy"
+#line 440 "../metacc/mcc_parser.yy"
         {
+        ast::C_function_call *self
+            = new ast::C_function_call();
+        self->init_with_1((yyvsp[-3].ast_C_direct_declarator));
+        (yyval.ast_C_function_call) = self;
 	}
-#line 1886 "mcc_parser.tab.cc"
+#line 1910 "mcc_parser.tab.cc"
+    break;
+
+  case 50:
+#line 449 "../metacc/mcc_parser.yy"
+        {
+		ast::C_declaration_qualifier *self
+			= new ast::C_declaration_qualifier();
+		self->init_with_C_MCC_TYPE((yyvsp[0].token_str));
+		(yyval.ast_C_declaration_qualifier) = self;
+	}
+#line 1921 "mcc_parser.tab.cc"
+    break;
+
+  case 51:
+#line 456 "../metacc/mcc_parser.yy"
+        {
+		ast::C_declaration_qualifier *self
+			= new ast::C_declaration_qualifier();
+		self->init_with_MCC_SYMBOL((yyvsp[0].token_str));
+		(yyval.ast_C_declaration_qualifier) = self;
+	}
+#line 1932 "mcc_parser.tab.cc"
+    break;
+
+  case 52:
+#line 465 "../metacc/mcc_parser.yy"
+        {
+		ast::C_init_declarator_list *self
+			= new ast::C_init_declarator_list();
+		self->append((yyvsp[0].ast_C_init_declarator));
+		(yyval.ast_C_init_declarator_list) = self;
+	}
+#line 1943 "mcc_parser.tab.cc"
+    break;
+
+  case 53:
+#line 472 "../metacc/mcc_parser.yy"
+        {
+		(yyvsp[-1].ast_C_init_declarator_list)->append((yyvsp[0].ast_C_init_declarator));
+		(yyval.ast_C_init_declarator_list) = (yyvsp[-1].ast_C_init_declarator_list);
+	}
+#line 1952 "mcc_parser.tab.cc"
+    break;
+
+  case 54:
+#line 479 "../metacc/mcc_parser.yy"
+        {
+		ast::C_init_declarator *self
+			= new ast::C_init_declarator();
+		self->init_with_C_declarator((yyvsp[0].ast_C_declarator));
+		(yyval.ast_C_init_declarator) = self;
+	}
+#line 1963 "mcc_parser.tab.cc"
+    break;
+
+  case 55:
+#line 488 "../metacc/mcc_parser.yy"
+        {
+		ast::C_declarator *self
+			= new ast::C_declarator();
+		self->init_with_ASTERISK_C_declarator((yyvsp[0].ast_C_declarator));
+		(yyval.ast_C_declarator) = self;
+	}
+#line 1974 "mcc_parser.tab.cc"
+    break;
+
+  case 56:
+#line 495 "../metacc/mcc_parser.yy"
+        {
+		ast::C_declarator *self
+			= new ast::C_declarator();
+		self->init_with_C_direct_declarator((yyvsp[0].ast_C_direct_declarator));
+		(yyval.ast_C_declarator) = self;
+	}
+#line 1985 "mcc_parser.tab.cc"
+    break;
+
+  case 57:
+#line 504 "../metacc/mcc_parser.yy"
+        {
+		ast::C_direct_declarator *self
+			= new ast::C_direct_declarator();
+		self->init_with_MCC_SYMBOL((yyvsp[0].token_str));
+		(yyval.ast_C_direct_declarator) = self;
+	}
+#line 1996 "mcc_parser.tab.cc"
+    break;
+
+  case 58:
+#line 511 "../metacc/mcc_parser.yy"
+        {
+		ast::C_direct_declarator *self
+			= new ast::C_direct_declarator();
+		self->init_with_C_IDENTIFIER((yyvsp[0].token_str));
+		(yyval.ast_C_direct_declarator) = self;
+	}
+#line 2007 "mcc_parser.tab.cc"
+    break;
+
+  case 59:
+#line 518 "../metacc/mcc_parser.yy"
+        {
+		ast::C_direct_declarator *self
+			= new ast::C_direct_declarator();
+		self->init_with_C_declarator((yyvsp[-1].ast_C_declarator));
+		(yyval.ast_C_direct_declarator) = self;
+	}
+#line 2018 "mcc_parser.tab.cc"
     break;
 
 
-#line 1890 "mcc_parser.tab.cc"
+#line 2022 "mcc_parser.tab.cc"
 
       default: break;
     }
@@ -2118,7 +2250,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 446 "../metacc/mcc_parser.yy"
+#line 528 "../metacc/mcc_parser.yy"
 
 int line_count = 0;
 

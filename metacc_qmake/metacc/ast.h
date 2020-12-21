@@ -1105,85 +1105,214 @@ namespace ast {
         class field_declaration_list *_field_declaration_list;
 
     public:
-        field_initializer(field_declaration_list *_field_declaration_list)
-            : _field_declaration_list(_field_declaration_list)
+        field_initializer()
+            : _field_declaration_list(nullptr)
         {}
         ~field_initializer() {}
 
-        void init_with_field_declaration_list() {
+        //
+        void init_with_field_declaration_list(field_declaration_list *_field_declaration_list) {
+            this->_field_declaration_list = _field_declaration_list;
         }
     };
     class field_declaration: public object {
+        class C_variable_declaration *_C_variable_declaration;
     
     public:
-        field_declaration() {}
+        field_declaration()
+            : _C_variable_declaration(nullptr)
+        {}
         ~field_declaration() {}
+
+        //
+        void init_with_C_variable_declaration(C_variable_declaration *_C_variable_declaration) {
+            this->_C_variable_declaration = _C_variable_declaration;
+        }
     };
 
 
-    //
+    ///
+    /// \brief The method_initializer class
+    ///
     class method_initializer: public object {
+        class method_declaration_list *_method_declaration_list;
 
     public:
-        method_initializer() {}
+        method_initializer()
+            : _method_declaration_list(nullptr)
+        {}
         ~method_initializer() {}
 
+        //
+        void init_with_method_declaration_list(method_declaration_list *_method_declaration_list) {
+            this->_method_declaration_list = _method_declaration_list;
+        }
     };
+    ///
+    /// \brief The method_declaration class
+    ///
     class method_declaration: public object {
+        class C_function_declaration *_C_function_declaration;
 
     public:
-        method_declaration() {}
+        method_declaration()
+            : _C_function_declaration(nullptr)
+        {}
         ~method_declaration() {}
+
+        //
+        void init_with_C_function_declaration(C_function_declaration *_C_function_declaration) {
+            this->_C_function_declaration = _C_function_declaration;
+        }
     };
 
 
 
-    //
+    ///
+    /// \brief The C_variable_declaration class
+    ///
     class C_variable_declaration: public object {
+        class C_declaration_qualifier *_C_declaration_qualifier;
+        class C_init_declarator_list *_C_init_declarator_list;
 
     public:
-        C_variable_declaration() {}
+        C_variable_declaration()
+            : _C_declaration_qualifier(nullptr)
+            , _C_init_declarator_list(nullptr)
+        {}
         ~C_variable_declaration() {}
+
+        //
+        void init_with_1(
+                C_declaration_qualifier *_C_declaration_qualifier,
+                C_init_declarator_list *_C_init_declarator_list) {
+            this->_C_declaration_qualifier = _C_declaration_qualifier;
+            this->_C_init_declarator_list = _C_init_declarator_list;
+        }
     };
+    ///
+    /// \brief The C_function_declaration class
+    ///
     class C_function_declaration: public object {
+        class C_declaration_qualifier *_C_declaration_qualifier;
+        class C_direct_declarator *_C_direct_declarator;
+
     public:
-        C_function_declaration() {}
+        C_function_declaration()
+            : _C_declaration_qualifier(nullptr)
+            , _C_direct_declarator(nullptr)
+        {}
         ~C_function_declaration() {}
+
+        //
+        void init_with_1(
+                C_declaration_qualifier *_C_declaration_qualifier,
+                C_direct_declarator *_C_direct_declarator
+                ) {
+            this->_C_declaration_qualifier = _C_declaration_qualifier;
+            this->_C_direct_declarator = _C_direct_declarator;
+        }
     };
+    ///
+    /// \brief The C_function_call class
+    ///
     class C_function_call: public object {
+        class C_direct_declarator *_C_direct_declarator;
+
     public:
-        C_function_call() {}
+        C_function_call()
+            : _C_direct_declarator(nullptr)
+        {}
         ~C_function_call() {}
+
+        //
+        void init_with_1(C_direct_declarator *_C_direct_declarator) {
+            this->_C_direct_declarator = _C_direct_declarator;
+        }
     };
+    ///
+    /// \brief The C_declaration_qualifier class
+    ///
     class C_declaration_qualifier: public object {
+
     public:
         C_declaration_qualifier() {}
         ~C_declaration_qualifier() {}
+
+        //
+        void init_with_C_MCC_TYPE(const std::string &value) {
+        }
+        void init_with_MCC_SYMBOL(const std::string &value) {
+        }
     };
-    class C_init_declarator_list: public object {
-    public:
-        C_init_declarator_list() {}
-        ~C_init_declarator_list() {}
-    };
+    ///
+    /// \brief The C_init_declarator class
+    ///
     class C_init_declarator: public object {
+        class C_declarator *_C_declarator;
+
     public:
-        C_init_declarator() {}
+        C_init_declarator()
+            : _C_declarator(nullptr)
+        {}
         ~C_init_declarator() {}
+
+        //
+        void init_with_C_declarator(C_declarator *_C_declarator) {
+            this->_C_declarator = _C_declarator;
+        }
     };
+    ///
+    /// \brief The C_declarator class
+    ///
     class C_declarator: public object {
+        int                       _pointer;
+        class C_declarator        *_C_declarator;
+        class C_direct_declarator *_C_direct_declarator;
+
     public:
-        C_declarator() {}
+        C_declarator()
+            : _pointer(-1)
+            , _C_declarator(nullptr)
+            , _C_direct_declarator(nullptr)
+        {}
         ~C_declarator() {}
+
+        //
+        void init_with_ASTERISK_C_declarator(C_declarator *_C_declarator) {
+            this->_pointer = 1;
+            this->_C_declarator = _C_declarator;
+        }
+        void init_with_C_direct_declarator(C_direct_declarator *_C_direct_declarator) {
+            this->_pointer = 0;
+            this->_C_direct_declarator = _C_direct_declarator;
+        }
     };
+    ///
+    /// \brief The C_direct_declarator class
+    ///
     class C_direct_declarator: public object {
+        class C_declarator *_C_declarator;
+
     public:
         C_direct_declarator() {}
         ~C_direct_declarator() {}
+
+        //
+        void init_with_MCC_SYMBOL(const std::string &value) {
+        }
+        void init_with_C_IDENTIFIER(const std::string &value) {
+        }
+        void init_with_C_declarator(C_declarator *_C_declarator) {
+            this->_C_declarator = _C_declarator;
+        }
     };
 
 
 
-    //
+    ///
+    /// \brief The symbol_definition_list class
+    ///
     class symbol_definition_list: public list<symbol_definition *> {
         std::string _symbol_name;
 
@@ -1221,6 +1350,9 @@ namespace ast {
             return p1->compare(p2);
         }
     };
+    ///
+    /// \brief The symbol_value_list class
+    ///
     class symbol_value_list: public list<symbol_value *> {
         std::string _symbol_name;
 
@@ -1258,6 +1390,9 @@ namespace ast {
             return p1->compare(p2);
         }
     };
+    ///
+    /// \brief The symbol_value_element_list class
+    ///
     class symbol_value_element_list: public list<symbol_value_element *> {
 
     public:
@@ -1288,6 +1423,9 @@ namespace ast {
             return p1->compare(p2);
         }
     };
+    ///
+    /// \brief The symbol_value_initializer_list class
+    ///
     class symbol_value_initializer_list: public list<symbol_value_initializer *> {
 
     public:
@@ -1318,24 +1456,27 @@ namespace ast {
             return p1->compare(p2);
         }
     };
+    ///
+    /// \brief The field_declaration_list class
+    ///
     class field_declaration_list: public list<field_declaration *> {
 
     public:
-        // 
+        //
         field_declaration_list(): list<field_declaration *>() { }
-        // 
+        //
         ~field_declaration_list() { }
 
-        // 
+        //
         void describe(FILE *out) { throw NotImplementedException(); }
-        // 
+        //
         std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
-        // 
+        //
         void action(FILE *out, act_opt option) { throw NotImplementedException(); }
 
-        // 
+        //
         int compare(const field_declaration_list *p2) const;
-        // 
+        //
         virtual int compare(const object *p2) const { 
             const field_declaration_list *child = dynamic_cast<const field_declaration_list *>(p2);
             if (child) {
@@ -1343,15 +1484,81 @@ namespace ast {
             }
             return 1;
         }
-        // 
+        //
         static int compare(const field_declaration_list *p1, const field_declaration_list *p2) {
+            return p1->compare(p2);
+        }
+    };
+    ///
+    /// \brief The method_declaration_list class
+    ///
+    class method_declaration_list: public list<method_declaration *> {
+
+    public:
+        //
+        method_declaration_list(): list<method_declaration *>() { }
+        //
+        ~method_declaration_list() { }
+
+        //
+        void describe(FILE *out) { throw NotImplementedException(); }
+        //
+        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        //
+        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+
+        //
+        int compare(const method_declaration_list *p2) const;
+        //
+        virtual int compare(const object *p2) const {
+            const method_declaration_list *child = dynamic_cast<const method_declaration_list *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
+        }
+        //
+        static int compare(const method_declaration_list *p1, const method_declaration_list *p2) {
+            return p1->compare(p2);
+        }
+    };
+    ///
+    /// \brief The C_init_declarator_list class
+    ///
+    class C_init_declarator_list: public list<C_init_declarator *> {
+
+    public:
+        //
+        C_init_declarator_list(): list<C_init_declarator *>() { }
+        //
+        ~C_init_declarator_list() { }
+
+        //
+        void describe(FILE *out) { throw NotImplementedException(); }
+        //
+        std::string glance(FILE *out, act_opt option) { throw NotImplementedException(); }
+        //
+        void action(FILE *out, act_opt option) { throw NotImplementedException(); }
+
+        //
+        int compare(const C_init_declarator_list *p2) const;
+        //
+        virtual int compare(const object *p2) const {
+            const C_init_declarator_list *child = dynamic_cast<const C_init_declarator_list *>(p2);
+            if (child) {
+                return compare(child);
+            }
+            return 1;
+        }
+        //
+        static int compare(const C_init_declarator_list *p1, const C_init_declarator_list *p2) {
             return p1->compare(p2);
         }
     };
 
 
 
-    // 
+    //
     extern std::vector< std::string >                                      symbols;
     extern std::vector< std::pair<std::string, std::string> >              string_tokens;
     extern std::vector< std::string >                                      tokens;

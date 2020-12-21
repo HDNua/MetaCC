@@ -1,3 +1,13 @@
+MetaCC - Meta Compiler Compiler v0.6.2.6 (201222-0158)
+----
+
+- parser and header and cpp update.
+
+
+end.
+
+
+
 MetaCC - Meta Compiler Compiler v0.6.2.5 (201221-1928)
 ----
 

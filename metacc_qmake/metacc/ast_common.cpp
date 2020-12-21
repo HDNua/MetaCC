@@ -538,7 +538,11 @@ int list_node::compare(const list_node *p2) const {
 
 
 
-// 
+///
+/// \brief symbol_definition::compare
+/// \param p2
+/// \return
+///
 int symbol_definition::compare(const symbol_definition *p2) const {
     compare_header();
     if (this != p2) {
@@ -554,7 +558,11 @@ int symbol_definition::compare(const symbol_definition *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief symbol_key::compare
+/// \param p2
+/// \return
+///
 int symbol_key::compare(const symbol_key *p2) const {
     compare_header();
     if (this != p2) {
@@ -570,7 +578,11 @@ int symbol_key::compare(const symbol_key *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief key_attributes::compare
+/// \param p2
+/// \return
+///
 int key_attributes::compare(const key_attributes *p2) const {
     compare_header();
     if (this != p2) {
@@ -583,7 +595,11 @@ int key_attributes::compare(const key_attributes *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief symbol_value::compare
+/// \param p2
+/// \return
+///
 int symbol_value::compare(const symbol_value *p2) const {
     compare_header();
     if (this != p2) {
@@ -592,7 +608,11 @@ int symbol_value::compare(const symbol_value *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief list_parameter::compare
+/// \param p2
+/// \return
+///
 int list_parameter::compare(const list_parameter *p2) const {
     compare_header();
     if (this != p2) {
@@ -615,7 +635,11 @@ int list_parameter::compare(const list_parameter *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief option_parameter::compare
+/// \param p2
+/// \return
+///
 int option_parameter::compare(const option_parameter *p2) const {
     compare_header();
     if (this != p2) {
@@ -623,7 +647,11 @@ int option_parameter::compare(const option_parameter *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief star_parameter::compare
+/// \param p2
+/// \return
+///
 int star_parameter::compare(const star_parameter *p2) const {
     compare_header();
     if (this != p2) {
@@ -631,7 +659,11 @@ int star_parameter::compare(const star_parameter *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief list_parameter_value::compare
+/// \param p2
+/// \return
+///
 int list_parameter_value::compare(const list_parameter_value *p2) const {
     compare_header();
     if (this != p2) {
@@ -640,7 +672,11 @@ int list_parameter_value::compare(const list_parameter_value *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief option_parameter_value::compare
+/// \param p2
+/// \return
+///
 int option_parameter_value::compare(const option_parameter_value *p2) const {
     compare_header();
     if (this != p2) {
@@ -649,7 +685,11 @@ int option_parameter_value::compare(const option_parameter_value *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief star_parameter_value::compare
+/// \param p2
+/// \return
+///
 int star_parameter_value::compare(const star_parameter_value *p2) const {
     compare_header();
     if (this != p2) {
@@ -658,7 +698,11 @@ int star_parameter_value::compare(const star_parameter_value *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief token_definition::compare
+/// \param p2
+/// \return
+///
 int token_definition::compare(const token_definition *p2) const {
     compare_header();
     if (this != p2) {
@@ -671,7 +715,11 @@ int token_definition::compare(const token_definition *p2) const {
     }
     return 0;
 }
-// 
+///
+/// \brief symbol_definition_list::compare
+/// \param p2
+/// \return
+///
 int symbol_definition_list::compare(const symbol_definition_list *p2) const {
     compare_header();
     if (this != p2) {
@@ -694,7 +742,11 @@ int symbol_definition_list::compare(const symbol_definition_list *p2) const {
 
     return 0;
 }
-// 
+///
+/// \brief symbol_value_list::compare
+/// \param p2
+/// \return
+///
 int symbol_value_list::compare(const symbol_value_list *p2) const {
     compare_header();
     if (this != p2) {
@@ -717,7 +769,11 @@ int symbol_value_list::compare(const symbol_value_list *p2) const {
 
     return 0;
 }
-// 
+///
+/// \brief symbol_value_element_list::compare
+/// \param p2
+/// \return
+///
 int symbol_value_element_list::compare(const symbol_value_element_list *p2) const {
     compare_header();
 
@@ -741,7 +797,11 @@ int symbol_value_element_list::compare(const symbol_value_element_list *p2) cons
 
     return 0;
 }
-//
+///
+/// \brief symbol_value_initializer_list::compare
+/// \param p2
+/// \return
+///
 int symbol_value_initializer_list::compare(const symbol_value_initializer_list *p2) const {
     compare_header();
 
@@ -765,8 +825,68 @@ int symbol_value_initializer_list::compare(const symbol_value_initializer_list *
 
     return 0;
 }
-//
+///
+/// \brief field_declaration_list::compare
+/// \param p2
+/// \return
+///
 int field_declaration_list::compare(const field_declaration_list *p2) const {
+    compare_header();
+
+    if (this != p2) {
+        if (this->count() != p2->count()) {
+            return 1;
+        }
+        else {
+            auto n1 = this->first();
+            auto n2 = p2->first();
+
+            while (n1 != this->end()) {
+                if ((*n1)->compare(*n2)) {
+                    return 1;
+                }
+                ++n1;
+                ++n2;
+            }
+        }
+    }
+
+    return 0;
+}
+///
+/// \brief method_declaration_list::compare
+/// \param p2
+/// \return
+///
+int method_declaration_list::compare(const method_declaration_list *p2) const {
+    compare_header();
+
+    if (this != p2) {
+        if (this->count() != p2->count()) {
+            return 1;
+        }
+        else {
+            auto n1 = this->first();
+            auto n2 = p2->first();
+
+            while (n1 != this->end()) {
+                if ((*n1)->compare(*n2)) {
+                    return 1;
+                }
+                ++n1;
+                ++n2;
+            }
+        }
+    }
+
+    return 0;
+}
+///
+/// \brief C_init_declarator_list::compare
+/// \param p2
+/// \return
+///
+int C_init_declarator_list::compare(const C_init_declarator_list *p2) const {
     compare_header();
 
     if (this != p2) {
@@ -792,15 +912,21 @@ int field_declaration_list::compare(const field_declaration_list *p2) const {
 
 
 
-// 
+///
+/// \brief object::compare_header
+///
 void object::compare_header() const {
 //    std::cout << "compare " << type().name() << std::endl;
 }
-// 
+///
+/// \brief object::glance_header
+///
 void object::glance_header() const {
 //    std::cout << "glance " << type().name() << std::endl;
 }
-// 
+///
+/// \brief object::action_header
+///
 void object::action_header() const {
 //    std::cout << "action " << type().name() << std::endl;
 }

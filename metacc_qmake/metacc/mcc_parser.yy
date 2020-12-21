@@ -25,9 +25,9 @@ int yyerror(char const *str);
     class ast::symbol_definition_list         *ast_symbol_definition_list;
     class ast::symbol_value_list              *ast_symbol_value_list;
     class ast::symbol_value_element_list      *ast_symbol_value_element_list;
-	class ast::symbol_value_initializer_list  *ast_symbol_value_initializer_list;
-	class ast::field_declaration_list         *ast_field_declaration_list;
-	class ast::method_declaration_list        *ast_method_declaration_list;
+    class ast::symbol_value_initializer_list  *ast_symbol_value_initializer_list;
+    class ast::field_declaration_list         *ast_field_declaration_list;
+    class ast::method_declaration_list        *ast_method_declaration_list;
 
     class ast::symbol_definition              *ast_symbol_definition;
     class ast::symbol_key                     *ast_symbol_key;
@@ -42,35 +42,35 @@ int yyerror(char const *str);
     class ast::star_parameter_value           *ast_star_parameter_value;
     class ast::token_definition               *ast_token_definition;
 
-	class ast::symbol_value_implementation    *ast_symbol_value_implementation;
-	class ast::symbol_value_initializer       *ast_symbol_value_initializer;
-	class ast::initializer_call               *ast_initializer_call;
+    class ast::symbol_value_implementation    *ast_symbol_value_implementation;
+    class ast::symbol_value_initializer       *ast_symbol_value_initializer;
+    class ast::initializer_call               *ast_initializer_call;
 
     class ast::field_initializer              *ast_field_initializer;
-	class ast::field_declaration              *ast_field_declaration;
+    class ast::field_declaration              *ast_field_declaration;
     class ast::method_initializer             *ast_method_initializer;
-	class ast::method_declaration             *ast_method_declaration;
+    class ast::method_declaration             *ast_method_declaration;
 
-	class ast::C_variable_declaration         *ast_C_variable_declaration;
-	class ast::C_function_declaration         *ast_C_function_declaration;
-	class ast::C_function_call                *ast_C_function_call;
-	class ast::C_declaration_qualifier        *ast_C_declaration_qualifier;
-	class ast::C_init_declarator_list         *ast_C_init_declarator_list;
-	class ast::C_init_declarator              *ast_C_init_declarator;
-	class ast::C_declarator                   *ast_C_declarator;
-	class ast::C_direct_declarator            *ast_C_direct_declarator;
+    class ast::C_variable_declaration         *ast_C_variable_declaration;
+    class ast::C_function_declaration         *ast_C_function_declaration;
+    class ast::C_function_call                *ast_C_function_call;
+    class ast::C_declaration_qualifier        *ast_C_declaration_qualifier;
+    class ast::C_init_declarator_list         *ast_C_init_declarator_list;
+    class ast::C_init_declarator              *ast_C_init_declarator;
+    class ast::C_declarator                   *ast_C_declarator;
+    class ast::C_direct_declarator            *ast_C_direct_declarator;
 }
 
-%token	COLON SEMICOLON
-%token	MCC_STRING
-%token	MCC_SYMBOL MCC_METHOD
+%token    COLON SEMICOLON
+%token    MCC_STRING
+%token    MCC_SYMBOL MCC_METHOD
 %token  C_MCC_TYPE C_IDENTIFIER
 
-%token	VBAR LP RP MLP MRP COMMA ASTERISK
-%token	LIST OPTION STAR
-%token	CSTRING NULL_
-%token	SKIP TERMINAL
-%token	TOKEN
+%token    VBAR LP RP MLP MRP COMMA ASTERISK
+%token    LIST OPTION STAR
+%token    CSTRING NULL_
+%token    SKIP TERMINAL
+%token    TOKEN
 %token  FIELDS METHODS
 
 %type <token_str> MCC_STRING
@@ -308,30 +308,30 @@ token_definition
     : TOKEN LP MCC_STRING RP
     {
         ast::token_definition *self =
-			new ast::token_definition($3, "");
+            new ast::token_definition($3, "");
         $$ = self;
     }
     ;
 symbol_value_implementation
     : symbol_value_initializer_list
     {
-		ast::symbol_value_implementation *self =
-			new ast::symbol_value_implementation($1);
-		$$ = self;
+        ast::symbol_value_implementation *self =
+            new ast::symbol_value_implementation($1);
+        $$ = self;
     }
     ;
 symbol_value_initializer_list
     : symbol_value_initializer
     {
-		ast::symbol_value_initializer_list *self =
-			new ast::symbol_value_initializer_list();
+        ast::symbol_value_initializer_list *self =
+            new ast::symbol_value_initializer_list();
         //self->append($1);
-		//$$ = self;
+        //$$ = self;
     }
     | symbol_value_initializer_list symbol_value_initializer
     {
-		$1->append($2);
-		$$ = $1;
+        $1->append($2);
+        $$ = $1;
     }
     ;
 symbol_value_initializer
@@ -339,15 +339,15 @@ symbol_value_initializer
     {
         ast::symbol_value_initializer *self = 
             new ast::symbol_value_initializer($1);
-		$$ = self;
+        $$ = self;
     }
     ;
 initializer_call
     : C_function_call
     {
         ast::initializer_call *self
-			= new ast::initializer_call($1);
-		$$ = self;
+            = new ast::initializer_call($1);
+        $$ = self;
     }
     ;
 
@@ -355,8 +355,9 @@ field_initializer
     : MLP field_declaration_list MRP
     {
         ast::field_initializer *self
-			= new ast::field_initializer($2);
-		$$ = self;
+            = new ast::field_initializer();
+        self->init_with_field_declaration_list($2);
+        $$ = self;
     }
     ;
 field_declaration_list
@@ -370,75 +371,156 @@ field_declaration_list
     | field_declaration_list field_declaration
     {
         $1->append($2);
-		$$ = $1;
+        $$ = $1;
     }
     ;
 field_declaration
     : C_variable_declaration
     {
-        ;
+        ast::field_declaration *self
+            = new ast::field_declaration();
+        self->init_with_C_variable_declaration($1);
+        $$ = self;
     }
     ;
 
 method_initializer
     : MLP method_declaration_list MRP
     {
-        ;
+        ast::method_initializer *self
+            = new ast::method_initializer();
+        self->init_with_method_declaration_list($2);
+        $$ = self;
     }
     ;
 method_declaration_list
     : method_declaration
     {
-        ;
+        ast::method_declaration_list *self
+            = new ast::method_declaration_list();
+        self->append($1);
+        $$ = self;
     }
     | method_declaration_list method_declaration
     {
-        ;
+        $1->append($2);
+        $$ = $1;
     }
     ;
 method_declaration
     : C_function_declaration
     {
-        ;
+        ast::method_declaration *self
+            = new ast::method_declaration();
+        self->init_with_C_function_declaration($1);
+        $$ = self;
     }
     ;
 
 C_variable_declaration
     : C_declaration_qualifier C_init_declarator_list SEMICOLON
     {
-        ;
+        ast::C_variable_declaration *self
+            = new ast::C_variable_declaration();
+        self->init_with_1($1, $2);
+        $$ = self;
     }
-	;
+    ;
 C_function_declaration
     : C_declaration_qualifier C_direct_declarator LP RP SEMICOLON
-	{
-		;
-	}
-	;
+    {
+        ast::C_function_declaration *self
+            = new ast::C_function_declaration();
+        self->init_with_1($1, $2);
+        $$ = self;
+    }
+    ;
 C_function_call
     : C_direct_declarator LP RP SEMICOLON
-	{
-	}
-	;
+    {
+        ast::C_function_call *self
+            = new ast::C_function_call();
+        self->init_with_1($1);
+        $$ = self;
+    }
+    ;
 C_declaration_qualifier
     : C_MCC_TYPE
+    {
+        ast::C_declaration_qualifier *self
+            = new ast::C_declaration_qualifier();
+        self->init_with_C_MCC_TYPE($1);
+        $$ = self;
+    }
     | MCC_SYMBOL
+    {
+        ast::C_declaration_qualifier *self
+            = new ast::C_declaration_qualifier();
+        self->init_with_MCC_SYMBOL($1);
+        $$ = self;
+    }
     ;
 C_init_declarator_list
     : C_init_declarator
+    {
+        ast::C_init_declarator_list *self
+            = new ast::C_init_declarator_list();
+        self->append($1);
+        $$ = self;
+    }
     | C_init_declarator_list C_init_declarator
+    {
+        $1->append($2);
+        $$ = $1;
+    }
     ;
 C_init_declarator
     : C_declarator
+    {
+        ast::C_init_declarator *self
+            = new ast::C_init_declarator();
+        self->init_with_C_declarator($1);
+        $$ = self;
+    }
     ;
 C_declarator
-	: ASTERISK C_declarator
-	| C_direct_declarator
-	;
+    : ASTERISK C_declarator
+    {
+        ast::C_declarator *self
+            = new ast::C_declarator();
+        self->init_with_ASTERISK_C_declarator($2);
+        $$ = self;
+    }
+    | C_direct_declarator
+    {
+        ast::C_declarator *self
+            = new ast::C_declarator();
+        self->init_with_C_direct_declarator($1);
+        $$ = self;
+    }
+    ;
 C_direct_declarator
-	: MCC_SYMBOL
-	| C_IDENTIFIER
-	| LP C_declarator RP
+    : MCC_SYMBOL
+    {
+        ast::C_direct_declarator *self
+            = new ast::C_direct_declarator();
+        self->init_with_MCC_SYMBOL($1);
+        $$ = self;
+    }
+    | C_IDENTIFIER
+    {
+        ast::C_direct_declarator *self
+            = new ast::C_direct_declarator();
+        self->init_with_C_IDENTIFIER($1);
+        $$ = self;
+    }
+    | LP C_declarator RP
+    {
+        ast::C_direct_declarator *self
+            = new ast::C_direct_declarator();
+        self->init_with_C_declarator($2);
+        $$ = self;
+    }
     ;
 
 
